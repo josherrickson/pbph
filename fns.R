@@ -67,8 +67,24 @@ addIntercept <- function(x) {
   warning(paste0("Don't know how to add intercept to ", class(x), "."))
   return(x)
 }
-## Computing the bread & meat.
-## These three don't depend on eta
+
+#' Internal piecewise generation of Bread and Meat matricies.
+#'
+#' @param eta Estimated version of the coefficient on the interaction
+#' between predicted and treatment. This could be from a model or a
+#' hypothesis.
+#' @param resp Vector of responses.
+#' @param covs Data frame of covariates.
+#' @param treatment Vector of 0/1 treatment indicators.
+#' @param mod1 First stage model.
+#' @param pred Predicted values from first stage.
+#' @param mod2 Second stage model.
+#'
+#' @name bread_and_meat
+NULL
+#> NULL
+
+##' @rdname bread_and_meat
 bread.11 <- function(covs, treatment) {
 
   covsInt <- addIntercept(covs)
@@ -77,10 +93,12 @@ bread.11 <- function(covs, treatment) {
     as.matrix(covsInt[treatment==0,,drop=FALSE])
 }
 
+##' @rdname bread_and_meat
 bread.22 <- function(pred, treatment) {
   crossprod(cbind(rep(1,length(pred[treatment==1])), pred[treatment==1]))
 }
 
+##' @rdname bread_and_meat
 meat.11 <- function(mod1, covs, treatment) {
   covsInt <- addIntercept(covs)
 
@@ -88,7 +106,7 @@ meat.11 <- function(mod1, covs, treatment) {
   (mod1$res*as.matrix(covsInt[treatment==0,,drop=FALSE]))
 }
 
-## These two depend on eta (through eta and mod2)
+##' @rdname bread_and_meat
 bread.21 <- function(eta, mod2, resp, covs, pred, treatment) {
   covsInt <- addIntercept(covs)
 
@@ -98,6 +116,7 @@ bread.21 <- function(eta, mod2, resp, covs, pred, treatment) {
               2, sum))
 }
 
+##' @rdname bread_and_meat
 meat.22 <- function(mod2, pred, treatment) {
   crossprod(cbind(mod2$res, mod2$res*pred[treatment==1]))
 }
@@ -108,8 +127,16 @@ correctedvar <- function(b11, b21, b22, m11, m22) {
                    solve(b11)%*%t(b21))%*% solve(b22))[2,2]
 }
 
-
-pb_method <- function(resp, covs, treatment) {
+##' Enhanced Peters-Belson method
+##'
+##' Performs enhanced Peters-Belson on the data. First stage is fit on
+##' `resp ~ covs`. *TODO* REPLACE WITH A FORMULA.
+##' @param resp Vector of responses.
+##' @param covs Data.frame of covariates.
+##' @param treatment Vector of 0/1 treatment indicators.
+##' @return Vector consisting of an estimate of eta and confidence bounds.
+##' @author Josh Errickson
+epb <- function(resp, covs, treatment) {
   stopifnot(all(treatment %in% 0:1))
 
   mods <- modfit(resp, covs, treatment)
