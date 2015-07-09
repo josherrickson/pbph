@@ -5,7 +5,7 @@ interactive-emacs:
 	R_PROFILE=load.R emacs -nw -f R
 
 test:
-	R -q -e "library(devtools); devtools:::test()"
+	R --vanilla -q -e "library(devtools); devtools:::test()"
 
 check:
-	R -q -e "library(devtools); devtools:::check()"
+	R --vanilla -q -e "library(devtools); devtools:::check()"
