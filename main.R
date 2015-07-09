@@ -1,7 +1,3 @@
-rm(list=ls())
-source("fns.R")
-
-
 n <- 100
 p <- 5
 pc <- .4

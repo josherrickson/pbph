@@ -1,7 +1,3 @@
-rm(list=ls())
-library(testthat)
-source("fns.R")
-
 test_that("modfit", {
   resp <- c(3,4,1,3,2,1,4,2)
   covs <- data.frame(x1=c(2,1,3,4,2,1,3,1),
