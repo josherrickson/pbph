@@ -4,7 +4,7 @@
 ##' the first column is an intercept; if the intercept is not already in the
 ##' object (defined as a first column being all 1's).
 ##' @param x A matrix or data.frame.
-##' @return If `x` has no intercept, a matrix with an interecpt column
+##' @return If `x` has no intercept, a matrix with an intercept column
 ##' @author Josh Errickson
 addIntercept <- function(x) {
   if (class(x) == "data.frame") {

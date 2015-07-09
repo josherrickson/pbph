@@ -1,4 +1,4 @@
-##' Perform model fitting for the enchanced PB method.
+##' Perform model fitting for the enhanced PB method.
 ##'
 ##' This  will fit a linear first stage model on the control group,
 ##' then use that model to predict $Y_c$ in the treatment group. Then a

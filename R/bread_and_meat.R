@@ -1,5 +1,4 @@
-
-#' Internal piecewise generation of Bread and Meat matricies.
+#' Internal piece-wise generation of Bread and Meat matrices.
 #'
 #' @param eta Estimated version of the coefficient on the interaction
 #' between predicted and treatment. This could be from a model or a
