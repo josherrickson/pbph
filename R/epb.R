@@ -6,6 +6,7 @@
 ##' @param covs Data.frame of covariates.
 ##' @param treatment Vector of 0/1 treatment indicators.
 ##' @return Vector consisting of an estimate of eta and confidence bounds.
+##' @export
 ##' @author Josh Errickson
 epb <- function(resp, covs, treatment) {
   stopifnot(all(treatment %in% 0:1))
