@@ -6,3 +6,6 @@ interactive-emacs:
 
 test:
 	R -q -e "library(devtools); devtools:::test()"
+
+check:
+	R -q -e "library(devtools); devtools:::check()"
