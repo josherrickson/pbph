@@ -20,10 +20,10 @@ for (j in 1:length(true_inter)) {
 
     noise <- rnorm(n)
     yc_un <- as.matrix(covs)%*%truebeta
-    yt_un <- true_t*treatment + ti*(treatment*yc_un - mean(yc_un[treatment==1]))
+    yt_un <- yc_un + true_t*treatment + ti*treatment*yc_un
     resp <- ifelse(treatment==1, yt_un, yc_un) + noise
 
-    save[i,] <- pb_method(resp, covs, treatment)
+    save[i,] <- epb(resp, covs, treatment)
   }
   bigsave[j,] <- c(ti, mean(save[save[,2] != -Inf,1]),
                          sum(save[,2] < ti & save[,3] > ti))
