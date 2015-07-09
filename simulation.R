@@ -7,7 +7,8 @@ sigma2 <- 1
 true_inter <- seq(-1,2,by=.5)
 
 reps <- 100
-bigsave <- matrix(nrow=length(true_inter), ncol=3)
+bigsave <- matrix(nrow=length(true_inter), ncol=5)
+colnames(bigsave) <- c("truth", "estimate", "#cov", "#uncov", "#inf")
 for (j in 1:length(true_inter)) {
   ti <- true_inter[j]
   save <- matrix(nrow=reps, ncol=3)
@@ -25,8 +26,13 @@ for (j in 1:length(true_inter)) {
 
     save[i,] <- epb(resp, covs, treatment)
   }
+  saveFinite <- save[save[,2] != -Inf,]
+  numcov <- sum(saveFinite[,2] <ti & saveFinite[,3] > ti)
+  numuncov <- nrow(saveFinite) - numcov
+  numinf <- reps - nrow(saveFinite)
   bigsave[j,] <- c(ti, mean(save[save[,2] != -Inf,1]),
-                         sum(save[,2] < ti & save[,3] > ti))
+                   numcov, numuncov, numinf)
+
 }
 
 #pdf("~/Desktop/coverage.pdf")
