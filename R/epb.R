@@ -2,16 +2,23 @@
 ##'
 ##' Performs enhanced Peters-Belson on the data. First stage is fit on
 ##' `resp ~ covs`. *TODO* REPLACE WITH A FORMULA.
-##' @param resp Vector of responses.
-##' @param covs Data.frame of covariates.
+##'
+##' @param form First stage model formula.
 ##' @param treatment Vector of 0/1 treatment indicators.
+##' @param data Data where variables in `form` live.
+##'
 ##' @return Vector consisting of an estimate of eta and confidence bounds.
 ##' @export
 ##' @author Josh Errickson
-epb <- function(resp, covs, treatment) {
+epb <- function(form, treatment, data) {
+  stopifnot(length(form) == 3)
+  stopifnot(class(form) == "formula")
   stopifnot(all(treatment %in% 0:1))
 
-  mods <- modfit(resp, covs, treatment)
+  mods <- modfit(form, treatment, data)
+
+  resp <- eval(form[[2]], envir=data)
+  covs <- model.matrix(form, data=data)
 
   bread11 <- bread.11(covs, treatment)
   bread22 <- bread.22(mods$pred, treatment)

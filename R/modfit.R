@@ -12,27 +12,29 @@
 ##'
 ##' resp - pred ~ pred | treatment == 1
 ##'
-##' @param resp The response variable.
-##' @param covs A data.frame of covariates. All will be included, so remove
-##' variables that shouldn't be included.
+##' @param form First stage model formula.
 ##' @param treatment A vector of treatment statuses, should be all `0` or `1`.
+##' @param data Data where variables in `form` live.
 ##' @param center Default FALSE. Should the covariates be centered in the
 ##' second stage?
+##'
 ##' @return A list consisting of the two models and predicted values (across both
 ##' groups)
 ##' @author Josh Errickson
-modfit <- function(resp, covs, treatment, center=FALSE) {
+modfit <- function(form, treatment, data, center=FALSE) {
+
   # First stage model, linear
-  mod1 <- lm(resp[treatment==0] ~ ., data=covs[treatment==0,,drop=FALSE])
+  mod1 <- lm(form, data=data[treatment==0,,drop=FALSE])
 
   # center the covariates. Why do we do this?
-  if (center) covs.center <- data.frame(scale(covs, scale=FALSE))
+  if (center) data.center <- data.frame(scale(data, scale=FALSE))
 
   # Get predicted values.
-  pred <- predict(mod1, newdata=if(center) covs.center else covs)
+  pred <- predict(mod1, newdata=if(center) data.center else data)
 
   # Second stage linear model.
-  mod2 <- lm(resp[treatment==1] - pred[treatment==1] ~ pred[treatment==1])
+  res <- eval(form[[2]], envir=data) - pred
+  mod2 <- lm(res[treatment==1] ~ pred[treatment==1])
 
   return(list(mod1=mod1,
               mod2=mod2,

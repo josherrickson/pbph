@@ -1,24 +1,33 @@
 context("bread_and_meat")
 
 test_that("bread 11", {
-  covs <- data.frame(x1=c(2,1,3,4,2,1,3,1),
-                     x2=c(3,5,2,1,3,2,3,4))
+  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
+                  x1=c(2,1,3,4,2,1,3,1),
+                  x2=c(3,5,2,1,3,2,3,4))
+  form <- y ~ x1 + x2
   treatment <- c(0,0,0,0,1,1,1,1)
 
+  resp <- eval(form[[2]], envir=d)
+  covs <- model.matrix(form, data=d)
+
   b11 <- bread.11(covs, treatment)
-  expect_true(all(rownames(b11) == c("Intercept", "x1", "x2")))
+  expect_true(all(rownames(b11) == c("(Intercept)", "x1", "x2")))
   expect_true(all(b11 == matrix(c(4,10,11,10,30,21,11,21,39), nrow=3)))
 })
 
 
 test_that("bread 21", {
-  resp <- c(3,4,1,3,2,1,4,2)
-  covs <- data.frame(x1=c(2,1,3,4,2,1,3,1),
-                     x2=c(3,5,2,1,3,2,3,4))
+  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
+                  x1=c(2,1,3,4,2,1,3,1),
+                  x2=c(3,5,2,1,3,2,3,4))
+  form <- y ~ x1 + x2
   treatment <- c(0,0,0,0,1,1,1,1)
+
+  resp <- eval(form[[2]], envir=d)
+  covs <- model.matrix(form, data=d)
   eta0 <- 1
 
-  m <- modfit(resp, covs, treatment)
+  m <- modfit(form, treatment, d)
 
   b21 <- bread.21(eta=1, m$mod2$coef[1], resp, covs, m$pred, treatment)
   expect_true(all.equal(b21, matrix(c(-8,-7567/285, -14, -5847/95,
@@ -27,24 +36,32 @@ test_that("bread 21", {
 })
 
 test_that("bread 22", {
-  resp <- c(3,4,1,3,2,1,4,2)
-  covs <- data.frame(x1=c(2,1,3,4,2,1,3,1),
-                     x2=c(3,5,2,1,3,2,3,4))
+  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
+                  x1=c(2,1,3,4,2,1,3,1),
+                  x2=c(3,5,2,1,3,2,3,4))
+  form <- y ~ x1 + x2
   treatment <- c(0,0,0,0,1,1,1,1)
 
-  m <- modfit(resp, covs, treatment)
+  resp <- eval(form[[2]], envir=d)
+  covs <- model.matrix(form, data=d)
+
+  m <- modfit(form, treatment, d)
   b22 <- bread.22(m$pred, treatment)
   expect_true(all.equal(b22, matrix(c(4,23/3,23/3,251/9), nrow=2),
                         check.attributes=FALSE))
 })
 
 test_that("meat 11", {
-  resp <- c(3,4,1,3,2,1,4,2)
-  covs <- data.frame(x1=c(2,1,3,4,2,1,3,1),
-                     x2=c(3,5,2,1,3,2,3,4))
+  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
+                  x1=c(2,1,3,4,2,1,3,1),
+                  x2=c(3,5,2,1,3,2,3,4))
+  form <- y ~ x1 + x2
   treatment <- c(0,0,0,0,1,1,1,1)
 
-  m <- modfit(resp, covs, treatment)
+  resp <- eval(form[[2]], envir=d)
+  covs <- model.matrix(form, data=d)
+
+  m <- modfit(form, treatment, d)
 
   m11 <- meat.11(m$mod1, covs, treatment)
 
@@ -56,17 +73,18 @@ test_that("meat 11", {
 
 
 test_that("meat 22", {
-  resp <- c(3,4,1,3,2,1,4,2)
-  covs <- data.frame(x1=c(2,1,3,4,2,1,3,1),
-                     x2=c(3,5,2,1,3,2,3,4))
+  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
+                  x1=c(2,1,3,4,2,1,3,1),
+                  x2=c(3,5,2,1,3,2,3,4))
+  form <- y ~ x1 + x2
   treatment <- c(0,0,0,0,1,1,1,1)
+
+  resp <- eval(form[[2]], envir=d)
+  covs <- model.matrix(form, data=d)
   eta0 <- 1
 
-  m <- modfit(resp, covs, treatment)
+  m <- modfit(form, treatment, d)
   mod2b <- lm(resp[treatment==1] - (1 + eta0)*m$pred[treatment==1] ~ 1)
-
-  covs$Intercept <- rep(1, nrow(covs))
-  covs <- model.frame(Intercept ~ ., data=covs)
 
   m22 <- meat.22(eta0, mod2b$coef[1], resp, m$pred, treatment)
   expect_true(all.equal(m22, matrix(c(1051/36, 3383/432, 3383/432, 164891/1296),
@@ -75,16 +93,18 @@ test_that("meat 22", {
 })
 
 test_that("corrected var", {
-  resp <- c(3,4,1,3,2,1,4,2)
-  covs <- data.frame(x1=c(2,1,3,4,2,1,3,1),
-                     x2=c(3,5,2,1,3,2,3,4))
+  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
+                  x1=c(2,1,3,4,2,1,3,1),
+                  x2=c(3,5,2,1,3,2,3,4))
+  form <- y ~ x1 + x2
   treatment <- c(0,0,0,0,1,1,1,1)
+
+  resp <- eval(form[[2]], envir=d)
+  covs <- model.matrix(form, data=d)
   eta0 <- 1
 
-  m <- modfit(resp, covs, treatment)
+  m <- modfit(form, treatment, d)
   mod2b <- lm(resp[treatment==1] - (1 + eta0)*m$pred[treatment==1] ~ 1)
-
-  covs <- cbind(rep(1,8), covs)
 
   b11 <- bread.11(covs, treatment)
   b21 <- bread.21(eta=1, mod2b$coef[1], resp, covs, m$pred, treatment)

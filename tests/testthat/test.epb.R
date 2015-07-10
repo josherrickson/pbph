@@ -3,9 +3,11 @@ context("epb")
 test_that("epb", {
   # Need to expand these a LOT
 
-  resp <- rnorm(10)
-  covs <- data.frame(x1=rnorm(10), x2=rnorm(10))
-  treatment <- rep(0:1, each=5)
+  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
+                  x1=c(2,1,3,4,2,1,3,1),
+                  x2=c(3,5,2,1,3,2,3,4))
+  form <- y ~ x1 + x2
+  treatment <- c(0,0,0,0,1,1,1,1)
 
-  epb(resp, covs, treatment)
+  epb(form, treatment, d)
 })
