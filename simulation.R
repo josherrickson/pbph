@@ -23,8 +23,9 @@ for (j in 1:length(true_inter)) {
     yc_un <- as.matrix(covs)%*%truebeta
     yt_un <- yc_un + true_t*treatment + ti*treatment*yc_un
     resp <- ifelse(treatment==1, yt_un, yc_un) + noise
+    d <- data.frame(y=resp, covs)
 
-    save[i,] <- epb(resp, covs, treatment)
+    save[i,] <- epb(y ~ ., treatment, data=d)
   }
   saveFinite <- save[save[,2] != -Inf,]
   numcov <- sum(saveFinite[,2] <ti & saveFinite[,3] > ti)
