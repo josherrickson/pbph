@@ -15,7 +15,7 @@ for (j in 1:length(true_inter)) {
   for (i in 1:reps) {
     covs <- data.frame(matrix(rnorm(n*p), nrow=n))
     truebeta <- rep(0, p)
-    truebeta[sample(1:p, round(informative*p))] <- rnorm(round(informative*p),,1)
+    truebeta[sample(1:p, round(informative*p))] <- rnorm(round(informative*p),0,1)
 
     treatment <- rep(0:1, c(n*pc, n*(1-pc)))
 

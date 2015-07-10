@@ -16,7 +16,6 @@ NULL
 
 ##' @rdname bread_and_meat
 bread.11 <- function(covs, treatment) {
-
   covsInt <- addIntercept(covs)
 
   t(as.matrix(covsInt[treatment==0,,drop=FALSE])) %*%
