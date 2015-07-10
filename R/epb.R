@@ -23,11 +23,11 @@ epb <- function(form, treatment, data) {
   bread11 <- bread.11(covs, treatment)
   bread22 <- bread.22(mods$pred, treatment)
   meat11 <- meat.11(mods$mod1, covs, treatment)
+  meat22 <- meat.22(mods$mod2$coef[2], mods$mod2$coef[1], resp, mods$pred, treatment)
 
   tosolve <- function(eta) {
     mod2b <- lm(resp[treatment==1] - eta*mods$pred[treatment==1] ~ 1)
 
-    meat22 <- meat.22(eta, mod2b$coef[1], resp, mods$pred, treatment)
     bread21 <- bread.21(eta, mod2b$coef[1], resp, covs, mods$pred, treatment)
 
     corrected <- correctedvar(bread11, bread21, bread22, meat11, meat22)
