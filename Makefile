@@ -12,3 +12,6 @@ check:
 
 document:
 	R --vanilla -q -e "library(devtools); devtools:::document()"
+
+build:
+	R --vanilla -q -e "library(devtools); devtools:::build()"
