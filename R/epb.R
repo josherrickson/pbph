@@ -7,9 +7,11 @@
 ##' @param treatment Vector of 0/1 treatment indicators.
 ##' @param data Data where variables in `form` live.
 ##'
-##' @return Vector consisting of an estimate of eta and confidence bounds.
+##' @return Vector consisting of an estimate of eta and confidence
+##'   bounds.
 ##' @export
 ##' @author Josh Errickson
+##'
 epb <- function(form, treatment, data) {
   stopifnot(length(form) == 3)
   stopifnot(class(form) == "formula")
@@ -23,14 +25,17 @@ epb <- function(form, treatment, data) {
   bread11 <- bread.11(covs, treatment)
   bread22 <- bread.22(mods$pred, treatment)
   meat11 <- meat.11(mods$mod1, covs, treatment)
-  meat22 <- meat.22(mods$mod2$coef[2], mods$mod2$coef[1], resp, mods$pred, treatment)
+  meat22 <- meat.22(mods$mod2$coef[2], mods$mod2$coef[1], resp,
+                    mods$pred, treatment)
 
   tosolve <- function(eta) {
     mod2b <- lm(resp[treatment==1] - eta*mods$pred[treatment==1] ~ 1)
 
-    bread21 <- bread.21(eta, mod2b$coef[1], resp, covs, mods$pred, treatment)
+    bread21 <- bread.21(eta, mod2b$coef[1], resp, covs,
+                        mods$pred, treatment)
 
-    corrected <- correctedvar(bread11, bread21, bread22, meat11, meat22)
+    corrected <- correctedvar(bread11, bread21, bread22,
+                              meat11, meat22)
 
     stat <- qt(.975, mods$mod1$df+2)
     return((mods$mod2$coef[2] - eta)^2 - stat^2*corrected)

@@ -1,11 +1,14 @@
 ##' Internal function to add a column for the intercept to a matrix.
 ##'
-##' Given a matrix or data.frame of size nxp, returns an nx(p+1) object where
-##' the first column is an intercept; if the intercept is not already in the
-##' object (defined as a first column being all 1's).
+##' Given a matrix or data.frame of size nxp, returns an nx(p+1)
+##' object where the first column is an intercept; if the intercept is
+##' not already in the object (defined as a first column being all
+##' 1's).
+##'
 ##' @param x A matrix or data.frame.
 ##' @return If `x` has no intercept, a matrix with an intercept column
 ##' @author Josh Errickson
+##'
 addIntercept <- function(x) {
   if (class(x) == "data.frame") {
     if (any(x[,1] !=1)) {
@@ -24,6 +27,7 @@ addIntercept <- function(x) {
     }
     return(x)
   }
-  warning(paste0("Don't know how to add intercept to ", class(x), "."))
+  warning(paste0("Don't know how to add intercept to ",
+                 class(x), "."))
   return(x)
 }

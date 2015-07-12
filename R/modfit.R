@@ -1,8 +1,8 @@
 ##' Perform model fitting for the enhanced PB method.
 ##'
-##' This  will fit a linear first stage model on the control group,
-##' then use that model to predict $Y_c$ in the treatment group. Then a
-##' linear second stage model will be fitted on the treatment group.
+##' This will fit a linear first stage model on the control group,
+##' then use that model to predict $Y_c$ in the treatment group. Then
+##' a linear second stage model will be fitted on the treatment group.
 ##'
 ##' The first stage model is
 ##'
@@ -13,14 +13,16 @@
 ##' resp - pred ~ pred | treatment == 1
 ##'
 ##' @param form First stage model formula.
-##' @param treatment A vector of treatment statuses, should be all `0` or `1`.
+##' @param treatment A vector of treatment statuses, should be all `0`
+##'   or `1`.
 ##' @param data Data where variables in `form` live.
-##' @param center Default FALSE. Should the covariates be centered in the
-##' second stage?
+##' @param center Default FALSE. Should the covariates be centered in
+##'   the second stage?
 ##'
-##' @return A list consisting of the two models and predicted values (across both
-##' groups)
+##' @return A list consisting of the two models and predicted values
+##'   (across both groups)
 ##' @author Josh Errickson
+##'
 modfit <- function(form, treatment, data, center=FALSE) {
 
   # First stage model, linear
