@@ -100,5 +100,4 @@ print.epbm <- function(x, digits=3, ...) {
   print(m, ..., quote=FALSE, right=TRUE)
 }
 
-##' @export
 show.epbm <- function(x) print(x)

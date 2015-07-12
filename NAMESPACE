@@ -3,4 +3,3 @@
 S3method(print,epbm)
 export(epb)
 export(epbm)
-export(show.epbm)
