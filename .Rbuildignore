@@ -1,4 +1,3 @@
-^Makefile$
-^load\.R$
-^simulation\.R$
-^modelfittesting\.R$
+Makefile
+load.R
+simulations
