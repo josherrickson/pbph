@@ -2,14 +2,15 @@ context("epb")
 
 test_that("epb", {
   # Need to expand these a LOT
+  set.seed(134)
+  x1 <- rnorm(10)
+  x2 <- rnorm(10)
+  y <- x1+x2+rnorm(10)
+  d <- data.frame(y,x1,x2)
+  rm(y,x1,x2)
+  treatment <- rep(0:1, each=5)
 
-  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
-                  x1=c(2,1,3,4,2,1,3,1),
-                  x2=c(3,5,2,1,3,2,3,4))
-  form <- y ~ x1 + x2
-  treatment <- c(0,0,0,0,1,1,1,1)
-
-  e <- epb(form, treatment, d)
+  e <- epb(y ~ . , treatment, d)
 
   expect_equal(length(e), 3)
   expect_true(is.numeric(e))
