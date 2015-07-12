@@ -9,5 +9,11 @@ test_that("epb", {
   form <- y ~ x1 + x2
   treatment <- c(0,0,0,0,1,1,1,1)
 
-  epb(form, treatment, d)
+  e <- epb(form, treatment, d)
+
+  expect_equal(length(e), 3)
+  expect_true(is.numeric(e))
+  # Regardless of input, bounds should capture estimate
+  expect_true(e[1] > e[2])
+  expect_true(e[1] < e[3])
 })
