@@ -1,3 +1,28 @@
+##' Constructor function for Enhanced Peters-Belson Model
+##'
+##' @param estimate Estimate of $eta$
+##' @param bounds Confidence bounds for $eta$. Can in -Inf,Inf.
+##' @param mod1 First stage model.
+##' @param mod2 Second stage model.
+##' @return An object of class "ebpm"
+##' @export
+##' @author Josh Errickson
+##'
+epbm <- function(estimate, bounds, mod1, mod2) {
+  stopifnot(is.numeric(estimate))
+  stopifnot(is.numeric(bounds))
+  stopifnot(length(bounds) == 2)
+  stopifnot(is(mod1, "lm"))
+  stopifnot(is(mod2, "lm"))
+
+structure(list(estimate=estimate,
+               bounds=bounds,
+               mod1=mod1,
+               mod2=mod2),
+          class="epbm")
+}
+
+
 ##' Enhanced Peters-Belson method
 ##'
 ##' Performs enhanced Peters-Belson on the data. First stage is fit on
@@ -51,8 +76,29 @@ epb <- function(form, treatment, data, profile.likelihood=FALSE) {
   if (1000 - abs(midpoint) > 1e-3) {
     bounds <- c(uniroot(tosolve, c(-1000, midpoint))$root,
                 uniroot(tosolve, c(midpoint, 1000))$root)
-    return(c(midpoint, bounds))
   } else {
-    return(c(midpoint, -Inf, Inf))
+    bounds <- c(-Inf, Inf)
   }
+  return(epbm(estimate=midpoint,
+              bounds=bounds,
+              mod1=mods$mod1,
+              mod2=mods$mod2))
 }
+
+
+##' @export
+print.epbm <- function(x, digits=3, ...) {
+  # Idea cribbed from print.data.frame
+  d <- data.frame(estimate=x$estimate,
+                  lb=x$bounds[1],
+                  up=x$bounds[2])
+  m <- as.matrix(format.data.frame(d, digits=digits))
+
+  colnames(m) <- c("Estimate", "Lower Bound", "Upper Bound")
+  rownames(m) <- ""
+
+  print(m, ..., quote=FALSE, right=TRUE)
+}
+
+##' @export
+show.epbm <- function(x) print(x)
