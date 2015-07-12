@@ -14,18 +14,19 @@ test_that("bread", {
   m <- modfit(form, treatment, d)
 
   # B11
-  b11 <- bread.11(covs, treatment)
+  b11 <- bread11(covs, treatment)
   expect_true(all(rownames(b11) == c("(Intercept)", "x1", "x2")))
-  expect_true(all(b11 == matrix(c(4,10,11,10,30,21,11,21,39), nrow=3)))
+  expect_true(all(b11 == matrix(c(4,10,11,10,30,21,11,21,39),
+                                nrow=3)))
 
   #B21
-  b21 <- bread.21(eta=1, m$mod2$coef[1], resp, covs, m$pred, treatment)
+  b21 <- bread21(eta=1, m$mod2$coef[1], resp, covs, m$pred, treatment)
   expect_true(all.equal(b21, matrix(c(-8,-7567/285, -14, -5847/95,
                                       -24, -26216/285 ), nrow=2),
                         check.attributes=FALSE))
 
   #B22
-  b22 <- bread.22(m$pred, treatment)
+  b22 <- bread22(m$pred, treatment)
   expect_true(all.equal(b22, matrix(c(4,23/3,23/3,251/9), nrow=2),
                         check.attributes=FALSE))
 })
@@ -45,15 +46,16 @@ test_that("meat", {
   mod2b <- lm(resp[treatment==1] - (1 + eta0)*m$pred[treatment==1] ~ 1)
 
   # M11
-  m11 <- meat.11(m$mod1, covs, treatment)
+  m11 <- meat11(m$mod1, covs, treatment)
   expect_true(all.equal(m11, matrix(c(8/3, 8, 16/3,
                                       8, 224/9, 136/9,
                                       16/3, 136/9, 104/9), nrow=3),
                         check.attributes=FALSE))
 
   # M22
-  m22 <- meat.22(eta0, mod2b$coef[1], resp, m$pred, treatment)
-  expect_true(all.equal(m22, matrix(c(1051/36, 3383/432, 3383/432, 164891/1296),
+  m22 <- meat22(eta0, mod2b$coef[1], resp, m$pred, treatment)
+  expect_true(all.equal(m22, matrix(c(1051/36, 3383/432,
+                                      3383/432, 164891/1296),
                                     nrow=2),
                         check.attributes=FALSE))
 })
@@ -72,11 +74,11 @@ test_that("corrected var", {
   m <- modfit(form, treatment, d)
   mod2b <- lm(resp[treatment==1] - (1 + eta0)*m$pred[treatment==1] ~ 1)
 
-  b11 <- bread.11(covs, treatment)
-  b21 <- bread.21(eta=1, mod2b$coef[1], resp, covs, m$pred, treatment)
-  b22 <- bread.22(m$pred, treatment)
-  m11 <- meat.11(m$mod1, covs, treatment)
-  m22 <- meat.22(eta0, mod2b$coef[1], resp, m$pred, treatment)
+  b11 <- bread11(covs, treatment)
+  b21 <- bread21(eta=1, mod2b$coef[1], resp, covs, m$pred, treatment)
+  b22 <- bread22(m$pred, treatment)
+  m11 <- meat11(m$mod1, covs, treatment)
+  m22 <- meat22(eta0, mod2b$coef[1], resp, m$pred, treatment)
 
   expect_equal(correctedvar(b11,b21,b22,m11,m22), 149941479/17247583)
 })

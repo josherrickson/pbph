@@ -16,7 +16,7 @@ NULL
 #> NULL
 
 ##' @rdname bread_and_meat
-bread.11 <- function(covs, treatment) {
+bread11 <- function(covs, treatment) {
   covsInt <- addIntercept(covs)
 
   t(as.matrix(covsInt[treatment==0,,drop=FALSE])) %*%
@@ -24,13 +24,13 @@ bread.11 <- function(covs, treatment) {
 }
 
 ##' @rdname bread_and_meat
-bread.22 <- function(pred, treatment) {
+bread22 <- function(pred, treatment) {
   crossprod(cbind(rep(1,length(pred[treatment==1])),
                   pred[treatment==1]))
 }
 
 ##' @rdname bread_and_meat
-meat.11 <- function(mod1, covs, treatment) {
+meat11 <- function(mod1, covs, treatment) {
   covsInt <- addIntercept(covs)
 
   t(mod1$res*as.matrix(covsInt[treatment==0,,drop=FALSE])) %*%
@@ -38,7 +38,7 @@ meat.11 <- function(mod1, covs, treatment) {
 }
 
 ##' @rdname bread_and_meat
-bread.21 <- function(eta, tau, resp, covs, pred, treatment) {
+bread21 <- function(eta, tau, resp, covs, pred, treatment) {
   covsInt <- addIntercept(covs)
 
   rbind(apply(-(1 + eta) * covsInt[treatment==1,,drop=FALSE], 2, sum),
@@ -49,7 +49,7 @@ bread.21 <- function(eta, tau, resp, covs, pred, treatment) {
 }
 
 ##' @rdname bread_and_meat
-meat.22 <- function(eta, tau, resp, pred, treatment) {
+meat22 <- function(eta, tau, resp, pred, treatment) {
   mod2res <- (resp[treatment==1] -
               (1 + eta)*pred[treatment==1] - tau)
   crossprod(cbind(mod2res, mod2res*pred[treatment==1]))
