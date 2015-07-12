@@ -9,3 +9,6 @@ test:
 
 check:
 	R --vanilla -q -e "library(devtools); devtools:::check()"
+
+document:
+	R --vanilla -q -e "library(devtools); devtools:::document()"
