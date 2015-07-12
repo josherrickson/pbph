@@ -6,13 +6,16 @@
 ##' @param form First stage model formula.
 ##' @param treatment Vector of 0/1 treatment indicators.
 ##' @param data Data where variables in `form` live.
+##' @param profile.likelihood logical. If TRUE, $tau$ in b21 is
+##'   estimated using profile likelihood, by default it is just
+##'   tauhat.
 ##'
 ##' @return Vector consisting of an estimate of eta and confidence
 ##'   bounds.
 ##' @export
 ##' @author Josh Errickson
 ##'
-epb <- function(form, treatment, data) {
+epb <- function(form, treatment, data, profile.likelihood=FALSE) {
   stopifnot(length(form) == 3)
   stopifnot(class(form) == "formula")
   stopifnot(all(treatment %in% 0:1))
@@ -29,9 +32,12 @@ epb <- function(form, treatment, data) {
                 treatment)
 
   tosolve <- function(eta) {
-    mod2b <- lm(resp[treatment==1] - eta*mods$pred[treatment==1] ~ 1)
+    if (profile.likelihood) {
+      mod2b <- lm(resp[treatment==1] - eta*mods$pred[treatment==1] ~ 1)
+    }
 
-    b21 <- bread21(eta, mod2b$coef[1], resp, covs, mods$pred,
+    b21 <- bread21(eta, if(profile.likelihood) mod2b$coef[1] else
+                   mods$mod2$coef[1], resp, covs, mods$pred,
                    treatment)
 
     corrected <- correctedvar(b11, b21, b22, m11, m22)

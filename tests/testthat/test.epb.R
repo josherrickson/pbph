@@ -17,4 +17,9 @@ test_that("epb", {
   # Regardless of input, bounds should capture estimate
   expect_true(e[1] > e[2])
   expect_true(e[1] < e[3])
+
+  # using profile.likelihood should slightly alter results
+  e2 <- epb(y ~ . , treatment, d, profile.likelihood=TRUE)
+
+  expect_false(isTRUE(all.equal(e,e2)))
 })
