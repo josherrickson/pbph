@@ -31,3 +31,23 @@ addIntercept <- function(x) {
                  class(x), "."))
   return(x)
 }
+
+##' Generate an empty matrix suitable for saving simulation results.
+##'
+##' Given a vector of column names and a number of reps, generates an
+##' appropriately sized matrix with given column names.
+##'
+##' @param colNames Vector of column names.
+##' @param reps Total reps.
+##' @return An empty matrix.
+##' @author Josh Errickson
+##'
+makeSaveMatrix <- function(colNames, reps) {
+  stopifnot(is.numeric(reps))
+
+  colNames <- as.character(colNames)
+
+  save <- matrix(nrow=reps, ncol=length(colNames))
+  colnames(save) <- colNames
+  return(save)
+}

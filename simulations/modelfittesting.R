@@ -5,20 +5,17 @@ informative <- .4
 sigma2 <- 1
 
 reps <- 100
-savenames <- c("truth", "estimate", "lb", "ub", "F-stat",
+save <- makeSaveMatrix(c("truth", "estimate", "lb", "ub", "F-stat",
                "R^2", "adj.R^2", "sigma^2", "mean_res^2",
-               "max_beta", "min_p", "sig_betas")
-save <- matrix(nrow=reps, ncol=length(savenames))
-colnames(save) <- savenames
+               "max_beta", "min_p", "sig_betas"), reps=reps)
 
 for (i in seq_len(reps)) {
   ti <- rnorm(1)
   tt <- rnorm(1)
 
   covs <- data.frame(matrix(rnorm(n*p), nrow=n))
-  truebeta <- rep(0, p)
-  truebeta[sample(1:p, round(informative*p))] <- rnorm(round(informative*p),0,1)
-
+  truebeta <- c(rnorm(round(informative*p)),
+                rep(0, round((1-informative)*p)))
   treatment <- rep(0:1, c(n*pc, n*(1-pc)))
 
   noise <- rnorm(n)

@@ -32,3 +32,24 @@ test_that("addIntercept", {
   expect_identical(v1, 1:3)
   expect_identical(v2, "abc")
 })
+
+
+test_that("makeSaveMatrix", {
+  names <- letters[1:5]
+  reps <- 10
+
+  d <- makeSaveMatrix(names, reps)
+
+  expect_true(all.equal(dim(d), c(reps, length(names))))
+  expect_true(all.equal(colnames(d), names))
+  expect_true(all(is.na(d)))
+
+  d <- makeSaveMatrix(1:5, reps)
+  expect_true(all.equal(dim(d), c(reps, length(names))))
+  expect_true(all.equal(colnames(d), as.character(1:5)))
+  expect_true(all(is.na(d)))
+
+  expect_error(makeSaveMatrix(names, TRUE))
+  expect_error(makeSaveMatrix(names, "20"))
+
+})
