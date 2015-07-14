@@ -32,6 +32,12 @@ test_that("epb", {
   expect_true(e$est > e$bounds[1])
   expect_true(e$est < e$bounds[2])
 
+
+  # using profile.likelihood should slightly alter results
+  e2 <- epb(y ~ . , treatment, d, profile.likelihood=TRUE)
+
+  expect_false(e$est == e2$est)
+
   # Inf CI
   set.seed(1352)
   x1 <- rnorm(10)
@@ -47,8 +53,4 @@ test_that("epb", {
   expect_true(is(e, "epbm"))
   expect_true(all(!is.finite(e$bounds)))
 
-  # using profile.likelihood should slightly alter results
-  e2 <- epb(y ~ . , treatment, d, profile.likelihood=TRUE)
-
-  expect_false(e$est == e2$est)
 })
