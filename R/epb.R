@@ -71,15 +71,16 @@ epb <- function(form, treatment, data, profile.likelihood=FALSE) {
     return((mods$mod2$coef[2] - eta)^2 - stat^2*corrected)
   }
 
-  midpoint <- optimize(tosolve, c(-1000, 1000))$minimum
+  midpoint <- nlm(tosolve, mods$mod2$coef[2])
 
-  if (1000 - abs(midpoint) > 1e-3) {
-    bounds <- c(uniroot(tosolve, c(-1000, midpoint))$root,
-                uniroot(tosolve, c(midpoint, 1000))$root)
+  # nlm's $code output has 1:2 for convergence, 3:5 for issues.
+  if (midpoint$code %in% 1:2) {
+    bounds <- c(uniroot(tosolve, c(-100, midpoint$estimate))$root,
+                uniroot(tosolve, c(midpoint$estimate, 100))$root)
   } else {
     bounds <- c(-Inf, Inf)
   }
-  return(epbm(estimate=midpoint,
+  return(epbm(estimate=midpoint$estimate,
               bounds=bounds,
               mod1=mods$mod1,
               mod2=mods$mod2))
