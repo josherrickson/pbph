@@ -4,9 +4,10 @@ pc <- .4
 informative <- .4
 sigma2 <- 1
 
-reps <- 100
-save <- makeSaveMatrix(c("truth", "estimate", "lb", "ub", "F-stat",
-               "R^2", "adj.R^2", "sigma^2", "mean_res^2",
+reps <- 1000
+
+save <- makeSaveMatrix(c("truth", "estimate", "lb", "ub", "isfinite",
+               "F-stat", "R^2", "adj.R^2", "sigma^2", "mean_res^2",
                "max_beta", "min_p", "sig_betas"), reps=reps)
 
 for (i in seq_len(reps)) {
@@ -27,26 +28,26 @@ for (i in seq_len(reps)) {
   e <- epb(y ~ ., treatment, data=d)
   sm <- summary(e$mod1)
 
-  save[i,] <- c(ti, e$estimate, e$bounds, sm$fstat[1], sm$r.s,
-                sm$adj.r.s, sm$sigma, mean(sm$res^2),
-                max(abs(e$mod1$coef)), min(sm$coef[-1,4]),
-                sum(sm$coef[-1,4] < .05))
+  save[i,] <- c(ti, e$estimate, e$bounds, all(is.finite(e$bound)),
+                sm$fstat[1], sm$r.s, sm$adj.r.s, sm$sigma,
+                mean(sm$res^2), max(abs(e$mod1$coef)),
+                min(sm$coef[-1,4]), sum(sm$coef[-1,4] < .05))
 }
 
-boxplot(log(save[,5]) ~ is.finite(save[,4]), xlab="Finite CI",
+boxplot(save[,6] ~ save[,"isfinite"], xlab="Finite CI",
         ylab="log(F-stat)")
-boxplot(save[,6] ~ is.finite(save[,4]), xlab="Finite CI",
+boxplot(save[,7] ~ save[,"isfinite"], xlab="Finite CI",
         ylab="R^2")
-boxplot(save[,7] ~ is.finite(save[,4]), xlab="Finite CI",
+boxplot(save[,8] ~ save[,"isfinite"], xlab="Finite CI",
         ylab="Adj. R^2")
-boxplot(save[,6] - save[,7] ~ is.finite(save[,4]), xlab="Finite CI",
+boxplot(save[,7] - save[,8] ~ save[,"isfinite"], xlab="Finite CI",
         ylab="Change from R^2 to Adj. R^2")
-boxplot(save[,8] ~ is.finite(save[,4]), xlab="Finite CI",
+boxplot(save[,9] ~ save[,"isfinite"], xlab="Finite CI",
         ylab="Sigma^2")
-boxplot(save[,9] ~ is.finite(save[,4]), xlab="Finite CI",
+boxplot(save[,10] ~ save[,"isfinite"], xlab="Finite CI",
         ylab="Mean Res^2")
-boxplot(save[,10] ~ is.finite(save[,4]), xlab="Finite CI",
+boxplot(save[,11] ~ save[,"isfinite"], xlab="Finite CI",
         ylab="Max Abs beta")
-boxplot(save[,11] ~ is.finite(save[,4]), xlab="Finite CI",
-        ylab="Min p-value", ylim=c(0,.1))
-table(save[,12], is.finite(save[,4])) # # significant beta's
+boxplot(save[,12] ~ save[,"isfinite"], xlab="Finite CI",
+        ylab="Min p-value", ylim=c(0,.01))
+table(save[,13], save[,"isfinite"]) # # significant beta's
