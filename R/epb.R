@@ -75,8 +75,11 @@ epb <- function(form, treatment, data, profile.likelihood=FALSE) {
 
   # nlm's $code output has 1:2 for convergence, 3:5 for issues.
   if (midpoint$code %in% 1:2) {
-    bounds <- c(uniroot(tosolve, c(-100, midpoint$estimate))$root,
-                uniroot(tosolve, c(midpoint$estimate, 100))$root)
+    lb <- tryCatch(uniroot(tosolve, c(-100, midpoint$estimate))$root,
+                   error=function(c) -Inf)
+    ub <- tryCatch(uniroot(tosolve, c(midpoint$estimate, 100))$root,
+                   error=function(c) Inf)
+    bounds <- c(lb,ub)
   } else {
     bounds <- c(-Inf, Inf)
   }
