@@ -7,8 +7,8 @@ sigma2 <- 1
 reps <- 1000
 
 save <- makeSaveMatrix(c("truth", "estimate", "lb", "ub", "isfinite",
-               "F-stat", "R^2", "adj.R^2", "sigma^2", "mean_res^2",
-               "max_beta", "min_p", "sig_betas"), reps=reps)
+               "F-stat", "R^2", "adj.R^2", "sigma^2", "rss",
+               "max_beta", "min_p"), reps=reps)
 
 for (i in seq_len(reps)) {
   ti <- rnorm(1)
@@ -30,24 +30,33 @@ for (i in seq_len(reps)) {
 
   save[i,] <- c(ti, e$estimate, e$bounds, all(is.finite(e$bound)),
                 sm$fstat[1], sm$r.s, sm$adj.r.s, sm$sigma,
-                mean(sm$res^2), max(abs(e$mod1$coef)),
-                min(sm$coef[-1,4]), sum(sm$coef[-1,4] < .05))
+                sum(sm$res^2), max(abs(e$mod1$coef)),
+                min(sm$coef[-1,4]))
+
+
 }
 
-boxplot(save[,6] ~ save[,"isfinite"], xlab="Finite CI",
+save <- as.data.frame(save)
+
+
+boxplot(log(save$"F-stat") ~ save$isfinite, xlab="Finite CI_1",
         ylab="log(F-stat)")
-boxplot(save[,7] ~ save[,"isfinite"], xlab="Finite CI",
+boxplot(1-pf(save$"F-stat", 5, 34) ~ save$isfinite, xlab="Finite CI_1",
+        ylab="F-test p-value")
+abline(h=.05)
+boxplot(save$"R^2" ~ save$isfinite, xlab="Finite CI_1",
         ylab="R^2")
-boxplot(save[,8] ~ save[,"isfinite"], xlab="Finite CI",
+boxplot(save$"adj.R^2" ~ save$isfinite, xlab="Finite CI",
         ylab="Adj. R^2")
-boxplot(save[,7] - save[,8] ~ save[,"isfinite"], xlab="Finite CI",
-        ylab="Change from R^2 to Adj. R^2")
-boxplot(save[,9] ~ save[,"isfinite"], xlab="Finite CI",
+boxplot(save$sigma ~ save$isfinite, xlab="Finite CI",
         ylab="Sigma^2")
-boxplot(save[,10] ~ save[,"isfinite"], xlab="Finite CI",
-        ylab="Mean Res^2")
-boxplot(save[,11] ~ save[,"isfinite"], xlab="Finite CI",
+boxplot(save$rss ~ save$isfinite, xlab="Finite CI",
+        ylab="RSS")
+boxplot(save$max_beta~ save$isfinite, xlab="Finite CI",
         ylab="Max Abs beta")
-boxplot(save[,12] ~ save[,"isfinite"], xlab="Finite CI",
+boxplot(save$min_p~ save$isfinite, xlab="Finite CI",
         ylab="Min p-value", ylim=c(0,.01))
-table(save[,13], save[,"isfinite"]) # # significant beta's
+
+max(save$"R^2"[save$isfinite == 0])
+
+table(.bincode(save$"R^2", seq(0,1,by=.1))/10, save$isfinite)
