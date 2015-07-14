@@ -5,9 +5,10 @@ sigma2 <- 1
 
 reps <- 100
 
-saveCols <- c("truth", "estimate", "lb", "ub", "F-stat", "R^2",
-              "adj.R^2", "sigma^2", "mean_res^2", "max_beta", "min_p",
-              "sig_betas")
+saveCols <- c("truth", "estimate", "lb", "ub", "isfinite","F-stat",
+              "R^2", "adj.R^2", "sigma^2", "mean_res^2", "max_beta",
+              "min_p", "sig_betas")
+
 saveoracle <- makeSaveMatrix(saveCols, reps=reps)
 saveunder <- makeSaveMatrix(saveCols, reps=reps)
 saveover <- makeSaveMatrix(saveCols, reps=reps)
@@ -34,6 +35,7 @@ for (i in seq_len(reps)) {
   smover   <- summary(eover$mod1)
 
   saveoracle[i,] <- c(ti, eoracle$estimate, eoracle$bounds,
+                      all(is.finite(eoracle$bounds)),
                       smoracle$fstat[1], smoracle$r.s,
                       smoracle$adj.r.s, smoracle$sigma,
                       mean(smoracle$res^2),
@@ -42,21 +44,30 @@ for (i in seq_len(reps)) {
                       sum(smoracle$coef[-1,4] < .05))
 
   saveunder[i,] <- c(ti, eunder$estimate, eunder$bounds,
-                     smunder$fstat[1], smunder$r.s, smunder$adj.r.s,
-                     smunder$sigma, mean(smunder$res^2),
-                     max(abs(eunder$mod1$coef)),
-                     min(smunder$coef[-1,4]), sum(smunder$coef[-1,4]
-                                                  < .05))
+                     all(is.finite(eunder$bounds)), smunder$fstat[1],
+                     smunder$r.s, smunder$adj.r.s, smunder$sigma,
+                     mean(smunder$res^2), max(abs(eunder$mod1$coef)),
+                     min(smunder$coef[-1,4]), sum(smunder$coef[-1,4] <
+                     .05))
 
-  saveover[i,] <- c(ti, eover$estimate, eover$bounds, smover$fstat[1],
+  saveover[i,] <- c(ti, eover$estimate, eover$bounds,
+                    all(is.finite(eover$bounds)), smover$fstat[1],
                     smover$r.s, smover$adj.r.s, smover$sigma,
                     mean(smover$res^2), max(abs(eover$mod1$coef)),
                     min(smover$coef[-1,4]), sum(smover$coef[-1,4] <
-                                                  .05))
+                    .05))
 
 }
 
+mean(saveoracle[,1] > saveoracle[,3] & saveoracle[,1] < saveoracle[,4])
+mean(saveunder[,1] > saveunder[,3] & saveunder[,1] < saveunder[,4])
+mean(saveover[,1] > saveover[,3] & saveover[,1] < saveover[,4])
 
-sum(saveoracle[,1] > saveoracle[,3] & saveoracle[,1] < saveoracle[,4])
-sum(saveunder[,1] > saveunder[,3] & saveunder[,1] < saveunder[,4])
-sum(saveover[,1] > saveover[,3] & saveover[,1] < saveover[,4])
+table(saveoracle[,"isfinite"])/reps
+table(saveunder[,"isfinite"])/reps
+table(saveover[,"isfinite"])/reps
+
+var <- "min_p"
+boxplot(saveoracle[,var] ~ saveoracle[, "isfinite"])
+boxplot(saveunder[,var] ~ saveunder[, "isfinite"])
+boxplot(saveover[,var] ~ saveover[, "isfinite"])
