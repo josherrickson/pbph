@@ -1,17 +1,25 @@
-interactive:
-	R_PROFILE=load.R R -q --no-save
+LOAD=R_PROFILE=load.R
+RCMD=R --vanilla -q -e
+DEVTOOLS=library(devtools)
+# DEVFUN needs to be followed by a devtools function like test() or check()
+DEVFUN=devtools:::
 
+# These two interactive commands aren't working right with documentation.
+# To see documentation live; run R then source("load.R")
 interactive-emacs:
-	R_PROFILE=load.R emacs -nw -f R
+	@$(LOAD) emacs -nw -f R
+
+interactive:
+	@$(LOAD) R -q --no-save
 
 test:
-	R --vanilla -q -e "library(devtools); devtools:::test()"
+	@$(RCMD) "$(DEVTOOLS); $(DEVFUN)test()"
 
 check:
-	R --vanilla -q -e "library(devtools); devtools:::check()"
+	@$(RCMD) "$(DEVTOOLS); $(DEVFUN)check()"
 
 document:
-	R --vanilla -q -e "library(devtools); devtools:::document()"
+	@$(RCMD) "$(DEVTOOLS); $(DEVFUN)document()"
 
 build:
-	R --vanilla -q -e "library(devtools); devtools:::build()"
+	@$(RCMD) "$(DEVTOOLS); $(DEVFUN)build()"
