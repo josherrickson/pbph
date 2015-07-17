@@ -4,8 +4,6 @@ DEVTOOLS=library(devtools)
 # DEVFUN needs to be followed by a devtools function like test() or check()
 DEVFUN=devtools:::
 
-# These two interactive commands aren't working right with documentation.
-# To see documentation live; run R then source("load.R")
 interactive-emacs:
 	@$(LOAD) emacs -nw -f R
 
