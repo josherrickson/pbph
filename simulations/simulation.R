@@ -8,7 +8,7 @@ true_inter <- seq(-1,2,by=.5)
 
 reps <- 100
 bigsave <- matrix(nrow=length(true_inter), ncol=5)
-colnames(bigsave) <- c("truth", "estimate", "#cov", "#uncov", "#inf")
+colnames(bigsave) <- c("truth", "estimate", "#cov", "#inf", "#uncov")
 for (j in 1:length(true_inter)) {
   ti <- true_inter[j]
   save <- matrix(nrow=reps, ncol=3)
@@ -25,14 +25,14 @@ for (j in 1:length(true_inter)) {
     resp <- ifelse(treatment==1, yt_un, yc_un) + noise
     d <- data.frame(y=resp, covs)
 
-    save[i,] <- epb(y ~ ., treatment, data=d)
+    save[i,] <- unlist(epb(y ~ ., treatment, data=d)[1:2])
   }
   saveFinite <- save[save[,2] != -Inf,]
   numcov <- sum(saveFinite[,2] <ti & saveFinite[,3] > ti)
   numuncov <- nrow(saveFinite) - numcov
   numinf <- reps - nrow(saveFinite)
   bigsave[j,] <- c(ti, mean(save[save[,2] != -Inf,1]),
-                   numcov, numuncov, numinf)
+                   numcov, numinf, numuncov)
 
 }
 
