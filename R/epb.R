@@ -28,6 +28,7 @@ epb <- function(mod1, treatment, data) {
   mod2$etabounds <- est$bounds
   mod2$coefficients[2] <- est$estimate
   mod2 <- as(mod2, "elm")
+
   return(mod2)
 }
 
@@ -74,12 +75,20 @@ epbsolve <- function(mod1, mod2, pred, isTreated, data) {
               bounds=bounds))
 }
 
-
+##' Summary for elm object
+##'
+##' Similar to `summary.lm`.
+##' @param object An object of class `elm`.
+##' @param ... Additional arguments to `summary.lm`.
+##' @return A summary
+##' @export
+##' @author Josh Errickson
 setMethod("summary", signature(object = "elm"),
           function(object, ...)
           {
-            ss <- summary(as(object, "lm"))
+            ss <- summary(as(object, "lm"), ...)
 
+            # Add new columns for bounds
             ss$coefficients <- cbind(ss$coefficients,
                                      matrix(c(NA, NA, object$etabounds),
                                             byrow=TRUE, nrow=2))

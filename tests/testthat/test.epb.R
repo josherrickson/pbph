@@ -16,12 +16,19 @@ test_that("epb", {
   mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
   e <- epb(mod1, treatment, d)
+  se <- summary(e)
 
-  expect_true(is(e, "summary.lm"))
+  expect_true(is(e, "elm"))
+  expect_true(is(e, "lm"))
+  expect_true(is(se, "summary.lm"))
   # Regardless of input, bounds should capture estimate
-  expect_true(all(is.finite(e$coefficients[2,5:6])))
-  expect_true(e$coefficients[2,1] > e$coefficients[2,5])
-  expect_true(e$coefficients[2,1] < e$coefficients[2,6])
+  expect_true(all(is.finite(se$coefficients[2,5:6])))
+  expect_true(se$coefficients[2,1] > se$coefficients[2,5])
+  expect_true(se$coefficients[2,1] < se$coefficients[2,6])
+
+  # Check NA's
+  expect_true(all(is.na(se$coefficients[1, 5:6])))
+  expect_true(all(is.na(se$coefficients[2, 2:4])))
 
   # Inf CI
   set.seed(1352)
@@ -34,9 +41,8 @@ test_that("epb", {
 
   mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
-  e <- epb(mod1, treatment, d)
+  se <- summary(epb(mod1, treatment, d))
 
-  expect_true(is(e, "summary.lm"))
-  expect_true(all(!is.finite(e$coefficients[2,5:6])))
+  expect_true(all(!is.finite(se$coefficients[2,5:6])))
 
 })
