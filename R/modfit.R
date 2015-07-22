@@ -22,11 +22,13 @@ makemod2 <- function(mod1, isTreated, data, center=FALSE) {
   if (center) data.center <- data.frame(scale(data, scale=FALSE))
 
   # Get predicted values.
-  pred <- predict(mod1, newdata=if(center) data.center else data)
+  predicted <- predict(mod1, newdata=if(center) data.center else data)
 
   # Second stage linear model.
-  res <- eval(formula(mod1)[[2]], envir=data) - pred
-  mod2 <- lm(res[isTreated==1] ~ pred[isTreated==1])
+  y_t <- eval(formula(mod1)[[2]], envir=data)[isTreated==1]
+  pred <- predicted[isTreated==1]
+  treatment <- rep(1, sum(isTreated))
+  mod2 <- lm(y_t - pred ~ treatment + pred + 0)
 
-  return(list(mod2=mod2, pred=pred))
+  return(list(mod2=mod2, pred=predicted))
 }
