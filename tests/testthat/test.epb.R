@@ -1,15 +1,5 @@
 context("epb")
 
-test_that("epb class", {
-  x <- 1:5
-  y <- 1:5
-  e <- epbm(1,c(1,2), lm(y~x), lm(x~y))
-  expect_true(length(e) == 4)
-  expect_true(all(sapply(e,class) == rep(c("numeric", "lm"), each=2)))
-
-  expect_error(epb("a", c(1,2), lm(y~x), lm(x~y)))
-})
-
 test_that("epb", {
   # Need to expand these a LOT
 
@@ -23,20 +13,15 @@ test_that("epb", {
   rm(y,x1,x2)
   treatment <- rep(0:1, each=5)
 
-  e <- epb(y ~ . , treatment, d)
+  mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
-  expect_equal(length(e), 4)
-  expect_true(is(e, "epbm"))
+  e <- epb(mod1, treatment, d)
+
+  expect_true(is(e, "summary.lm"))
   # Regardless of input, bounds should capture estimate
-  expect_true(all(is.finite(e$bounds)))
-  expect_true(e$est > e$bounds[1])
-  expect_true(e$est < e$bounds[2])
-
-
-  # using profile.likelihood should slightly alter results
-  e2 <- epb(y ~ . , treatment, d, profile.likelihood=TRUE)
-
-  expect_false(e$est == e2$est)
+  expect_true(all(is.finite(e$coefficients[2,5:6])))
+  expect_true(e$coefficients[2,1] > e$coefficients[2,5])
+  expect_true(e$coefficients[2,1] < e$coefficients[2,6])
 
   # Inf CI
   set.seed(1352)
@@ -47,10 +32,11 @@ test_that("epb", {
   rm(y,x1,x2)
   treatment <- rep(0:1, each=5)
 
-  e <- epb(y ~ . , treatment, d)
+  mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
-  expect_equal(length(e), 4)
-  expect_true(is(e, "epbm"))
-  expect_true(all(!is.finite(e$bounds)))
+  e <- epb(mod1, treatment, d)
+
+  expect_true(is(e, "summary.lm"))
+  expect_true(all(!is.finite(e$coefficients[2,5:6])))
 
 })

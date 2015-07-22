@@ -1,4 +1,4 @@
-#' Internal piece-wise generation of Bread and Meat matrices.
+#' (Internal) Piece-wise generation of Bread and Meat matrices.
 #'
 #' @param eta Estimated version of the coefficient on the interaction
 #'   between predicted and treatment. This could be from a model or a
@@ -55,7 +55,11 @@ meat22 <- function(eta, tau, resp, pred, treatment) {
   crossprod(cbind(mod2res, mod2res*pred[treatment==1]))
 }
 
-## Compute B^-1*M*B^T
+##' (Internal) Compute B^-1*M*B^T
+##'
+##' @param b11,b21,b22,m11,m22 Pieces of bread and meat.
+##' @return Variance estimate.
+##' @author Josh Errickson
 correctedvar <- function(b11, b21, b22, m11, m22) {
   (solve(b22)%*% (m22 + b21%*%solve(b11)%*%m11%*%
                    solve(b11)%*%t(b21))%*% solve(b22))[2,2]

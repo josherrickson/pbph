@@ -11,7 +11,9 @@ test_that("bread", {
   covs <- model.matrix(form, data=d)
   eta0 <- 1
 
-  m <- modfit(form, treatment, d)
+  mod1 <- lm(form, data=d, subset=treatment==0)
+
+  m <- makemod2(mod1, treatment, d)
 
   # B11
   b11 <- bread11(covs, treatment)
@@ -38,22 +40,23 @@ test_that("meat", {
   form <- y ~ x1 + x2
   treatment <- c(0,0,0,0,1,1,1,1)
 
+  mod1 <- lm(form, data=d, subset=treatment==0)
+
+  m <- makemod2(mod1, treatment, d)
+
   resp <- eval(form[[2]], envir=d)
   covs <- model.matrix(form, data=d)
-  eta0 <- 1
-
-  m <- modfit(form, treatment, d)
-  mod2b <- lm(resp[treatment==1] - (1 + eta0)*m$pred[treatment==1] ~ 1)
 
   # M11
-  m11 <- meat11(m$mod1, covs, treatment)
+  m11 <- meat11(mod1, covs, treatment)
   expect_true(all.equal(m11, matrix(c(8/3, 8, 16/3,
                                       8, 224/9, 136/9,
                                       16/3, 136/9, 104/9), nrow=3),
                         check.attributes=FALSE))
 
   # M22
-  m22 <- meat22(eta0, mod2b$coef[1], resp, m$pred, treatment)
+  # check this
+  m22 <- meat22(1, m$mod2$coef[1], resp, m$pred, treatment)
   expect_true(all.equal(m22, matrix(c(1051/36, 3383/432,
                                       3383/432, 164891/1296),
                                     nrow=2),
@@ -69,16 +72,17 @@ test_that("corrected var", {
 
   resp <- eval(form[[2]], envir=d)
   covs <- model.matrix(form, data=d)
-  eta0 <- 1
 
-  m <- modfit(form, treatment, d)
-  mod2b <- lm(resp[treatment==1] - (1 + eta0)*m$pred[treatment==1] ~ 1)
+  mod1 <- lm(form, data=d, subset=treatment==0)
+
+  m <- makemod2(mod1, treatment, d)
 
   b11 <- bread11(covs, treatment)
-  b21 <- bread21(eta=1, mod2b$coef[1], resp, covs, m$pred, treatment)
+  b21 <- bread21(eta=1, m$mod2$coef[1], resp, covs, m$pred, treatment)
   b22 <- bread22(m$pred, treatment)
-  m11 <- meat11(m$mod1, covs, treatment)
-  m22 <- meat22(eta0, mod2b$coef[1], resp, m$pred, treatment)
+  m11 <- meat11(mod1, covs, treatment)
+  m22 <- meat22(1, m$mod2$coef[1], resp, m$pred, treatment)
 
-  expect_equal(correctedvar(b11,b21,b22,m11,m22), 149941479/17247583)
+  # Double check this!
+  expect_true(all.equal(correctedvar(b11,b21,b22,m11,m22), 149941479/17247583))
 })
