@@ -1,6 +1,6 @@
-context("modfit")
+context("makemod2")
 
-test_that("modfit", {
+test_that("makemod2", {
   d <- data.frame(y=c(3,4,1,3,2,1,4,2),
                   x1=c(2,1,3,4,2,1,3,1),
                   x2=c(3,5,2,1,3,2,3,4))
