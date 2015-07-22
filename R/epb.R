@@ -1,3 +1,5 @@
+elm <- setClass("elm", contains = "lm")
+
 ##' Enhanced Peters-Belson method
 ##'
 ##' Performs enhanced Peters-Belson on the data.
@@ -23,16 +25,10 @@ epb <- function(mod1, treatment, data) {
 
   est <- epbsolve(mod1, mod2, pred, isTreated, data)
 
-  smod2 <- summary(mod2)
-
-  smod2$coefficients <- cbind(smod2$coef,
-                              matrix(c(NA, NA, est$bounds),
-                                     byrow=TRUE, nrow=2))
-
-  smod2$coefficients[2,1] <- est$estimate
-  colnames(smod2$coefficients)[5:6] <- c("LB", "UB")
-
-  return(smod2)
+  mod2$etabounds <- est$bounds
+  mod2$coefficients[2] <- est$estimate
+  mod2 <- as(mod2, "elm")
+  return(mod2)
 }
 
 ##' (Internal) Computes corrected estimate and bounds.
@@ -77,3 +73,16 @@ epbsolve <- function(mod1, mod2, pred, isTreated, data) {
   return(list(estimate=midpoint$estimate,
               bounds=bounds))
 }
+
+
+setMethod("summary", signature(object = "elm"),
+          function(object, ...)
+          {
+            ss <- summary(as(object, "lm"))
+
+            ss$coefficients <- cbind(ss$coefficients,
+                                     matrix(c(NA, NA, object$etabounds),
+                                            byrow=TRUE, nrow=2))
+            colnames(ss$coefficients)[5:6] <- c("LB", "UB")
+            return(ss)
+          } )
