@@ -11,14 +11,10 @@
 ##' @author Josh Errickson
 ##'
 epb <- function(mod1, treatment, data) {
-  if (!is.logical(treatment)) {
-    warning("treatment not logical, attempting to convert")
-    isTreated <- as.logical(treatment)
-    if(any(is.na(isTreated))) {
-      stop("treatment cannot be converted to logical")
-    }
-    isTreated <- as.numeric(isTreated)
+  if( !all(treatment %in% 0:1)) {
+    stop("treatment must be indicator (0/1) for treatment status")
   }
+  isTreated <- treatment
 
   mod2 <- makemod2(mod1, isTreated, data)
 
