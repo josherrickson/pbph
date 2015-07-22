@@ -84,5 +84,9 @@ setMethod("summary", signature(object = "elm"),
                                      matrix(c(NA, NA, object$etabounds),
                                             byrow=TRUE, nrow=2))
             colnames(ss$coefficients)[5:6] <- c("LB", "UB")
+
+            # Remove standard error & p-value
+            ss$coefficients[2,2:4] <- NA
+
             return(ss)
           } )
