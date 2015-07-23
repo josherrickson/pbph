@@ -2,3 +2,5 @@
 
 export(epb)
 exportMethods(summary)
+importFrom(methods,setClass)
+importFrom(methods,setMethod)
