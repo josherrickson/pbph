@@ -57,8 +57,10 @@ test_that("meat", {
   # M22
   # check this
   m22 <- meat22(1, m$mod2$coef[1], resp, m$pred, treatment)
-  expect_true(all.equal(m22, matrix(c(1051/36, 3383/432,
-                                      3383/432, 164891/1296),
+  expect_true(all.equal(m22, matrix(c(60.652767005232462338,
+                                      176.40659484969751247,
+                                      176.40659484969751247,
+                                      603.89350432611854558),
                                     nrow=2),
                         check.attributes=FALSE))
 })
@@ -84,5 +86,6 @@ test_that("corrected var", {
   m22 <- meat22(1, m$mod2$coef[1], resp, m$pred, treatment)
 
   # Double check this!
-  expect_true(all.equal(correctedvar(b11,b21,b22,m11,m22), 149941479/17247583))
+  expect_true(all.equal(correctedvar(b11,b21,b22,m11,m22),
+                        4.3974828563929113656))
 })
