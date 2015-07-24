@@ -1,6 +1,6 @@
-context("epb")
+context("pblm")
 
-test_that("epb", {
+test_that("pblm", {
   # Need to expand these a LOT
 
   # Testing valid CI's (have to set seed because this data is
@@ -15,10 +15,10 @@ test_that("epb", {
 
   mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
-  e <- epb(mod1, treatment, d)
+  e <- pblm(mod1, treatment, d)
   se <- summary(e)
 
-  expect_true(is(e, "elm"))
+  expect_true(is(e, "pblm"))
   expect_true(is(e, "lm"))
   expect_true(is(se, "summary.lm"))
   # Regardless of input, bounds should capture estimate
@@ -41,7 +41,7 @@ test_that("epb", {
 
   mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
-  se <- summary(epb(mod1, treatment, d))
+  se <- summary(pblm(mod1, treatment, d))
 
   expect_true(all(!is.finite(se$coefficients[2,5:6])))
 

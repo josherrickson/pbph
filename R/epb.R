@@ -1,4 +1,4 @@
-elm <- setClass("elm", contains = "lm")
+pblm <- setClass("pblm", contains = "lm")
 
 ##' Enhanced Peters-Belson method
 ##'
@@ -12,7 +12,7 @@ elm <- setClass("elm", contains = "lm")
 ##' @export
 ##' @author Josh Errickson
 ##'
-epb <- function(mod1, treatment, data) {
+pblm <- function(mod1, treatment, data) {
   if( !all(treatment %in% 0:1)) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
@@ -27,7 +27,7 @@ epb <- function(mod1, treatment, data) {
 
   mod2$etabounds <- est$bounds
   mod2$coefficients[2] <- est$estimate
-  mod2 <- as(mod2, "elm")
+  mod2 <- as(mod2, "pblm")
 
   return(mod2)
 }
@@ -75,15 +75,15 @@ epbsolve <- function(mod1, mod2, pred, isTreated, data) {
               bounds=bounds))
 }
 
-##' Summary for elm object
+##' Summary for pblm object
 ##'
 ##' Similar to `summary.lm`.
-##' @param object An object of class `elm`.
+##' @param object An object of class `pblm`.
 ##' @param ... Additional arguments to `summary.lm`.
 ##' @return A summary
 ##' @export
 ##' @author Josh Errickson
-setMethod("summary", signature(object = "elm"),
+setMethod("summary", signature(object = "pblm"),
           function(object, ...)
           {
             ss <- summary(as(object, "lm"), ...)
