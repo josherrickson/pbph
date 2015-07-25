@@ -26,7 +26,6 @@ pblm <- function(mod1, treatment, data) {
   est <- epbsolve(mod1, mod2, pred, isTreated, data)
 
   mod2$etabounds <- est$bounds
-  mod2$coefficients[2] <- est$estimate
   mod2 <- as(mod2, "pblm")
 
   return(mod2)
