@@ -8,7 +8,12 @@ pblm <- setClass("pblm", contains = "lm")
 ##' @param treatment Vector of 0/1 treatment indicators.
 ##' @param data Data where variables in `form` live.
 ##'
-##' @return Summary of second stage model.
+##' @return A pblm object which extends lm. Can be passed to `summary`
+##'   or `confint`.
+##'
+##'   The return contains an additional object, `epb`, which `lm`
+##'   doesn't include. `epb` is a list which contains several pieces
+##'   necessary for `summary` and `confint` support.
 ##' @export
 ##' @author Josh Errickson
 ##'
@@ -16,16 +21,15 @@ pblm <- function(mod1, treatment, data) {
   if( !all(treatment %in% 0:1)) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
-  isTreated <- treatment
 
-  mod2 <- makemod2(mod1, isTreated, data)
+  mm <- makemod2(mod1, treatment, data)
 
-  pred <- mod2$pred
-  mod2 <- mod2$mod2
+  pred <- mm$pred
+  mod2 <- mm$mod2
 
   mod2$epb <- list(mod1=mod1,
                    pred=pred,
-                   isTreated=isTreated,
+                   treatment=treatment,
                    data=data)
 
   mod2 <- as(mod2, "pblm")
@@ -36,27 +40,27 @@ pblm <- function(mod1, treatment, data) {
 ##' (Internal) Computes a confidence interval for eta via test
 ##' inversion.
 ##'
-##' @param mod1 First stage model.
-##' @param mod2 Second stage model.
-##' @param pred Predicted values.
-##' @param isTreated Treatment.
-##' @param data Data.
+##' @param object A pblm object.
 ##' @param level Confidence level. Default is 95\%.
 ##' @return Vector of length two with the lower and upper bounds.
 ##' @author Josh Errickson
-testinverse <- function(mod1, mod2, pred, isTreated, data,
-                        level=.95) {
+testinverse <- function(object, level=.95) {
 
-  resp <- eval(formula(mod1)[[2]], envir=data)
-  covs <- model.matrix(formula(mod1), data=data)
+  mod1 <- object$epb[["mod1"]]
+  pred <- object$epb[["pred"]]
+  treatment <- object$epb[["treatment"]]
+  mod2 <- object
 
-  b11 <- bread11(covs, isTreated)
-  b22 <- bread22(pred, isTreated)
-  m11 <- meat11(mod1, covs, isTreated)
-  m22 <- meat22(mod2$coef[2], mod2$coef[1], resp, pred, isTreated)
+  resp <- eval(formula(mod1)[[2]], envir=object$epb[["data"]])
+  covs <- model.matrix(formula(mod1), data=object$epb[["data"]])
+
+  b11 <- bread11(covs, treatment)
+  b22 <- bread22(pred, treatment)
+  m11 <- meat11(mod1, covs, treatment)
+  m22 <- meat22(mod2$coef[2], mod2$coef[1], resp, pred, treatment)
 
   tosolve <- function(eta) {
-    b21 <- bread21(eta, mod2$coef[1], resp, covs, pred, isTreated)
+    b21 <- bread21(eta, mod2$coef[1], resp, covs, pred, treatment)
 
     corrected <- correctedvar(b11, b21, b22, m11, m22)[2,2]
     stat <- qt(1-(level)/2, mod1$df+2)
@@ -92,19 +96,18 @@ vcov.pblm <- function(object) {
 
   mod1 <- object$epb[["mod1"]]
   pred <- object$epb[["pred"]]
-  isTreated <- object$epb[["isTreated"]]
-  data <- object$epb[["data"]]
+  treatment <- object$epb[["treatment"]]
   mod2 <- object
 
-  resp <- eval(formula(mod1)[[2]], envir=data)
-  covs <- model.matrix(formula(mod1), data=data)
+  resp <- eval(formula(mod1)[[2]], envir=object$epb[["data"]])
+  covs <- model.matrix(formula(mod1), data=object$epb[["data"]])
 
-  b11 <- bread11(covs, isTreated)
+  b11 <- bread11(covs, treatment)
   b21 <- bread21(mod2$coef[2], mod2$coef[1], resp, covs, pred,
-                 isTreated)
-  b22 <- bread22(pred, isTreated)
-  m11 <- meat11(mod1, covs, isTreated)
-  m22 <- meat22(mod2$coef[2], mod2$coef[1], resp, pred, isTreated)
+                 treatment)
+  b22 <- bread22(pred, treatment)
+  m11 <- meat11(mod1, covs, treatment)
+  m22 <- meat22(mod2$coef[2], mod2$coef[1], resp, pred, treatment)
 
   return(correctedvar(b11, b21, b22, m11, m22))
 }
@@ -122,9 +125,7 @@ setMethod("summary", signature(object = "pblm"),
           {
             ss <- summary(as(object, "lm"), ...)
 
-            est <- vcov(object)
-
-            ss$cov.unscaled <- est
+            ss$cov.unscaled <- vcov(object)
 
             # Remove standard error & p-value
             ss$coefficients[,2] <- sqrt(diag(ss$cov.unscaled))
@@ -142,7 +143,7 @@ setMethod("summary", signature(object = "pblm"),
 ##' Similar to `confint.lm`.
 ##' @param object An object of class `pblm`.
 ##' @param parm Parameters
-##' @param level Confidence level. Not implemented currently
+##' @param level Confidence level.
 ##' @param ... Additional arguments to `confint.lm`.
 ##' @return Confidence intervals
 ##' @export
@@ -151,12 +152,7 @@ confint.pblm <- function(object, parm, level = 0.95,...)
 {
   ci <- confint.lm(object, parm=parm, level=level,...)
   if ("pred" %in% rownames(ci)) {
-    ci["pred",] <- testinverse(object$epb[["mod1"]],
-                           object,
-                           object$epb[["pred"]],
-                           object$epb[["isTreated"]],
-                           object$epb[["data"]],
-                           level=level)
+    ci["pred",] <- testinverse(object, level=level)
   }
   return(ci)
 }
