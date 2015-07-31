@@ -113,14 +113,16 @@ setMethod("summary", signature(object = "pblm"),
 ##' Similar to `confint.lm`.
 ##' @param object An object of class `pblm`.
 ##' @param parm Parameters
-##' @param level Confidence level
+##' @param level Confidence level. Not implemented currently
 ##' @param ... Additional arguments to `confint.lm`.
 ##' @return Confidence intervals
 ##' @export
 ##' @author Josh Errickson
 confint.pblm <- function(object, parm, level = 0.95,...)
 {
-  ci <- confint(as(object, "lm"), parm=parm, level=level, ...)
+  if (level != .95) warning("Confidence levels other than 95% are not currently supported.")
+
+  ci <- confint(as(object, "lm"), parm=parm, ...)
   if ("pred" %in% rownames(ci)) {
     ci["pred",] <- object$etabounds
   }
