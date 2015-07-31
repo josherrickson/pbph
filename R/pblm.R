@@ -106,3 +106,23 @@ setMethod("summary", signature(object = "pblm"),
 
             return(ss)
           } )
+
+
+##' Confidence intervals for pblm object
+##'
+##' Similar to `confint.lm`.
+##' @param object An object of class `pblm`.
+##' @param parm Parameters
+##' @param level Confidence level
+##' @param ... Additional arguments to `confint.lm`.
+##' @return Confidence intervals
+##' @export
+##' @author Josh Errickson
+confint.pblm <- function(object, parm, level = 0.95,...)
+{
+  ci <- confint(as(object, "lm"), parm=parm, level=level, ...)
+  if ("pred" %in% rownames(ci)) {
+    ci["pred",] <- object$etabounds
+  }
+  return(ci)
+}
