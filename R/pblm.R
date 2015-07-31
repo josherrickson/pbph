@@ -23,26 +23,29 @@ pblm <- function(mod1, treatment, data) {
   pred <- mod2$pred
   mod2 <- mod2$mod2
 
-  est <- epbsolve(mod1, mod2, pred, isTreated, data)
-
-  mod2$etabounds <- est$bounds
-  mod2$cov.unscaled <- est$covmat
+  mod2$epb <- list(mod1=mod1,
+                   pred=pred,
+                   isTreated=isTreated,
+                   data=data)
 
   mod2 <- as(mod2, "pblm")
 
   return(mod2)
 }
 
-##' (Internal) Computes corrected estimate and bounds.
+##' (Internal) Computes a confidence interval for eta via test
+##' inversion.
 ##'
 ##' @param mod1 First stage model.
 ##' @param mod2 Second stage model.
 ##' @param pred Predicted values.
 ##' @param isTreated Treatment.
 ##' @param data Data.
-##' @return Estimate and bounds.
+##' @param level Confidence level. Default is 95%.
+##' @return Vector of length two with the lower and upper bounds.
 ##' @author Josh Errickson
-epbsolve <- function(mod1, mod2, pred, isTreated, data) {
+testinverse <- function(mod1, mod2, pred, isTreated, data,
+                        level=.95) {
 
   resp <- eval(formula(mod1)[[2]], envir=data)
   covs <- model.matrix(formula(mod1), data=data)
@@ -56,7 +59,7 @@ epbsolve <- function(mod1, mod2, pred, isTreated, data) {
     b21 <- bread21(eta, mod2$coef[1], resp, covs, pred, isTreated)
 
     corrected <- correctedvar(b11, b21, b22, m11, m22)[2,2]
-    stat <- qt(.975, mod1$df+2)
+    stat <- qt(1-(level)/2, mod1$df+2)
     return((mod2$coef[2] - eta)^2 - stat^2*corrected)
   }
 
@@ -73,13 +76,37 @@ epbsolve <- function(mod1, mod2, pred, isTreated, data) {
     bounds <- c(-Inf, Inf)
   }
 
-  covmat <- correctedvar(b11, bread21(mod2$coef[2], mod2$coef[1],
-                                      resp, covs, pred, isTreated),
-                         b22, m11, m22)
+  return(bounds)
+}
 
-  return(list(estimate=midpoint$estimate,
-              bounds=bounds,
-              covmat=covmat))
+##' Returns covariance matrix calculated via sandwich estimation.
+##'
+##' Returns a covariance matrix. Computed using enhanced PB
+##' methods. The variance for pred should NOT be used directly in
+##' confidence intervals.
+##'
+##' @param object pblm object.
+##' @return A covariance matrix.
+##' @author Josh Errickson
+vcov.pblm <- function(object) {
+
+  mod1 <- object$epb[["mod1"]]
+  pred <- object$epb[["pred"]]
+  isTreated <- object$epb[["isTreated"]]
+  data <- object$epb[["data"]]
+  mod2 <- object
+
+  resp <- eval(formula(mod1)[[2]], envir=data)
+  covs <- model.matrix(formula(mod1), data=data)
+
+  b11 <- bread11(covs, isTreated)
+  b21 <- bread21(mod2$coef[2], mod2$coef[1], resp, covs, pred,
+                 isTreated)
+  b22 <- bread22(pred, isTreated)
+  m11 <- meat11(mod1, covs, isTreated)
+  m22 <- meat22(mod2$coef[2], mod2$coef[1], resp, pred, isTreated)
+
+  return(correctedvar(b11, b21, b22, m11, m22))
 }
 
 ##' Summary for pblm object
@@ -95,7 +122,9 @@ setMethod("summary", signature(object = "pblm"),
           {
             ss <- summary(as(object, "lm"), ...)
 
-            ss$cov.unscaled <- object$cov.unscaled
+            est <- vcov(object)
+
+            ss$cov.unscaled <- est
 
             # Remove standard error & p-value
             ss$coefficients[,2] <- sqrt(diag(ss$cov.unscaled))
@@ -122,9 +151,14 @@ confint.pblm <- function(object, parm, level = 0.95,...)
 {
   if (level != .95) warning("Confidence levels other than 95% are not currently supported.")
 
-  ci <- confint(as(object, "lm"), parm=parm, ...)
+  ci <- confint.lm(object, parm=parm, ...)
   if ("pred" %in% rownames(ci)) {
-    ci["pred",] <- object$etabounds
+    ci["pred",] <- testinverse(object$epb[["mod1"]],
+                           object,
+                           object$epb[["pred"]],
+                           object$epb[["isTreated"]],
+                           object$epb[["data"]],
+                           level=level)
   }
   return(ci)
 }
