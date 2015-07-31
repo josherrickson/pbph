@@ -149,9 +149,7 @@ setMethod("summary", signature(object = "pblm"),
 ##' @author Josh Errickson
 confint.pblm <- function(object, parm, level = 0.95,...)
 {
-  if (level != .95) warning("Confidence levels other than 95% are not currently supported.")
-
-  ci <- confint.lm(object, parm=parm, ...)
+  ci <- confint.lm(object, parm=parm, level=level,...)
   if ("pred" %in% rownames(ci)) {
     ci["pred",] <- testinverse(object$epb[["mod1"]],
                            object,
