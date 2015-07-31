@@ -61,6 +61,9 @@ meat22 <- function(eta, tau, resp, pred, treatment) {
 ##' @return Variance estimate.
 ##' @author Josh Errickson
 correctedvar <- function(b11, b21, b22, m11, m22) {
-  (solve(b22)%*% (m22 + b21%*%solve(b11)%*%m11%*%
-                   solve(b11)%*%t(b21))%*% solve(b22))
+  covmat <- (solve(b22)%*% (m22 + b21%*%solve(b11)%*%m11%*%
+                           solve(b11)%*%t(b21))%*% solve(b22))
+  dimnames(covmat) <- list(c("treatment", "pred"),
+                           c("treatment", "pred"))
+  return(covmat)
 }
