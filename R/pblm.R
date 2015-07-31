@@ -26,6 +26,8 @@ pblm <- function(mod1, treatment, data) {
   est <- epbsolve(mod1, mod2, pred, isTreated, data)
 
   mod2$etabounds <- est$bounds
+  mod2$etase <- est$etase
+  mod2$tause <- est$tause
   mod2 <- as(mod2, "pblm")
 
   return(mod2)
@@ -70,8 +72,18 @@ epbsolve <- function(mod1, mod2, pred, isTreated, data) {
   } else {
     bounds <- c(-Inf, Inf)
   }
+
+  covmat <- correctedvar(b11, bread21(mod2$coef[2], mod2$coef[1],
+                                      resp, covs, pred, isTreated),
+                         b22, m11, m22)
+
+  etase <- sqrt(covmat[2,2])
+  tause <- sqrt(covmat[1,1])
+
   return(list(estimate=midpoint$estimate,
-              bounds=bounds))
+              bounds=bounds,
+              etase=etase,
+              tause=tause))
 }
 
 ##' Summary for pblm object
@@ -87,14 +99,13 @@ setMethod("summary", signature(object = "pblm"),
           {
             ss <- summary(as(object, "lm"), ...)
 
-            # Add new columns for bounds
-            ss$coefficients <- cbind(ss$coefficients,
-                                     matrix(c(NA, NA, object$etabounds),
-                                            byrow=TRUE, nrow=2))
-            colnames(ss$coefficients)[5:6] <- c("LB", "UB")
-
             # Remove standard error & p-value
-            ss$coefficients[2,2:4] <- NA
+            ss$coefficients[1,2] <- object$tause
+            ss$coefficients[2,2] <- object$etase
+            ss$coefficients[2,3:4] <- NA
+            ss$coefficients[1,3] <- ss$coef[1,1]/ss$coeff[1,2]
+            ss$coefficients[1,4] <- min(pnorm(ss$coef[1,3]),
+                                              1 - pnorm(ss$coef[1,3]))
 
             return(ss)
           } )
