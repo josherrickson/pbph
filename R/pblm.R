@@ -41,7 +41,7 @@ pblm <- function(mod1, treatment, data) {
 ##' @param pred Predicted values.
 ##' @param isTreated Treatment.
 ##' @param data Data.
-##' @param level Confidence level. Default is 95%.
+##' @param level Confidence level. Default is 95\%.
 ##' @return Vector of length two with the lower and upper bounds.
 ##' @author Josh Errickson
 testinverse <- function(mod1, mod2, pred, isTreated, data,
