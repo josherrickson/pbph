@@ -62,5 +62,5 @@ meat22 <- function(eta, tau, resp, pred, treatment) {
 ##' @author Josh Errickson
 correctedvar <- function(b11, b21, b22, m11, m22) {
   (solve(b22)%*% (m22 + b21%*%solve(b11)%*%m11%*%
-                   solve(b11)%*%t(b21))%*% solve(b22))[2,2]
+                   solve(b11)%*%t(b21))%*% solve(b22))
 }

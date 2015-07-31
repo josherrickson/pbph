@@ -86,6 +86,6 @@ test_that("corrected var", {
   m22 <- meat22(1, m$mod2$coef[1], resp, m$pred, treatment)
 
   # Double check this!
-  expect_true(all.equal(correctedvar(b11,b21,b22,m11,m22),
+  expect_true(all.equal(correctedvar(b11,b21,b22,m11,m22)[2,2],
                         4.3974828563929113656))
 })
