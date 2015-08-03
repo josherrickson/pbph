@@ -27,35 +27,47 @@ for (i in seq_len(reps)) {
   resp <- ifelse(treatment==1, yt_un, yc_un) + noise
   d <- data.frame(y=resp, covs)
 
-  eoracle <- epb(y ~ X1 + X2 , treatment, data=d)
-  eunder  <- epb(y ~ X1      , treatment, data=d)
-  eover   <- epb(y ~ .       , treatment, data=d)
-  smoracle <- summary(eoracle$mod1)
-  smunder  <- summary(eunder$mod1)
-  smover   <- summary(eover$mod1)
+  mod1oracle <- lm(y ~ X1 + X2, data=d, subset=treatment==0)
+  mod1under  <- lm(y ~ X1     , data=d, subset=treatment==0)
+  mod1over   <- lm(y ~ .      , data=d, subset=treatment==0)
 
-  saveoracle[i,] <- c(ti, eoracle$estimate, eoracle$bounds,
-                      all(is.finite(eoracle$bounds)),
-                      smoracle$fstat[1], smoracle$r.s,
-                      smoracle$adj.r.s, smoracle$sigma,
-                      mean(smoracle$res^2),
-                      max(abs(eoracle$mod1$coef)),
-                      min(smoracle$coef[-1,4]),
-                      sum(smoracle$coef[-1,4] < .05))
+  sm1oracle <- summary(mod1oracle)
+  sm1under  <- summary(mod1under)
+  sm1over   <- summary(mod1over)
 
-  saveunder[i,] <- c(ti, eunder$estimate, eunder$bounds,
-                     all(is.finite(eunder$bounds)), smunder$fstat[1],
-                     smunder$r.s, smunder$adj.r.s, smunder$sigma,
-                     mean(smunder$res^2), max(abs(eunder$mod1$coef)),
-                     min(smunder$coef[-1,4]), sum(smunder$coef[-1,4] <
-                     .05))
+  eoracle <- pblm(mod1oracle, treatment, d)
+  eunder  <- pblm(mod1under, treatment, d)
+  eover   <- pblm(mod1over, treatment, d)
+  smoracle <- summary(eoracle)
+  smunder  <- summary(eunder)
+  smover   <- summary(eover)
 
-  saveover[i,] <- c(ti, eover$estimate, eover$bounds,
-                    all(is.finite(eover$bounds)), smover$fstat[1],
-                    smover$r.s, smover$adj.r.s, smover$sigma,
-                    mean(smover$res^2), max(abs(eover$mod1$coef)),
-                    min(smover$coef[-1,4]), sum(smover$coef[-1,4] <
-                    .05))
+  saveoracle[i,] <- c(ti, eoracle$coef[2], confint(eoracle)["pred",],
+                      all(is.finite(confint(eoracle)["pred",])),
+                      sm1oracle$fstat[1], sm1oracle$r.s,
+                      sm1oracle$adj.r.s, sm1oracle$sigma,
+                      mean(sm1oracle$res^2),
+                      max(abs(mod1oracle$coef)),
+                      min(sm1oracle$coef[-1,4]),
+                      sum(sm1oracle$coef[-1,4] < .05))
+
+  saveover[i,] <- c(ti, eover$coef[2], confint(eover)["pred",],
+                      all(is.finite(confint(eover)["pred",])),
+                      sm1over$fstat[1], sm1over$r.s,
+                      sm1over$adj.r.s, sm1over$sigma,
+                      mean(sm1over$res^2),
+                      max(abs(mod1over$coef)),
+                      min(sm1over$coef[-1,4]),
+                      sum(sm1over$coef[-1,4] < .05))
+
+  saveunder[i,] <- c(ti, eunder$coef[2], confint(eunder)["pred",],
+                      all(is.finite(confint(eunder)["pred",])),
+                      sm1under$fstat[1], sm1under$r.s,
+                      sm1under$adj.r.s, sm1under$sigma,
+                      mean(sm1under$res^2),
+                      max(abs(mod1under$coef)),
+                      min(sm1under$coef[-1,4]),
+                      sum(sm1under$coef[-1,4] < .05))
 
 }
 

@@ -4,7 +4,7 @@ pc <- .4
 informative <- .4
 sigma2 <- 1
 
-reps <- 1000
+reps <- 100
 
 save <- makeSaveMatrix(c("truth", "estimate", "lb", "ub", "isfinite",
                "F-stat", "R^2", "adj.R^2", "sigma^2", "rss",
@@ -25,14 +25,17 @@ for (i in seq_len(reps)) {
   resp <- ifelse(treatment==1, yt_un, yc_un) + noise
   d <- data.frame(y=resp, covs)
 
-  e <- epb(y ~ ., treatment, data=d)
-  sm <- summary(e$mod1)
+  mod1 <- lm(y ~ ., data=d, subset=treatment==0)
+  smod1 <- summary(mod1)
 
-  save[i,] <- c(ti, e$estimate, e$bounds, all(is.finite(e$bound)),
-                sm$fstat[1], sm$r.s, sm$adj.r.s, sm$sigma,
-                sum(sm$res^2), max(abs(e$mod1$coef)),
-                min(sm$coef[-1,4]))
+  e <- pblm(mod1, treatment, d)
+  sm <- summary(e)
 
+  save[i,] <- c(ti, e$coef[2], confint(e)["pred",],
+                all(is.finite(confint(e)["pred",])), smod1$fstat[1],
+                smod1$r.s, smod1$adj.r.s, smod1$sigma,
+                sum(smod1$res^2), max(abs(smod1$coef)),
+                min(smod1$coef[-1,4]))
 
 }
 

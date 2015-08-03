@@ -1,7 +1,7 @@
-##' INTERNAL. Perform model fitting for the enhanced PB method.
+##' (Internal) Fit the second stage Enhanced Peters-Belson model.
 ##'
-##' Predict the values from the first stage model `mod1` through
-##' `data`, then fit
+##' Given a first stage model fit only on the control group, fit a
+##' second stage model with formula.
 ##'
 ##' resp - pred ~ pred | treatment == 1
 ##'
@@ -25,10 +25,17 @@ makemod2 <- function(mod1, isTreated, data, center=FALSE) {
   predicted <- predict(mod1, newdata=if(center) data.center else data)
 
   # Second stage linear model.
-  y_t <- eval(formula(mod1)[[2]], envir=data)[isTreated==1]
+  respname <- formula(mod1)[[2]]
+  assign(paste0(respname, "_t"),
+         eval(respname, envir=data)[isTreated==1])
   pred <- predicted[isTreated==1]
   treatment <- rep(1, sum(isTreated))
-  mod2 <- lm(y_t - pred ~ treatment + pred + 0)
+
+  mod2 <- lm(as.formula(paste0(respname,
+                               "_t - pred ~ treatment + pred + 0")))
+
+  mod2$call$formula <- as.formula(paste0(respname,
+                                  "_t - pred ~ treatment + pred"))
 
   return(list(mod2=mod2, pred=predicted))
 }
