@@ -47,3 +47,25 @@ test_that("pblm input/output", {
   expect_error(pblm(mod1, t[1:9], d),
                "same length")
 })
+
+test_that("vcov.pblm", {
+  d <- data.frame(abc=rnorm(10),
+                  x=rnorm(10),
+                  z=rnorm(10))
+  t <- rep(0:1, each=5)
+
+  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+
+  e <- pblm(mod1, t, d)
+
+  v <- vcov(e)
+
+  expect_equal(dim(v), c(2,2))
+  expect_equal(colnames(v), rownames(v))
+  expect_equal(colnames(v), c("treatment", "pred"))
+
+  expect_true(all(diag(v) > 0))
+  expect_equal(v[1,2], v[2, 1])
+
+  expect_true(all(vcov(e) - vcov(as(e, "lm")) != 0))
+})
