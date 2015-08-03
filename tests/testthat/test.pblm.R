@@ -139,6 +139,37 @@ test_that("confint.pblm", {
   expect_true(all(!is.finite(ci[2,])))
 
 })
+
+test_that("CI arguments", {
+  set.seed(8)
+  d <- data.frame(abc=rnorm(10),
+                  x=rnorm(10),
+                  z=rnorm(10))
+  t <- rep(0:1, each=5)
+
+  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+
+  e <- pblm(mod1, t, d)
+
+  ci <- confint(e)
+
+  ci1 <- confint(e, parm="treatment")
+  expect_equal(rownames(ci1), "treatment")
+  expect_equal(ci1[1,], ci[1,], check.attributes=FALSE)
+
+  ci2 <- confint(e, parm="pred")
+  expect_equal(rownames(ci2), "pred")
+  expect_equal(ci2[1,], ci[2,], check.attributes=FALSE)
+
+  ci3 <- confint(e, parm=c("pred", "pred", "treatment"))
+  expect_equal(rownames(ci3), c("pred", "pred", "treatment"))
+
+  # Confidence level should shrink
+  ci4 <- confint(e, level=.5)
+  expect_true(all((ci4 - ci)[,1] > 0))
+  expect_true(all((ci4 - ci)[,2] < 0))
+})
+
 test_that("wald-style CI's", {
   set.seed(8)
   d <- data.frame(abc=rnorm(10),
