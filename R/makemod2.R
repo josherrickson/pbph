@@ -1,7 +1,7 @@
-##' INTERNAL. Perform model fitting for the enhanced PB method.
+##' (Internal) Fit the second stage Enhanced Peters-Belson model.
 ##'
-##' Predict the values from the first stage model `mod1` through
-##' `data`, then fit
+##' Given a first stage model fit only on the control group, fit a
+##' second stage model with formula.
 ##'
 ##' resp - pred ~ pred | treatment == 1
 ##'
