@@ -66,26 +66,18 @@ test_that("meat", {
 })
 
 test_that("corrected var", {
-  d <- data.frame(y=c(3,4,1,3,2,1,4,2),
-                  x1=c(2,1,3,4,2,1,3,1),
-                  x2=c(3,5,2,1,3,2,3,4))
-  form <- y ~ x1 + x2
-  treatment <- c(0,0,0,0,1,1,1,1)
+  b11 <- matrix(c(1,2,2,3), nrow=2)
+  b21 <- matrix(c(4,2,2,3), nrow=2)
+  b22 <- matrix(c(6,-1,-1,2), nrow=2)
+  m11 <- matrix(c(5,2,2,2), nrow=2)
+  m22 <- matrix(c(-3,-1,-1,1), nrow=2)
 
-  resp <- eval(form[[2]], envir=d)
-  covs <- model.matrix(form, data=d)
+  cv <- correctedvar(b11, b21, b22, m11, m22)
 
-  mod1 <- lm(form, data=d, subset=treatment==0)
+  expect_true(all(dim(cv) == 2))
+  expect_true(all(sapply(dimnames(cv), "==", c("treatment", "pred"))))
 
-  m <- makemod2(mod1, treatment, d)
-
-  b11 <- bread11(covs, treatment)
-  b21 <- bread21(eta=1, m$mod2$coef[1], resp, covs, m$pred, treatment)
-  b22 <- bread22(m$pred, treatment)
-  m11 <- meat11(mod1, covs, treatment)
-  m22 <- meat22(1, m$mod2$coef[1], resp, m$pred, treatment)
-
-  # Double check this!
-  expect_true(all.equal(correctedvar(b11,b21,b22,m11,m22)[2,2],
-                        4.3974828563929113656))
+  # off-diag's should be equal, on-diag should be positive.
+  expect_equal(cv[1,2], cv[2,1])
+  expect_true(all(diag(cv) > 0))
 })
