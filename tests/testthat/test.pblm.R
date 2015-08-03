@@ -69,3 +69,73 @@ test_that("vcov.pblm", {
 
   expect_true(all(vcov(e) - vcov(as(e, "lm")) != 0))
 })
+
+test_that("summary.pblm", {
+  d <- data.frame(abc=rnorm(10),
+                  x=rnorm(10),
+                  z=rnorm(10))
+  t <- rep(0:1, each=5)
+
+  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+
+  e <- pblm(mod1, t, d)
+
+  s <- summary(e)
+
+  expect_is(s, "summary.lm")
+
+  expect_equal(e$coef, s$coef[,1])
+  expect_true(all(is.na(s$coef[2, 3:4])))
+  expect_equal(s$cov.unscaled, vcov(e))
+
+  expect_identical(summary.lm(e), summary(as(e, "lm")))
+  slm <- summary.lm(e)
+
+  expect_equal(slm$coef[,1], s$coef[,1])
+  expect_false(isTRUE(all.equal(slm$coef[,2], s$coef[,2])))
+})
+
+test_that("confint.pblm", {
+
+  # Force finite CI
+  set.seed(8)
+  d <- data.frame(abc=rnorm(10),
+                  x=rnorm(10),
+                  z=rnorm(10))
+  t <- rep(0:1, each=5)
+
+  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+
+  e <- pblm(mod1, t, d)
+
+  ci <- confint(e)
+
+
+  expect_equal(dim(ci), c(2,2))
+  expect_equal(rownames(ci), c("treatment", "pred"))
+
+  # Ci's should have lower and upper correct
+  expect_true(all(apply(ci, 1, function(x) diff(x)>0)))
+
+  expect_equal(ci[1,], confint.lm(e)[1,])
+  expect_false(isTRUE(all.equal(ci[2,], confint.lm(e)[2,])))
+
+  expect_true(e$coef[1] > ci[1,1] & e$coef[1] < ci[1,2])
+  expect_true(e$coef[2] > ci[2,1] & e$coef[2] < ci[2,2])
+
+  # Force infinite CI
+  set.seed(4)
+  d <- data.frame(abc=rnorm(10),
+                  x=rnorm(10),
+                  z=rnorm(10))
+  t <- rep(0:1, each=5)
+
+  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+
+  e <- pblm(mod1, t, d)
+
+  ci <- confint(e)
+
+  expect_true(all(!is.finite(ci[2,])))
+
+})
