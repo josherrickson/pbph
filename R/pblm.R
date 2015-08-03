@@ -22,6 +22,14 @@ pblm <- function(mod1, treatment, data) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
 
+  if (sum(1-treatment) != length(resid(mod1))) {
+    stop("It appears the first stage model is not fit only on control units.")
+  }
+
+  if (length(treatment) != nrow(data)) {
+    stop("treatment must be same length as number of observations in data.")
+  }
+
   mm <- makemod2(mod1, treatment, data)
 
   pred <- mm$pred
