@@ -3,8 +3,8 @@ context("pblm")
 test_that("making pblm object", {
   s <- lm(1~1)
   s <- as(s, "pblm")
-  expect_true(is(s, "pblm"))
-  expect_true(is(s, "lm"))
+  expect_is(s, "pblm")
+  expect_is(s, "lm")
   # These tests are likely tautologies, but assigning `s` to class
   # `pblm` could error.
 })
@@ -19,7 +19,7 @@ test_that("pblm input/output", {
 
   e <- pblm(mod1, t, d)
 
-  expect_true(is(e, "pblm"))
+  expect_is(e, "pblm")
   expect_equal(e, as(e, "lm"), check.attributes=FALSE)
 
   expect_true(length(coef(e)) == 2)
