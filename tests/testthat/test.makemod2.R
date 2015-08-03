@@ -10,8 +10,24 @@ test_that("makemod2", {
 
   m <- makemod2(mod1, treatment, d)
 
-  expect_true(all.equal(m$pred, c(7/3, 4, 7/3, 7/3, 7/3, -1, 4, 7/3),
-                        check.attributes=FALSE))
-  expect_true(all.equal(m$mod2$coef, c(116/95, -44/95),
-                        check.attributes=FALSE))
+  expect_true(is.list(m))
+
+  expect_true(length(m) == 2)
+  expect_true(all(names(m) == c("mod2", "pred")))
+
+  expect_true(is(m$mod2, "lm"))
+  expect_true(length(m$pred) == 8)
+
+  expect_equal(m$pred, c(7/3, 4, 7/3, 7/3, 7/3, -1, 4, 7/3),
+               check.attributes=FALSE)
+  expect_equal(m$mod2$coef, c(116/95, -44/95),
+               check.attributes=FALSE)
+
+
+  # Centering should not effect eta, but will affect tau.
+  m2 <- makemod2(mod1, treatment, d, center=TRUE)
+
+  expect_equal(m$mod2$coef[2],m2$mod2$coef[2])
+  expect_false(isTRUE(all.equal(m$mod2$coef[1], m2$mod2$coef[1])))
+
 })
