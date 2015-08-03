@@ -153,13 +153,23 @@ setMethod("summary", signature(object = "pblm"),
 ##' @param parm Parameters
 ##' @param level Confidence level.
 ##' @param ... Additional arguments to `confint.lm`.
+##' @param wald.style Logical. Defaults to FALSE so the method
+##'   performs test inversion to obtain proper coverage. If TRUE,
+##'   generates wald-style CI's, which will likely suffer from
+##'   undercoverage.
 ##' @return Confidence intervals
 ##' @export
 ##' @author Josh Errickson
-confint.pblm <- function(object, parm, level = 0.95,...)
+##'
+confint.pblm <- function(object, parm, level = 0.95, ...,
+                         wald.style=FALSE)
 {
+
+  # Do not use confint(as(object, "lm")). `confint.lm` includes a call
+  # to vcov; doing it that way will return the originals rather than
+  # the corrected versions.
   ci <- confint.lm(object, parm=parm, level=level,...)
-  if ("pred" %in% rownames(ci)) {
+  if ("pred" %in% rownames(ci) & !wald.style) {
     ci["pred",] <- testinverse(object, level=level)
   }
   return(ci)

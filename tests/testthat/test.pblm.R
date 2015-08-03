@@ -139,3 +139,20 @@ test_that("confint.pblm", {
   expect_true(all(!is.finite(ci[2,])))
 
 })
+test_that("wald-style CI's", {
+  set.seed(8)
+  d <- data.frame(abc=rnorm(10),
+                  x=rnorm(10),
+                  z=rnorm(10))
+  t <- rep(0:1, each=5)
+
+  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+
+  e <- pblm(mod1, t, d)
+
+  ci <- confint(e)
+  ci2 <- confint(e, wald.style=TRUE)
+
+  expect_false(identical(ci[2,],ci2[2,]))
+
+})
