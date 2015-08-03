@@ -71,7 +71,7 @@ testinverse <- function(object, level=.95) {
     b21 <- bread21(eta, mod2$coef[1], resp, covs, pred, treatment)
 
     corrected <- correctedvar(b11, b21, b22, m11, m22)[2,2]
-    stat <- qt(1-(level)/2, mod1$df+2)
+    stat <- qt((1-level)/2, mod1$df+2)
     return((mod2$coef[2] - eta)^2 - stat^2*corrected)
   }
 
