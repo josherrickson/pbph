@@ -30,7 +30,7 @@ for (j in 1:length(true_inter)) {
     mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
     e <- pblm(mod1, treatment, d)
-    save[i,] <- c(e$coef[2], summary(e)$coef[2,5:6])
+    save[i,] <- c(e$coef[2], confint(e)["pred",])
   }
   saveFinite <- save[save[,2] != -Inf,]
   numcov <- sum(saveFinite[,2] < ti & saveFinite[,3] > ti)

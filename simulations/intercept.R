@@ -27,8 +27,9 @@ for (i in seq_len(reps)) {
 
   e <- pblm(mod1, treatment, d)
   sm <- summary(e)
+  smlm <- summary.lm(e)
 
-  save[i,] <- c(tt, sm$coef[1,1:2], e$tause)
+  save[i,] <- c(tt, sm$coef[1,1:2], smlm$coef[1,2])
 
 
 }
