@@ -45,51 +45,72 @@ pblm <- function(mod1, treatment, data) {
   return(mod2)
 }
 
-##' (Internal) Computes a confidence interval for eta via test
-##' inversion.
-##'
-##' @param object A pblm object.
-##' @param level Confidence level. Default is 95\%.
-##' @return Vector of length two with the lower and upper bounds.
-##' @author Josh Errickson
-testinverse <- function(object, level=.95) {
 
+##' (Internal) Return covariance matrix associated with a given choice
+##' of eta.
+##'
+##' For a given eta, the covariance can vary. For example, etahat or
+##' eta_0.
+##' @param eta Value of eta to use.
+##' @param object A pblm object.
+##' @param breadAndMeat By defauly, will create breadAndMeat
+##'   associated with 'object'. If speed a concern, it is faster to
+##'   compute this once.
+##' @return A covariance matrix
+##' @author Josh Errickson
+corrVar <- function(eta, object,
+                    breadAndMeat=createBreadAndMeat(object)) {
   mod1 <- object$epb[["mod1"]]
-  pred <- object$epb[["pred"]]
-  treatment <- object$epb[["treatment"]]
-  mod2 <- object
 
   resp <- eval(formula(mod1)[[2]], envir=object$epb[["data"]])
   covs <- model.matrix(formula(mod1), data=object$epb[["data"]])
 
-  b11 <- bread11(covs, treatment)
-  b22 <- bread22(pred, treatment)
-  m11 <- meat11(mod1, covs, treatment)
-  m22 <- meat22(mod2$coef[2], mod2$coef[1], resp, pred, treatment)
+  b21 <- bread21(eta, object$coef[1], resp, covs,
+                 object$epb[["pred"]],
+                 object$epb[["treatment"]])
 
-  tosolve <- function(eta) {
-    b21 <- bread21(eta, mod2$coef[1], resp, covs, pred, treatment)
-
-    corrected <- correctedvar(b11, b21, b22, m11, m22)[2,2]
-    stat <- qt((1-level)/2, mod1$df+2)
-    return((mod2$coef[2] - eta)^2 - stat^2*corrected)
-  }
-
-  midpoint <- nlm(tosolve, mod2$coef[2])
-
-  # nlm's $code output has 1:2 for convergence, 3:5 for issues.
-  if (midpoint$code %in% 1:2) {
-    lb <- tryCatch(uniroot(tosolve, c(-100, midpoint$estimate))$root,
-                   error=function(c) -Inf)
-    ub <- tryCatch(uniroot(tosolve, c(midpoint$estimate, 100))$root,
-                   error=function(c) Inf)
-    bounds <- c(lb,ub)
-  } else {
-    bounds <- c(-Inf, Inf)
-  }
-
-  return(bounds)
+  corrected <- correctedvar(breadAndMeat$b11,
+                            b21,
+                            breadAndMeat$b22,
+                            breadAndMeat$m11,
+                            breadAndMeat$m22)
+  return(corrected)
 }
+
+##' Computers Bread and Meat matrices.
+##'
+##' Computes the pieces of the Bread and Meat (e.g. all but B21) which
+##' do not depend on eta.
+##' @param object A pblm object.
+##' @return A list of b11, b22, m11, and m22.
+##' @author Josh Errickson
+createBreadAndMeat <- function(object) {
+  mod1 <- object$epb[["mod1"]]
+
+  resp <- eval(formula(mod1)[[2]], envir=object$epb[["data"]])
+  covs <- model.matrix(formula(mod1), data=object$epb[["data"]])
+
+  b11 <- bread11(covs, object$epb[["treatment"]])
+  b22 <- bread22(object$epb[["pred"]], object$epb[["treatment"]])
+  m11 <- meat11(mod1, covs, object$epb[["treatment"]])
+  m22 <- meat22(object$coef[2], object$coef[1], resp,
+                object$epb[["pred"]],
+                object$epb[["treatment"]])
+
+  return(list(b11=b11,b22=b22,m11=m11,m22=m22))
+}
+
+##' Conducts a hypothesis test for a given null.
+##'
+##' @param object A pblm object.
+##' @param null Defaults to 0.
+##' @return A test statistic, with distribution t(k) where k is the
+##'   number of parameters in the first stage model, less 2.
+##' @author Josh Errickson
+hypothesisTest <- function(object, null=0) {
+  return((object$coef[2] - null)/sqrt(corrVar(eta=null, object)[2,2]))
+}
+
 
 ##' Returns covariance matrix calculated via sandwich estimation.
 ##'
@@ -101,23 +122,7 @@ testinverse <- function(object, level=.95) {
 ##' @return A covariance matrix.
 ##' @author Josh Errickson
 vcov.pblm <- function(object) {
-
-  mod1 <- object$epb[["mod1"]]
-  pred <- object$epb[["pred"]]
-  treatment <- object$epb[["treatment"]]
-  mod2 <- object
-
-  resp <- eval(formula(mod1)[[2]], envir=object$epb[["data"]])
-  covs <- model.matrix(formula(mod1), data=object$epb[["data"]])
-
-  b11 <- bread11(covs, treatment)
-  b21 <- bread21(mod2$coef[2], mod2$coef[1], resp, covs, pred,
-                 treatment)
-  b22 <- bread22(pred, treatment)
-  m11 <- meat11(mod1, covs, treatment)
-  m22 <- meat22(mod2$coef[2], mod2$coef[1], resp, pred, treatment)
-
-  return(correctedvar(b11, b21, b22, m11, m22))
+  return(corrVar(object$coef[2], object))
 }
 
 ##' Summary for pblm object
@@ -135,9 +140,17 @@ setMethod("summary", signature(object = "pblm"),
 
             ss$cov.unscaled <- vcov(object)
 
-            # Remove standard error & p-value
+            # Input corrected Std. Error
             ss$coefficients[,2] <- sqrt(diag(ss$cov.unscaled))
-            ss$coefficients[2,3:4] <- NA
+
+            # Correct test statistic & p-value.
+            ss$coefficients[2,3] <- hypothesisTest(object)
+            ss$coefficients[2,4] <- pt(abs(ss$coefficients[2,3]),
+                                       object$epb[["mod1"]]$df+2,
+                                       lower.tail=FALSE)
+
+            # Correct test statistic & p-value for intercept with
+            # corrected Std. Error.
             ss$coefficients[1,3] <- ss$coef[1,1]/ss$coeff[1,2]
             ss$coefficients[1,4] <- min(pnorm(ss$coef[1,3]),
                                               1 - pnorm(ss$coef[1,3]))
@@ -173,4 +186,37 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
     ci["pred",] <- testinverse(object, level=level)
   }
   return(ci)
+}
+
+##' (Internal) Computes a confidence interval for eta via test
+##' inversion.
+##'
+##' @param object A pblm object.
+##' @param level Confidence level. Default is 95\%.
+##' @return Vector of length two with the lower and upper bounds.
+##' @author Josh Errickson
+testinverse <- function(object, level=.95) {
+
+  bAndM <- createBreadAndMeat(object)
+
+  tosolve <- function(eta) {
+    corrected <- corrVar(eta, object, bAndM)[2,2]
+    stat <- qt((1-level)/2, object$epb[["mod1"]]$df+2)
+    return((object$coef[2] - eta)^2 - stat^2*corrected)
+  }
+
+  midpoint <- nlm(tosolve, object$coef[2])
+
+  # nlm's $code output has 1:2 for convergence, 3:5 for issues.
+  if (midpoint$code %in% 1:2) {
+    lb <- tryCatch(uniroot(tosolve, c(-100, midpoint$estimate))$root,
+                   error=function(c) -Inf)
+    ub <- tryCatch(uniroot(tosolve, c(midpoint$estimate, 100))$root,
+                   error=function(c) Inf)
+    bounds <- c(lb,ub)
+  } else {
+    bounds <- c(-Inf, Inf)
+  }
+
+  return(bounds)
 }
