@@ -164,7 +164,7 @@ setMethod("summary", signature(object = "pblm"),
             # Correct test statistic & p-value.
             ss$coefficients[2,3] <- hypothesisTest(object)
             ss$coefficients[2,4] <- pt(abs(ss$coefficients[2,3]),
-                                       mod1$df+2,
+                                       object$epb[["mod1"]]$df+2,
                                        lower.tail=FALSE)
 
             # Correct test statistic & p-value for intercept with
