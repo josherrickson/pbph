@@ -48,7 +48,7 @@ test_that("pblm input/output", {
                "same length")
 })
 
-test_that("vcov.pblm", {
+test_that("corrVar and vcov", {
   d <- data.frame(abc=rnorm(10),
                   x=rnorm(10),
                   z=rnorm(10))
@@ -58,16 +58,54 @@ test_that("vcov.pblm", {
 
   e <- pblm(mod1, t, d)
 
-  v <- vcov(e)
+  cv <- corrVar(e$coef[2],e)
 
-  expect_equal(dim(v), c(2,2))
-  expect_equal(colnames(v), rownames(v))
-  expect_equal(colnames(v), c("treatment", "pred"))
+  expect_equal(dim(cv), c(2,2))
+  expect_equal(colnames(cv), rownames(cv))
+  expect_equal(colnames(cv), c("treatment", "pred"))
 
-  expect_true(all(diag(v) > 0))
-  expect_equal(v[1,2], v[2, 1])
+  expect_true(all(diag(cv) > 0))
+  expect_equal(cv[1,2], cv[2, 1])
+
+  expect_identical(cv, vcov(e))
 
   expect_true(all(vcov(e) - vcov(as(e, "lm")) != 0))
+})
+
+test_that("createBreadAndMeat", {
+  d <- data.frame(abc=rnorm(10),
+                  x=rnorm(10),
+                  z=rnorm(10))
+  t <- rep(0:1, each=5)
+
+  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+
+  e <- pblm(mod1, t, d)
+
+  bnm <- createBreadAndMeat(e)
+
+  expect_is(bnm, "list")
+  expect_equal(length(bnm), 4)
+  expect_identical(names(bnm), c("b11", "b22", "m11", "m22"))
+  expect_true(all(c(3,3,2,2,3,3,2,2) == sapply(bnm, dim)))
+
+})
+
+test_that("Hypothesis Test", {
+
+  d <- data.frame(abc=rnorm(10),
+                  x=rnorm(10),
+                  z=rnorm(10))
+  t <- rep(0:1, each=5)
+
+  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+
+  e <- pblm(mod1, t, d)
+
+  ht <- hypothesisTest(e)
+
+  expect_is(ht, "numeric")
+  expect_equal(length(ht), 1)
 })
 
 test_that("summary.pblm", {
@@ -85,14 +123,19 @@ test_that("summary.pblm", {
   expect_is(s, "summary.lm")
 
   expect_equal(e$coef, s$coef[,1])
-  expect_true(all(is.na(s$coef[2, 3:4])))
+  expect_true(all.equal(s$coef[2,3], hypothesisTest(e),
+                        check.attributes=FALSE))
+
+  expect_true(all.equal(s$coef[2,4],
+                        pt(abs(hypothesisTest(e)),4, lower.tail=FALSE),
+                        check.attributes=FALSE))
   expect_equal(s$cov.unscaled, vcov(e))
 
   expect_identical(summary.lm(e), summary(as(e, "lm")))
   slm <- summary.lm(e)
 
   expect_equal(slm$coef[,1], s$coef[,1])
-  expect_false(isTRUE(all.equal(slm$coef[,2], s$coef[,2])))
+  expect_true(all(!slm$coef[,-1] == s$coef[,-1]))
 })
 
 test_that("confint.pblm", {
