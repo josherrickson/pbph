@@ -53,51 +53,69 @@ pblm <- function(mod1, treatment, data) {
 ##' eta_0.
 ##' @param eta Value of eta to use.
 ##' @param object A pblm object.
-##' @param breadAndMeat By defauly, will create breadAndMeat
+##' @param breadAndMeat By default, will create breadAndMeat
 ##'   associated with 'object'. If speed a concern, it is faster to
-##'   compute this once.
+##'   compute this once and pass into corrVar.
 ##' @return A covariance matrix
 ##' @author Josh Errickson
 corrVar <- function(eta, object,
                     breadAndMeat=createBreadAndMeat(object)) {
+
   mod1 <- object$epb[["mod1"]]
+  data <- object$epb[["data"]]
 
-  resp <- eval(formula(mod1)[[2]], envir=object$epb[["data"]])
-  covs <- model.matrix(formula(mod1), data=object$epb[["data"]])
-
-  b21 <- bread21(eta, object$coef[1], resp, covs,
-                 object$epb[["pred"]],
-                 object$epb[["treatment"]])
+  b21 <- bread21(eta,
+                 tau = object$coef[1],
+                 resp = eval(formula(mod1)[[2]], envir = data),
+                 covs = model.matrix(formula(mod1), data = data),
+                 pred = object$epb[["pred"]],
+                 treatment = object$epb[["treatment"]])
 
   corrected <- correctedvar(breadAndMeat$b11,
-                            b21,
+                                         b21,
                             breadAndMeat$b22,
                             breadAndMeat$m11,
                             breadAndMeat$m22)
+
   return(corrected)
 }
 
-##' Computers Bread and Meat matrices.
+##' Computes Bread and Meat matrices.
 ##'
-##' Computes the pieces of the Bread and Meat (e.g. all but B21) which
-##' do not depend on eta.
+##' Computes the pieces of the Bread and Meat which do not depend on
+##' eta. (e.g. all but B21)
 ##' @param object A pblm object.
 ##' @return A list of b11, b22, m11, and m22.
 ##' @author Josh Errickson
 createBreadAndMeat <- function(object) {
+
   mod1 <- object$epb[["mod1"]]
+  data <- object$epb[["data"]]
+  covs <- model.matrix(formula(mod1),
+                       data = data)
+  treatment <- object$epb[["treatment"]]
+  pred <- object$epb[["pred"]]
 
-  resp <- eval(formula(mod1)[[2]], envir=object$epb[["data"]])
-  covs <- model.matrix(formula(mod1), data=object$epb[["data"]])
+  b11 <- bread11(covs      = covs,
+                 treatment = treatment)
 
-  b11 <- bread11(covs, object$epb[["treatment"]])
-  b22 <- bread22(object$epb[["pred"]], object$epb[["treatment"]])
-  m11 <- meat11(mod1, covs, object$epb[["treatment"]])
-  m22 <- meat22(object$coef[2], object$coef[1], resp,
-                object$epb[["pred"]],
-                object$epb[["treatment"]])
+  b22 <- bread22(pred      = pred,
+                 treatment = treatment)
 
-  return(list(b11=b11,b22=b22,m11=m11,m22=m22))
+  m11 <- meat11(mod1       = mod1,
+                covs       = covs,
+                treatment  = treatment)
+
+  m22 <- meat22(eta        = object$coef[2],
+                tau        = object$coef[1],
+                resp       = eval(formula(mod1)[[2]], envir = data),
+                pred       = pred,
+                treatment  = treatment)
+
+  return(list(b11 = b11,
+              b22 = b22,
+              m11 = m11,
+              m22 = m22))
 }
 
 ##' Conducts a hypothesis test for a given null.
@@ -146,7 +164,7 @@ setMethod("summary", signature(object = "pblm"),
             # Correct test statistic & p-value.
             ss$coefficients[2,3] <- hypothesisTest(object)
             ss$coefficients[2,4] <- pt(abs(ss$coefficients[2,3]),
-                                       object$epb[["mod1"]]$df+2,
+                                       mod1$df+2,
                                        lower.tail=FALSE)
 
             # Correct test statistic & p-value for intercept with
