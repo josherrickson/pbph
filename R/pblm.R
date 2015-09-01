@@ -188,20 +188,36 @@ setMethod("summary", signature(object = "pblm"),
 ##'   performs test inversion to obtain proper coverage. If TRUE,
 ##'   generates wald-style CI's, which will likely suffer from
 ##'   undercoverage.
+##' @param forceDisplayConfInt Logical. Defaults to FALSE. If a
+##'   hypothesis test for the interaction term fails, a confidence
+##'   interval is unreliable (and ultimately unnecessary) and thus not
+##'   returned. Set this to TRUE to force computation of the interval
+##'   regardless of the hypothesis test.
 ##' @return Confidence intervals
 ##' @export
 ##' @author Josh Errickson
 ##'
 confint.pblm <- function(object, parm, level = 0.95, ...,
-                         wald.style=FALSE)
+                         wald.style=FALSE, forceDisplayConfInt=FALSE)
 {
+  if (wald.style & forceDisplayConfInt) {
+    warning("Argument 'forceDisplayConfInt' ignored when 'wald.style' is TRUE.")
+  }
 
   # Do not use confint(as(object, "lm")). `confint.lm` includes a call
   # to vcov; doing it that way will return the originals rather than
   # the corrected versions.
   ci <- confint.lm(object, parm=parm, level=level,...)
   if ("pred" %in% rownames(ci) & !wald.style) {
-    ci["pred",] <- testinverse(object, level=level)
+    pval <- pt(hypothesisTest(object), object$epb[["mod1"]]$df+2,
+               lower.tail=FALSE)
+
+    if (pval > .05 & !forceDisplayConfInt) {
+      #cat("Interaction term not significant, suppressing associated confidence interval. Use 'forceDisplayConfInt=TRUE' to force it.\n")
+      ci["pred",] <- c(NA, NA)
+    } else {
+      ci["pred",] <- testinverse(object, level=level)
+    }
   }
   return(ci)
 }
