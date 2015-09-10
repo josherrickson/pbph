@@ -163,15 +163,15 @@ setMethod("summary", signature(object = "pblm"),
 
             # Correct test statistic & p-value.
             ss$coefficients[2,3] <- hypothesisTest(object)
-            ss$coefficients[2,4] <- pt(abs(ss$coefficients[2,3]),
-                                       object$epb[["mod1"]]$df+2,
+            ss$coefficients[2,4] <- 2*pt(abs(ss$coefficients[2,3]),
+                                       object$epb[["mod1"]]$df,
                                        lower.tail=FALSE)
 
             # Correct test statistic & p-value for intercept with
             # corrected Std. Error.
             ss$coefficients[1,3] <- ss$coef[1,1]/ss$coeff[1,2]
-            ss$coefficients[1,4] <- min(pnorm(ss$coef[1,3]),
-                                              1 - pnorm(ss$coef[1,3]))
+            ss$coefficients[1,4] <- 2*pnorm(abs(ss$coef[1,3]),
+                                            lower.tail=FALSE)
 
             return(ss)
           } )
