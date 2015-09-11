@@ -209,10 +209,7 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
   # the corrected versions.
   ci <- confint.lm(object, parm=parm, level=level,...)
   if ("pred" %in% rownames(ci) & !wald.style) {
-    pval <- pt(hypothesisTest(object), object$epb[["mod1"]]$df+2,
-               lower.tail=FALSE)
-
-    if (pval > .05 & !forceDisplayConfInt) {
+    if (summary(object)$coef[2,4] > .05 & !forceDisplayConfInt) {
       #cat("Interaction term not significant, suppressing associated confidence interval. Use 'forceDisplayConfInt=TRUE' to force it.\n")
       ci["pred",] <- c(NA, NA)
     } else {
