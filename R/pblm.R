@@ -126,7 +126,7 @@ createBreadAndMeat <- function(object) {
 ##'   number of parameters in the first stage model, less 2.
 ##' @author Josh Errickson
 hypothesisTest <- function(object, null=0) {
-  return((object$coef[2] - null)/sqrt(corrVar(eta=null, object)[2,2]))
+  return(abs(object$coef[2] - null)/sqrt(corrVar(eta=null, object)[2,2]))
 }
 
 
@@ -232,7 +232,7 @@ testinverse <- function(object, level=.95) {
 
   tosolve <- function(eta) {
     corrected <- corrVar(eta, object, bAndM)[2,2]
-    stat <- qt((1-level)/2, object$epb[["mod1"]]$df+2)
+    stat <- qt((1-level)/2, object$epb[["mod1"]]$df)
     return((object$coef[2] - eta)^2 - stat^2*corrected)
   }
 
