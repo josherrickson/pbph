@@ -126,7 +126,7 @@ createBreadAndMeat <- function(object) {
 ##'   number of parameters in the first stage model, less 2.
 ##' @author Josh Errickson
 hypothesisTest <- function(object, null=0) {
-  return(abs(object$coef[2] - null)/sqrt(corrVar(eta=null, object)[2,2]))
+  return((object$coef[2] - null)/sqrt(corrVar(eta=null, object)[2,2]))
 }
 
 
