@@ -213,7 +213,9 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
       #cat("Interaction term not significant, suppressing associated confidence interval. Use 'forceDisplayConfInt=TRUE' to force it.\n")
       ci["pred",] <- c(NA, NA)
     } else {
-      ci["pred",] <- testinverse(object, level=level)
+      ti <- testinverse(object, level=level)
+      ci["pred",] <- ti
+      attr(ci, "type") <- attr(ti, "type")
     }
   }
   return(ci)
@@ -236,18 +238,33 @@ testinverse <- function(object, level=.95) {
     return((object$coef[2] - eta)^2 - stat^2*corrected)
   }
 
-  midpoint <- nlm(tosolve, object$coef[2])
+  threepoints <- data.frame(eta=-1:1,
+                            t=sapply(-1:1,tosolve),
+                            row.names=1:3)
 
-  # nlm's $code output has 1:2 for convergence, 3:5 for issues.
-  if (midpoint$code %in% 1:2) {
-    lb <- tryCatch(uniroot(tosolve, c(-100, midpoint$estimate))$root,
-                   error=function(c) -Inf)
-    ub <- tryCatch(uniroot(tosolve, c(midpoint$estimate, 100))$root,
-                   error=function(c) Inf)
-    bounds <- c(lb,ub)
+  coefs <- lm(t ~ eta + I(eta^2), data=threepoints)$coef
+
+  midpoint <- nlm(function(x) sign(coefs[3])*tosolve(x), object$coef[2])
+
+  # If a is positive, convex and therefore finite.
+  #   (Can show that all reject is impossible.)
+  # If a is negative AND midpoint is positive, concave and disjoint.
+  # if a is negative AND midpoint is negative, concave and infinite.
+  type <- ifelse(sign(coefs[3]) == 1, "finite",
+                 ifelse(midpoint > 0, "disjoint", "infinte"))
+
+  if (type != "infinite") {
+    quad <- function(a,b,c) {
+      return(c((-b - sqrt(b^2 - 4*a*c))/(2*a),
+      (-b + sqrt(b^2 - 4*a*c))/(2*a)))
+    }
+
+    bounds <- quad(coefs[3], coefs[2], coefs[1])
   } else {
     bounds <- c(-Inf, Inf)
   }
+
+  attr(bounds, "type") <- as.vector(type)
 
   return(bounds)
 }
