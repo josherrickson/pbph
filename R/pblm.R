@@ -204,6 +204,9 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
     warning("Argument 'forceDisplayConfInt' ignored when 'wald.style' is TRUE.")
   }
 
+  # Temp disabling this
+  forceDisplayConfInt <- TRUE
+
   # Do not use confint(as(object, "lm")). `confint.lm` includes a call
   # to vcov; doing it that way will return the originals rather than
   # the corrected versions.
