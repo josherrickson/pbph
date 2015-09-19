@@ -241,11 +241,10 @@ testinverse <- function(object, level=.95) {
     return((object$coef[2] - eta)^2 - stat^2*corrected)
   }
 
-  threepoints <- data.frame(eta=-1:1,
-                            t=sapply(-1:1,tosolve),
-                            row.names=1:3)
+  t <- sapply(-1:1,tosolve)
 
-  coefs <- lm(t ~ eta + I(eta^2), data=threepoints)$coef
+  dmat <- cbind(1, (-1:1), (-1:1)^2)
+  coefs <- solve(t(dmat)%*%dmat)%*%t(dmat)%*%t
 
   midpoint <- nlm(function(x) sign(coefs[3])*tosolve(x), object$coef[2])
 
