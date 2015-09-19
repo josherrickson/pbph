@@ -53,3 +53,23 @@ test_that("makeSaveMatrix", {
   expect_error(makeSaveMatrix(names, "20"))
 
 })
+
+test_that("quadratic formula", {
+  q1 <- quad(1,1,1)
+  expect_true(length(q1) == 2)
+  expect_true(is.vector(q1))
+  expect_true(is.vector(q1))
+
+  q2 <- quad(1,0,-1)
+  expect_true(all(q2 == c(-1,1)))
+
+  # examples from http://regentsprep.org/Regents/math/algtrig/ATE3/quadformula.htm
+  expect_true(all.equal(quad(1,2,-8), c(-4,2)))
+  expect_true(all.equal(quad(3,-10,5),
+                        c((5-sqrt(10))/3,(5+sqrt(10))/3)))
+  expect_true(all.equal(quad(1,4,5),
+                        c(NA, NA)))
+  expect_true(all.equal(quad(1,-4,4), c(2,2)))
+  expect_true(all.equal(quad(2,1,-.5),
+                        c((-1-sqrt(5))/4,(-1+sqrt(5))/4)))
+})

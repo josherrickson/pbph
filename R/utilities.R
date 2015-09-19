@@ -51,3 +51,21 @@ makeSaveMatrix <- function(colNames, reps) {
   colnames(save) <- colNames
   return(save)
 }
+
+##' Solve quadratic formula
+##'
+##' Given an expression a*x^2 + b*x + c = 0, solve for x.
+##' @param a Coefficient on second-order term.
+##' @param b Coefficient on first-order term.
+##' @param c Coefficient on the constant.
+##' @return Zeroes of the function a*x^2 + b*x + c = 0.
+##' @author Josh Errickson
+##'
+quad <- function(a,b,c) {
+  # Short circuit if we get into imaginary number land.
+  if (b^2 < 4*a*c) {
+    return(c(NA,NA))
+  }
+  return(sort(c((-b - sqrt(b^2 - 4*a*c))/(2*a),
+                (-b + sqrt(b^2 - 4*a*c))/(2*a))))
+}

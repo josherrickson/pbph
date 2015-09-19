@@ -256,11 +256,6 @@ testinverse <- function(object, level=.95) {
                  ifelse(midpoint > 0, "disjoint", "infinte"))
 
   if (type != "infinite") {
-    quad <- function(a,b,c) {
-      return(c((-b - sqrt(b^2 - 4*a*c))/(2*a),
-      (-b + sqrt(b^2 - 4*a*c))/(2*a)))
-    }
-
     bounds <- quad(coefs[3], coefs[2], coefs[1])
   } else {
     bounds <- c(-Inf, Inf)
