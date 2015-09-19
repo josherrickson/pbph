@@ -241,11 +241,13 @@ testinverse <- function(object, level=.95) {
     return((object$coef[2] - eta)^2 - stat^2*corrected)
   }
 
+  # Faster than lm
   t <- sapply(-1:1,tosolve)
-
   dmat <- cbind(1, (-1:1), (-1:1)^2)
   coefs <- solve(t(dmat)%*%dmat)%*%t(dmat)%*%t
 
+  # Rather than deal with max vs min, use the sign on the quadratic
+  # form to flip the sign of `tosolve`.
   midpoint <- nlm(function(x) sign(coefs[3])*tosolve(x), object$coef[2])
 
   # If a is positive, convex and therefore finite.
