@@ -255,7 +255,7 @@ testinverse <- function(object, level=.95) {
   # If a is negative AND midpoint is positive, concave and disjoint.
   # if a is negative AND midpoint is negative, concave and infinite.
   type <- ifelse(sign(coefs[3]) == 1, "finite",
-                 ifelse(midpoint > 0, "disjoint", "infinte"))
+                 ifelse(midpoint > 0, "disjoint", "infinite"))
 
   if (type != "infinite") {
     bounds <- quad(coefs[3], coefs[2], coefs[1])
