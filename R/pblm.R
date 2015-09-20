@@ -248,7 +248,8 @@ testinverse <- function(object, level=.95) {
 
   # Rather than deal with max vs min, use the sign on the quadratic
   # form to flip the sign of `tosolve`.
-  midpoint <- nlm(function(x) sign(coefs[3])*tosolve(x), object$coef[2])
+  midpoint <- sign(coefs[3])*nlm(function(x)
+    sign(coefs[3])*tosolve(x), object$coef[2])$minimum
 
   # If a is positive, convex and therefore finite.
   #   (Can show that all reject is impossible.)
