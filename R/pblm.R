@@ -96,21 +96,13 @@ createBreadAndMeat <- function(object) {
   treatment <- object$epb[["treatment"]]
   pred <- object$epb[["pred"]]
 
-  b11 <- bread11(covs      = covs,
-                 treatment = treatment)
+  b11 <- bread11(mod1)
 
-  b22 <- bread22(pred      = pred,
-                 treatment = treatment)
+  b22 <- bread22(object)
 
-  m11 <- meat11(mod1       = mod1,
-                covs       = covs,
-                treatment  = treatment)
+  m11 <- meat11(mod1)
 
-  m22 <- meat22(eta        = object$coef[2],
-                tau        = object$coef[1],
-                resp       = eval(formula(mod1)[[2]], envir = data),
-                pred       = pred,
-                treatment  = treatment)
+  m22 <- meat22(object)
 
   return(list(b11 = b11,
               b22 = b22,
@@ -119,6 +111,7 @@ createBreadAndMeat <- function(object) {
 }
 
 ##' Conducts a hypothesis test for a given null.
+##'
 ##'
 ##' @param object A pblm object.
 ##' @param null Defaults to 0.

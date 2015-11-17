@@ -16,25 +16,18 @@ NULL
 #> NULL
 
 ##' @rdname bread_and_meat
-bread11 <- function(covs, treatment) {
-  covsInt <- addIntercept(covs)
-
-  t(as.matrix(covsInt[treatment==0,,drop=FALSE])) %*%
-    as.matrix(covsInt[treatment==0,,drop=FALSE])
+bread11 <- function(model) {
+  sandwich::bread(model)/length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
-bread22 <- function(pred, treatment) {
-  crossprod(cbind(rep(1,length(pred[treatment==1])),
-                  pred[treatment==1]))
+bread22 <- function(model) {
+  sandwich::bread(model)/length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
-meat11 <- function(mod1, covs, treatment) {
-  covsInt <- addIntercept(covs)
-
-  t(mod1$res*as.matrix(covsInt[treatment==0,,drop=FALSE])) %*%
-  (mod1$res*as.matrix(covsInt[treatment==0,,drop=FALSE]))
+meat11 <- function(model) {
+  sandwich::meat(model)*length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
@@ -49,10 +42,8 @@ bread21 <- function(eta, tau, resp, covs, pred, treatment) {
 }
 
 ##' @rdname bread_and_meat
-meat22 <- function(eta, tau, resp, pred, treatment) {
-  mod2res <- (resp[treatment==1] -
-              (1 + eta)*pred[treatment==1] - tau)
-  crossprod(cbind(mod2res, mod2res*pred[treatment==1]))
+meat22 <- function(model) {
+  sandwich::meat(model)*length(residuals(model))
 }
 
 ##' (Internal) Compute B^-1*M*B^T
@@ -61,8 +52,7 @@ meat22 <- function(eta, tau, resp, pred, treatment) {
 ##' @return Variance estimate.
 ##' @author Josh Errickson
 correctedvar <- function(b11, b21, b22, m11, m22) {
-  covmat <- (solve(b22)%*% (m22 + b21%*%solve(b11)%*%m11%*%
-                           solve(b11)%*%t(b21))%*% solve(b22))
+  covmat <- (b22 %*% (m22 + b21 %*% b11 %*% m11 %*% b11 %*% t(b21))%*% b22)
   dimnames(covmat) <- list(c("treatment", "pred"),
                            c("treatment", "pred"))
   return(covmat)
