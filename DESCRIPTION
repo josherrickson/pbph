@@ -2,9 +2,18 @@ Package: epb
 Title: Enhanced Peters-Belson Method
 Version: 0.0.0.9000
 Authors@R: person("Josh", "Errickson", email = "josh@errickson.net", role = c("aut", "cre"))
-Description: Produces proper estimates in the Enhanced Peters-Belson method; to address whether there is an interaction between predicted outcome and treatment. This generally arise when testing hypotheses of the form "Do those most at risk (predicted to have a low outcome in the absence of treatment) gain more effect from the treatment?"
-Depends: R (>= 3.2.0)
-Imports: methods
+Description: Produces proper estimates in the Enhanced Peters-Belson method; to
+    address whether there is an interaction between predicted outcome and treatment.
+    This generally arise when testing hypotheses of the form "Do those most at risk
+    (predicted to have a low outcome in the absence of treatment) gain more effect
+    from the treatment?"
+Depends:
+    R (>= 3.2.0)
+Imports:
+    methods,
+    sandwich
 License: GPL-3
 LazyData: true
-Suggests: testthat
+Suggests:
+    testthat
+RoxygenNote: 5.0.1
