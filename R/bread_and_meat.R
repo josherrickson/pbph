@@ -1,33 +1,44 @@
 #' (Internal) Piece-wise generation of Bread and Meat matrices.
 #'
+#' Computes the Bread and Meat matricies. The diagonal elements are
+#' typical sandwich estimators, with scaling, and thus only use the
+#' \code{model} argument. The off-diagonal Bread element requires
+#' further specification.
+#' @param model For Bread & Meat that can be calculated using sandwich
+#'   package, we only need the model, either first or second stage,
+#'   depending.
 #' @param eta Estimated version of the coefficient on the interaction
 #'   between predicted and treatment. This could be from a model or a
 #'   hypothesis.
 #' @param resp Vector of responses.
 #' @param covs Data frame of covariates.
 #' @param treatment Vector of 0/1 treatment indicators.
-#' @param mod1 First stage model.
 #' @param pred Predicted values from first stage.
 #' @param tau Estimated value of constant coefficient in second stage
 #'   model.
-#'
+#' @import sandwich
 #' @name bread_and_meat
 NULL
 #> NULL
 
 ##' @rdname bread_and_meat
 bread11 <- function(model) {
-  sandwich::bread(model)/length(residuals(model))
+  bread(model)/length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
 bread22 <- function(model) {
-  sandwich::bread(model)/length(residuals(model))
+  bread(model)/length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
 meat11 <- function(model) {
-  sandwich::meat(model)*length(residuals(model))
+  meat(model)*length(residuals(model))
+}
+
+##' @rdname bread_and_meat
+meat22 <- function(model) {
+  meat(model)*length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
@@ -39,11 +50,6 @@ bread21 <- function(eta, tau, resp, covs, pred, treatment) {
                2*(1 + eta) * pred[treatment==1]) *
                 covsInt[treatment==1,,drop=FALSE],
               2, sum))
-}
-
-##' @rdname bread_and_meat
-meat22 <- function(model) {
-  sandwich::meat(model)*length(residuals(model))
 }
 
 ##' (Internal) Compute B^-1*M*B^T
