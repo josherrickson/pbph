@@ -120,7 +120,7 @@ test_that("summary.pblm", {
 
   s <- summary(e)
 
-  expect_is(s, "summary.lm")
+  expect_is(s, "summary.pblm")
 
   expect_equal(e$coef, s$coef[,1])
   expect_true(all.equal(s$coef[2,3], hypothesisTest(e),

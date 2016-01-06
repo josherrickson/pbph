@@ -173,9 +173,20 @@ setMethod("summary", signature(object = "pblm"),
             ss$coefficients[1,4] <- 2*pnorm(abs(ss$coef[1,3]),
                                             lower.tail=FALSE)
 
+            class(ss) <- "summary.pblm"
+
             return(ss)
           } )
-
+##' Print `summary.pblm` objects correctly
+##'
+##' @param x A `summary.pblm` object.
+##' @param ... Additional arguments to `print`.
+##' @return Outputs a printed result similar to `print.summary.lm`.
+##' @author Josh Errickson
+print.summary.pblm <- function(x, ...) {
+  class(x) <- "summary.lm"
+  print(x, ...)
+}
 
 ##' Confidence intervals for pblm object
 ##'
