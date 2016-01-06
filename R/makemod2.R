@@ -23,6 +23,12 @@ makemod2 <- function(mod1, isTreated, data, center=FALSE) {
 
   # Get predicted values.
   predicted <- predict(mod1, newdata=if(center) data.center else data)
+  if(is(mod1, "glm")) {
+    if(mod1$family$link == "logit") {
+      # transform to the (0,1) scale
+      predicted <- plogis(predicted)
+    }
+  }
 
   # Second stage linear model.
   respname <- formula(mod1)[[2]]

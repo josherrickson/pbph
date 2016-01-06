@@ -156,8 +156,15 @@ setMethod("summary", signature(object = "pblm"),
 
             # Correct test statistic & p-value.
             ss$coefficients[2,3] <- hypothesisTest(object)
+            mod1 <- object$epb[["mod1"]]
+            df <- mod1$df
+            if(is(mod1, "glm")) {
+              if(mod1$family$link == "logit") {
+                df <- mod1$df.null
+              }
+            }
             ss$coefficients[2,4] <- 2*pt(abs(ss$coefficients[2,3]),
-                                       object$epb[["mod1"]]$df,
+                                       df,
                                        lower.tail=FALSE)
 
             # Correct test statistic & p-value for intercept with
