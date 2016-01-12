@@ -159,9 +159,9 @@ setMethod("summary", signature(object = "pblm"),
             mod1 <- object$epb[["mod1"]]
             df <- mod1$df
             if(is(mod1, "glm")) {
-              if(mod1$family$link == "logit") {
+#              if(mod1$family$link == "logit") {
                 df <- mod1$df.null
-              }
+#              }
             }
             ss$coefficients[2,4] <- 2*pt(abs(ss$coefficients[2,3]),
                                        df,
