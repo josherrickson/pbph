@@ -177,12 +177,14 @@ setMethod("summary", signature(object = "pblm"),
 
             return(ss)
           } )
+
 ##' Print `summary.pblm` objects correctly
 ##'
 ##' @param x A `summary.pblm` object.
 ##' @param ... Additional arguments to `print`.
 ##' @return Outputs a printed result similar to `print.summary.lm`.
 ##' @author Josh Errickson
+##' @export
 print.summary.pblm <- function(x, ...) {
   class(x) <- "summary.lm"
   print(x, ...)
