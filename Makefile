@@ -15,3 +15,6 @@ check: FUNC=check
 document: FUNC=document
 build: FUNC=build
 test check document build: .devtools
+
+clean:
+	git clean -Xfd
