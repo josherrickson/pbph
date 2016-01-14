@@ -157,12 +157,7 @@ setMethod("summary", signature(object = "pblm"),
             # Correct test statistic & p-value.
             ss$coefficients[2,3] <- hypothesisTest(object)
             mod1 <- object$epb[["mod1"]]
-            df <- mod1$df
-            if(is(mod1, "glm")) {
-#              if(mod1$family$link == "logit") {
-                df <- mod1$df.null
-#              }
-            }
+            df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
             ss$coefficients[2,4] <- 2*pt(abs(ss$coefficients[2,3]),
                                        df,
                                        lower.tail=FALSE)
@@ -250,7 +245,9 @@ testinverse <- function(object, level=.95) {
 
   tosolve <- function(eta) {
     corrected <- corrVar(eta, object, bAndM)[2,2]
-    stat <- qt((1-level)/2, object$epb[["mod1"]]$df)
+    mod1 <- object$epb[["mod1"]]
+    df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
+    stat <- qt((1-level)/2, df)
     return((object$coef[2] - eta)^2 - stat^2*corrected)
   }
 
