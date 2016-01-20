@@ -7,12 +7,14 @@ sigma2 <- 1
 true_inter <- seq(-1,2,by=.5)
 
 reps <- 100
-bigsave <- makeSaveMatrix(c("truth", "estimate", "#cov", "#inf",
-                            "#uncov"),
-                          length(true_inter))
+bigsave <- makeSaveMatrix(c("truth", "estimate", "overall_cov",
+                            "overall_un", "finite_un", "finite_cov",
+                            "inf_un", "inf_cov", "disjoint_un",
+                            "disjoint_cov"),
+                          reps=length(true_inter))
 for (j in 1:length(true_inter)) {
   ti <- true_inter[j]
-  save <- makeSaveMatrix(c("estimate", "lb", "ub"),
+  save <- makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"),
                          reps)
   for (i in 1:reps) {
     covs <- data.frame(matrix(rnorm(n*p), nrow=n))
@@ -30,14 +32,35 @@ for (j in 1:length(true_inter)) {
     mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
     e <- pblm(mod1, treatment, d)
-    save[i,] <- c(e$coef[2], confint(e)["pred",])
+    ci <- confint(e, "pred")
+    type <- attr(ci, "type")
+    if (type == "finite") {
+      covered <- ci[1] < ti & ti < ci[2]
+    } else if (type == "infinite") {
+      covered <- TRUE
+    } else if (type == "disjoint") {
+      covered <- ti < ci[1] | ci[2] < ti
+    } else {
+      stop(paste("Problem:", type))
+    }
+    type <- switch(type,
+                   finite=1,
+                   infinite=2,
+                   disjoint=3)
+
+    save[i,] <- c(e$coef[2], ci[1], ci[2], type, covered)
+
   }
-  saveFinite <- save[save[,2] != -Inf,]
-  numcov <- sum(saveFinite[,2] < ti & saveFinite[,3] > ti)
-  numuncov <- nrow(saveFinite) - numcov
-  numinf <- reps - nrow(saveFinite)
-  bigsave[j,] <- c(ti, mean(save[save[,2] != -Inf,1]),
-                   numcov, numinf, numuncov)
+  save <- data.frame(save)
+  save$type <- as.factor(save$type)
+  levels(save$type) <- 1:3
+  save$covered <- factor(save$covered, levels=0:1)
+
+  #bytype <- aggregate(save$covered, by=list(save$type), FUN=mean)[,2]
+  overall <- mean(save$covered==1)
+
+  bigsave[j,] <- c(ti, mean(save$estimate), table(save$covered),
+                   as.vector(table(save$covered, save$type)))
 
 }
 
