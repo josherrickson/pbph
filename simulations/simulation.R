@@ -31,7 +31,7 @@ for (j in 1:length(true_inter)) {
 
     mod1 <- lm(y ~ ., data=d, subset=treatment==0)
 
-    e <- pblm(mod1, treatment, d, center=TRUE)
+    e <- pblm(mod1, treatment, d)
     ci <- confint(e, "pred")
     type <- attr(ci, "type")
     if (type == "finite") {
