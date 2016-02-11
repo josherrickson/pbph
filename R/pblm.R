@@ -62,15 +62,17 @@ pblm <- function(mod1, treatment, data, center=FALSE) {
 corrVar <- function(eta, object,
                     breadAndMeat=createBreadAndMeat(object)) {
 
-  mod1 <- object$epb[["mod1"]]
-  data <- object$epb[["data"]]
+  mod1 <- object$epb$mod1
+  data <- object$epb$data
+
+
 
   b21 <- bread21(eta,
                  tau = object$coef[1],
                  resp = eval(formula(mod1)[[2]], envir = data),
                  covs = model.matrix(formula(mod1), data = data),
-                 pred = object$epb[["pred"]],
-                 treatment = object$epb[["treatment"]])
+                 pred = object$epb$pred,
+                 treatment = object$epb$treatment)
 
   corrected <- correctedvar(breadAndMeat$b11,
                                          b21,
@@ -90,12 +92,12 @@ corrVar <- function(eta, object,
 ##' @author Josh Errickson
 createBreadAndMeat <- function(object) {
 
-  mod1 <- object$epb[["mod1"]]
-  data <- object$epb[["data"]]
+  mod1 <- object$epb$mod1
+  data <- object$epb$data
   covs <- model.matrix(formula(mod1),
                        data = data)
-  treatment <- object$epb[["treatment"]]
-  pred <- object$epb[["pred"]]
+  treatment <- object$epb$treatment
+  pred <- object$epb$pred
 
   b11 <- bread11(mod1)
 
@@ -157,7 +159,7 @@ setMethod("summary", signature(object = "pblm"),
 
             # Correct test statistic & p-value.
             ss$coefficients[2,3] <- hypothesisTest(object)
-            mod1 <- object$epb[["mod1"]]
+            mod1 <- object$epb$mod1
             df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
             ss$coefficients[2,4] <- 2*pt(abs(ss$coefficients[2,3]),
                                        df,
@@ -246,7 +248,7 @@ testinverse <- function(object, level=.95) {
 
   tosolve <- function(eta) {
     corrected <- corrVar(eta, object, bAndM)[2,2]
-    mod1 <- object$epb[["mod1"]]
+    mod1 <- object$epb$mod1
     df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
     stat <- qt((1-level)/2, df)
     return((object$coef[2] - eta)^2 - stat^2*corrected)
