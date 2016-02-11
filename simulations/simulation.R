@@ -7,8 +7,8 @@ sigma2 <- 1
 true_inter <- seq(-1,2,by=.5)
 
 reps <- 100
-bigsave <- makeSaveMatrix(c("truth", "estimate", "overall_cov",
-                            "overall_un", "finite_un", "finite_cov",
+bigsave <- makeSaveMatrix(c("truth", "estimate", "overall_un",
+                            "overall_cov", "finite_un", "finite_cov",
                             "inf_un", "inf_cov", "disjoint_un",
                             "disjoint_cov"),
                           reps=length(true_inter))
