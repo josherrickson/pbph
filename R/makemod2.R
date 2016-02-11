@@ -9,8 +9,8 @@
 ##' @param isTreated A vector of treatment statuses, should be all `0`
 ##'   or `1`.
 ##' @param data Data where variables in `form` live.
-##' @param center Default FALSE. Should the covariates be centered in
-##'   the second stage?
+##' @param center Default FALSE. Should the predicted values be
+##'   centered in the second stage?
 ##'
 ##' @return A list consisting of `mod2`, the second stage model, and
 ##'   `pred`, the predicted values from `mod1`.

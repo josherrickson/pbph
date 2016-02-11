@@ -7,7 +7,8 @@ pblm <- setClass("pblm", contains = "lm")
 ##' @param mod1 First stage fitted model.
 ##' @param treatment Vector of 0/1 treatment indicators.
 ##' @param data Data where variables in `form` live.
-##'
+##' @param center Default FALSE. Should the predicted values be
+##'   centered in the second stage?
 ##' @return A pblm object which extends lm. Can be passed to `summary`
 ##'   or `confint`.
 ##'
@@ -17,7 +18,7 @@ pblm <- setClass("pblm", contains = "lm")
 ##' @export
 ##' @author Josh Errickson
 ##'
-pblm <- function(mod1, treatment, data) {
+pblm <- function(mod1, treatment, data, center=FALSE) {
   if( !all(treatment %in% 0:1)) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
@@ -30,7 +31,7 @@ pblm <- function(mod1, treatment, data) {
     stop("treatment must be same length as number of observations in data.")
   }
 
-  mm <- makemod2(mod1, treatment, data)
+  mm <- makemod2(mod1, treatment, data, center=center)
 
   pred <- mm$pred
   mod2 <- mm$mod2
