@@ -14,8 +14,6 @@
 #' @param covs Data frame of covariates.
 #' @param treatment Vector of 0/1 treatment indicators.
 #' @param pred Predicted values from first stage.
-#' @param tau Estimated value of constant coefficient in second stage
-#'   model.
 #' @import sandwich
 #' @name bread_and_meat
 NULL
@@ -42,8 +40,11 @@ meat22 <- function(model) {
 }
 
 ##' @rdname bread_and_meat
-bread21 <- function(eta, tau, resp, covs, pred, treatment) {
+bread21 <- function(eta, resp, covs, pred, treatment) {
   covsInt <- addIntercept(covs)
+
+  # Replace tauhat with tauhat_eta0
+  tau <- lm(resp - (1+eta)*pred ~ 1, subset=treatment==1)$coef
 
   rbind(apply(-(1 + eta) * covsInt[treatment==1,,drop=FALSE], 2, sum),
         apply((resp[treatment==1] - tau -

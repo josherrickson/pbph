@@ -65,10 +65,7 @@ corrVar <- function(eta, object,
   mod1 <- object$epb$mod1
   data <- object$epb$data
 
-
-
   b21 <- bread21(eta,
-                 tau = object$coef[1],
                  resp = eval(formula(mod1)[[2]], envir = data),
                  covs = model.matrix(formula(mod1), data = data),
                  pred = object$epb$pred,

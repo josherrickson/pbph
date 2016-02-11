@@ -23,9 +23,10 @@ test_that("bread", {
                check.attributes=FALSE)
 
   #B21
-  b21 <- bread21(eta=1, m$mod2$coef[1], resp, covs, m$pred, treatment)
-  expect_equal(b21, matrix(c(-8,-7567/285, -14, -5847/95,
-                             -24, -26216/285 ), nrow=2),
+  tau <- lm(resp - (1+eta0)*m$pred ~ 1, subset=treatment==1)$coef
+  b21 <- bread21(eta=1, resp, covs, m$pred, treatment)
+  expect_equal(b21, matrix(c(-8,-46/3, -14, -503/12,
+                             -24, -175/3 ), nrow=2),
                check.attributes=FALSE)
 
   #B22
