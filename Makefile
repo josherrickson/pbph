@@ -10,11 +10,12 @@ interactive:
 .devtools:
 	@$(RCMD) "library(devtools); devtools:::$(FUNC)()"
 
+dependencies: FUNC=install_deps
 test: FUNC=test
 check: FUNC=check
 document: FUNC=document
 build: FUNC=build
-test check document build: .devtools
+dependencies test check document build: .devtools
 
 clean:
 	git clean -Xfd
