@@ -8,9 +8,9 @@ Description: Produces proper estimates in the Enhanced Peters-Belson method; to
     (predicted to have a low outcome in the absence of treatment) gain more effect
     from the treatment?"
 Depends:
-    R (>= 3.2.0)
+    R (>= 3.2.0),
+    methods
 Imports:
-    methods,
     sandwich
 License: GPL-3
 LazyData: true
