@@ -144,7 +144,7 @@ vcov.pblm <- function(object) {
 ##' @return A summary
 ##' @export
 ##' @author Josh Errickson
-setMethod("summary", signature(object = "pblm"),
+setMethod("summary", "pblm",
           function(object, ...)
           {
             ss <- summary(as(object, "lm"), ...)
