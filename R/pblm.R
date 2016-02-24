@@ -90,11 +90,6 @@ corrVar <- function(eta, object,
 createBreadAndMeat <- function(object) {
 
   mod1 <- object$epb$mod1
-  data <- object$epb$data
-  covs <- model.matrix(formula(mod1),
-                       data = data)
-  treatment <- object$epb$treatment
-  pred <- object$epb$pred
 
   b11 <- bread11(mod1)
 
