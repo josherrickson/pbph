@@ -11,15 +11,15 @@
 ##'
 addIntercept <- function(x) {
   if (class(x) == "data.frame") {
-    if (any(x[,1] !=1)) {
+    if (any(x[,1] != 1)) {
       x$Intercept <- rep(1,nrow(x))
-      x <- x[,c(ncol(x), 1:(ncol(x)-1))]
+      x <- x[,c(ncol(x), 1:(ncol(x) - 1))]
     }
     return(x)
   }
 
   if (class(x) == "matrix") {
-    if (any(x[,1] !=1)) {
+    if (any(x[,1] != 1)) {
       x <- cbind(rep(1, nrow(x)), x)
       if(!is.null(colnames(x))) {
         colnames(x)[1] <- "Intercept"
@@ -63,9 +63,9 @@ makeSaveMatrix <- function(colNames, reps) {
 ##'
 quad <- function(a,b,c) {
   # Short circuit if we get into imaginary number land.
-  if (b^2 < 4*a*c) {
-    return(c(NA,NA))
+  if (b^2 < 4 * a * c) {
+    return(c(NA, NA))
   }
-  return(sort(c((-b - sqrt(b^2 - 4*a*c))/(2*a),
-                (-b + sqrt(b^2 - 4*a*c))/(2*a))))
+  return(sort(c((-b - sqrt(b^2 - 4 * a * c)) / (2 * a),
+                (-b + sqrt(b^2 - 4 * a * c)) / (2 * a))))
 }

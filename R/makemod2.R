@@ -24,7 +24,7 @@ makemod2 <- function(mod1, isTreated, data, center=FALSE) {
   # Get predicted values.
   predicted <- predict(mod1,
                        type="response",
-                       newdata=if(center) data.center else data)
+                       newdata=if (center) data.center else data)
 
   # Second stage linear model.
   respname <- formula(mod1)[[2]]

@@ -23,7 +23,7 @@ pblm <- function(mod1, treatment, data, center=TRUE) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
 
-  if (sum(1-treatment) != length(resid(mod1))) {
+  if (sum(1 - treatment) != length(resid(mod1))) {
     stop("It appears the first stage model is not fit only on control units.")
   }
 
@@ -119,7 +119,7 @@ createBreadAndMeat <- function(object) {
 ##'   number of parameters in the first stage model, less 2.
 ##' @author Josh Errickson
 hypothesisTest <- function(object, null=0) {
-  return((object$coef[2] - null)/sqrt(corrVar(eta=null, object)[2,2]))
+  return( (object$coef[2] - null) / sqrt(corrVar(eta=null, object)[2,2]))
 }
 
 
@@ -145,8 +145,7 @@ vcov.pblm <- function(object) {
 ##' @export
 ##' @author Josh Errickson
 setMethod("summary", "pblm",
-          function(object, ...)
-          {
+          function(object, ...) {
             ss <- summary(as(object, "lm"), ...)
 
             ss$cov.unscaled <- vcov(object)
@@ -158,15 +157,15 @@ setMethod("summary", "pblm",
             ss$coefficients[2,3] <- hypothesisTest(object)
             mod1 <- object$epb$mod1
             df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
-            ss$coefficients[2,4] <- 2*pt(abs(ss$coefficients[2,3]),
-                                       df,
-                                       lower.tail=FALSE)
+            ss$coefficients[2,4] <- 2 * pt(abs(ss$coefficients[2,3]),
+                                           df,
+                                           lower.tail=FALSE)
 
             # Correct test statistic & p-value for intercept with
             # corrected Std. Error.
-            ss$coefficients[1,3] <- ss$coef[1,1]/ss$coeff[1,2]
-            ss$coefficients[1,4] <- 2*pnorm(abs(ss$coef[1,3]),
-                                            lower.tail=FALSE)
+            ss$coefficients[1,3] <- ss$coef[1,1] / ss$coeff[1,2]
+            ss$coefficients[1,4] <- 2 * pnorm(abs(ss$coef[1,3]),
+                                              lower.tail=FALSE)
 
             class(ss) <- "summary.pblm"
 
@@ -206,8 +205,7 @@ print.summary.pblm <- function(x, ...) {
 ##' @author Josh Errickson
 ##'
 confint.pblm <- function(object, parm, level = 0.95, ...,
-                         wald.style=FALSE, forceDisplayConfInt=FALSE)
-{
+                         wald.style=FALSE, forceDisplayConfInt=FALSE) {
   if (wald.style & forceDisplayConfInt) {
     warning("Argument 'forceDisplayConfInt' ignored when 'wald.style' is TRUE.")
   }
@@ -221,7 +219,8 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
   ci <- confint.lm(object, parm=parm, level=level,...)
   if ("pred" %in% rownames(ci) & !wald.style) {
     if (summary(object)$coef[2,4] > .05 & !forceDisplayConfInt) {
-      #cat("Interaction term not significant, suppressing associated confidence interval. Use 'forceDisplayConfInt=TRUE' to force it.\n")
+      cat("Interaction term not significant, suppressing associated confidence interval. ")
+      cat("Use 'forceDisplayConfInt=TRUE' to force it.\n")
       ci["pred",] <- c(NA, NA)
     } else {
       ti <- testinverse(object, level=level)
@@ -247,14 +246,14 @@ testinverse <- function(object, level=.95) {
     corrected <- corrVar(eta, object, bAndM)[2,2]
     mod1 <- object$epb$mod1
     df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
-    stat <- qt((1-level)/2, df)
-    return((object$coef[2] - eta)^2 - stat^2*corrected)
+    stat <- qt( (1 - level) / 2, df)
+    return( (object$coef[2] - eta)^2 - stat^2 * corrected)
   }
 
   # Faster than lm
   t <- sapply(-1:1,tosolve)
   dmat <- cbind(1, (-1:1), (-1:1)^2)
-  coefs <- solve(t(dmat)%*%dmat)%*%t(dmat)%*%t
+  coefs <- solve(t(dmat) %*% dmat) %*% t(dmat) %*% t
 
   # Rather than deal with max vs min, use the sign on the quadratic
   # form to flip the sign of `tosolve`.
