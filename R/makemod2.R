@@ -28,13 +28,14 @@ makemod2 <- function(mod1, isTreated, data, center=FALSE) {
 
   # Second stage linear model.
   respname <- formula(mod1)[[2]]
-  assign(paste0(respname, "_t"),
-         eval(respname, envir=data)[isTreated==1])
-  pred <- predicted[isTreated==1]
-  treatment <- rep(1, sum(isTreated))
+  newdata <- data.frame(pred      = predicted[isTreated == 1],
+                        treatment = rep(1, sum(isTreated)))
+  newdata[[paste0(respname, "_t")]] <- eval(respname, envir=data)[isTreated == 1]
+
 
   mod2 <- lm(as.formula(paste0(respname,
-                               "_t - pred ~ treatment + pred + 0")))
+                               "_t - pred ~ treatment + pred + 0")),
+             data=newdata)
 
   mod2$call$formula <- as.formula(paste0(respname,
                                   "_t - pred ~ treatment + pred"))
