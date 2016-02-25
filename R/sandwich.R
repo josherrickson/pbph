@@ -18,7 +18,7 @@ sandwich <- function (x, bread. = bread, meat. = meat, clusters = list(), ...) {
   if (is.function(bread.))
     bread. <- bread.(x)
   if (is.function(meat.))
-        meat. <- meat.(x, clusters = clusters, ...)
+    meat. <- meat.(x, clusters = clusters, ...)
   n <- NROW(sandwich::estfun(x))
   return(1/n * (bread. %*% meat. %*% bread.))
 }
