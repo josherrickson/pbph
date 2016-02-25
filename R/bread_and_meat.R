@@ -21,22 +21,22 @@ NULL
 
 ##' @rdname bread_and_meat
 bread11 <- function(model) {
-  bread(model) / length(residuals(model))
+  sandwich::bread(model) / length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
 bread22 <- function(model) {
-  bread(model) / length(residuals(model))
+  sandwich::bread(model) / length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
 meat11 <- function(model) {
-  meat(model) * length(residuals(model))
+  sandwich::meat(model) * length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
 meat22 <- function(model) {
-  meat(model) * length(residuals(model))
+  sandwich::meat(model) * length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
