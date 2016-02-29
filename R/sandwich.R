@@ -55,3 +55,8 @@ meat <- function(x, adjust = FALSE, clusters=list(), ...) {
   rownames(rval) <- colnames(rval) <- colnames(psi)
   return(rval)
 }
+
+# This allows a user to access sandwich's bread when loading pblm
+# without forcing them to load the full sandwich package (as sandwich
+# is only an Import instead of a Depends.
+bread <- sandwich::bread
