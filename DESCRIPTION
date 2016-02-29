@@ -9,8 +9,7 @@ Description: Produces proper estimates in the Enhanced Peters-Belson method; to
     from the treatment?"
 Depends:
     R (>= 3.2.0),
-    methods
-Imports:
+    methods,
     sandwich
 License: GPL-3
 LazyData: true
