@@ -98,9 +98,14 @@ createBreadAndMeat <- function(object, clusters=list()) {
 
   b22 <- bread22(object)
 
-  m11 <- meat11(mod1, clusters=clusters)
+  clusters.control <- lapply(clusters,
+                               function(x) x[object$epb$treatment == 0])
+  clusters.treatment <- lapply(clusters,
+                               function(x) x[object$epb$treatment == 1])
 
-  m22 <- meat22(object, clusters=clusters)
+  m11 <- meat11(mod1, clusters=clusters.control)
+
+  m22 <- meat22(object, clusters=clusters.treatment)
 
   return(list(b11 = b11,
               b22 = b22,
@@ -238,7 +243,7 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
 ##' @author Josh Errickson
 testinverse <- function(object, level=.95) {
 
-  bAndM <- createBreadAndMeat(object)
+  bAndM <- createBreadAndMeat(object, object$epb$clusters)
 
   tosolve <- function(eta) {
     corrected <- corrVar(eta, object, bAndM)[2,2]
