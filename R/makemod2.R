@@ -6,7 +6,7 @@
 ##' resp - pred ~ pred | treatment == 1
 ##'
 ##' @param mod1 First stage model fit
-##' @param isTreated A vector of treatment statuses, should be all `0`
+##' @param trtmt A vector of treatment statuses, should be all `0`
 ##'   or `1`.
 ##' @param data Data where variables in `form` live.
 ##' @param center Default FALSE. Should the predicted values be
@@ -16,7 +16,7 @@
 ##'   `pred`, the predicted values from `mod1`.
 ##' @author Josh Errickson
 ##'
-makemod2 <- function(mod1, isTreated, data, center=FALSE) {
+makemod2 <- function(mod1, trtmt, data, center=FALSE) {
 
   # center the covariates. Why do we do this?
   if (center) data.center <- data.frame(scale(data, scale=FALSE))
@@ -28,9 +28,9 @@ makemod2 <- function(mod1, isTreated, data, center=FALSE) {
 
   # Second stage linear model.
   respname <- formula(mod1)[[2]]
-  newdata <- data.frame(pred      = predicted[isTreated == 1],
-                        treatment = rep(1, sum(isTreated)))
-  newdata[[paste0(respname, "_t")]] <- eval(respname, envir=data)[isTreated == 1]
+  newdata <- data.frame(pred      = predicted[trtmt == 1],
+                        treatment = rep(1, sum(trtmt)))
+  newdata[[paste0(respname, "_t")]] <- eval(respname, envir=data)[trtmt == 1]
 
 
   mod2 <- lm(as.formula(paste0(respname,
