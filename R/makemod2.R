@@ -19,7 +19,12 @@
 makemod2 <- function(mod1, trtmt, data, center=FALSE) {
 
   # center the covariates. Why do we do this?
-  if (center) data.center <- data.frame(scale(data, scale=FALSE))
+  if (center) {
+    data.center <- data
+    numeric_cols <- sapply(data, is.numeric)
+    data.center[numeric_cols] <- data.frame(scale(data[numeric_cols],
+                                                  scale=FALSE))
+  }
 
   # Get predicted values.
   predicted <- predict(mod1,
