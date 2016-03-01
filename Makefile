@@ -14,8 +14,10 @@ dependencies: FUNC=install_deps
 test: FUNC=test
 check: FUNC=check
 document: FUNC=document
+vignette: FUNC=build_vignettes
+clean-vignette: FUNC=clean_vignettes
 build: FUNC=build
-dependencies test check document build: .devtools
+dependencies test check document vignette clean_vignettes build: .devtools
 
-clean:
+clean: clean-vignettes
 	git clean -Xfd
