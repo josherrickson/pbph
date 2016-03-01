@@ -4,7 +4,7 @@
 \alias{pblm}
 \title{Enhanced Peters-Belson method}
 \usage{
-pblm(mod1, treatment, data, center = TRUE)
+pblm(mod1, treatment, data, center = TRUE, clusters = list())
 }
 \arguments{
 \item{mod1}{First stage fitted model.}
@@ -15,6 +15,8 @@ pblm(mod1, treatment, data, center = TRUE)
 
 \item{center}{Default TRUE. Should the predicted values be
 centered in the second stage?}
+
+\item{clusters}{List of clusters}
 }
 \value{
 A pblm object which extends lm. Can be passed to `summary`

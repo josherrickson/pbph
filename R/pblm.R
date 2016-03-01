@@ -9,6 +9,7 @@ pblm <- setClass("pblm", contains = "lm")
 ##' @param data Data where variables in `form` live.
 ##' @param center Default TRUE. Should the predicted values be
 ##'   centered in the second stage?
+##' @param clusters List of clusters
 ##' @return A pblm object which extends lm. Can be passed to `summary`
 ##'   or `confint`.
 ##'
@@ -18,7 +19,7 @@ pblm <- setClass("pblm", contains = "lm")
 ##' @export
 ##' @author Josh Errickson
 ##'
-pblm <- function(mod1, treatment, data, center=TRUE) {
+pblm <- function(mod1, treatment, data, center=TRUE, clusters=list()) {
   if( !all(treatment %in% 0:1)) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
@@ -39,7 +40,8 @@ pblm <- function(mod1, treatment, data, center=TRUE) {
   mod2$epb <- list(mod1=mod1,
                    pred=pred,
                    treatment=treatment,
-                   data=data)
+                   data=data,
+                   clusters=clusters)
 
   mod2 <- as(mod2, "pblm")
 
@@ -60,7 +62,7 @@ pblm <- function(mod1, treatment, data, center=TRUE) {
 ##' @return A covariance matrix
 ##' @author Josh Errickson
 corrVar <- function(eta, object,
-                    breadAndMeat=createBreadAndMeat(object)) {
+                    breadAndMeat=createBreadAndMeat(object, clusters=object$epb$clusters)) {
 
   mod1 <- object$epb$mod1
   data <- object$epb$data
@@ -85,9 +87,10 @@ corrVar <- function(eta, object,
 ##' Computes the pieces of the Bread and Meat which do not depend on
 ##' eta. (e.g. all but B21)
 ##' @param object A pblm object.
+##' @param clusters A list of cluster variables to pass to meat.
 ##' @return A list of b11, b22, m11, and m22.
 ##' @author Josh Errickson
-createBreadAndMeat <- function(object) {
+createBreadAndMeat <- function(object, clusters=list()) {
 
   mod1 <- object$epb$mod1
 
@@ -95,9 +98,9 @@ createBreadAndMeat <- function(object) {
 
   b22 <- bread22(object)
 
-  m11 <- meat11(mod1)
+  m11 <- meat11(mod1, clusters=clusters)
 
-  m22 <- meat22(object)
+  m22 <- meat22(object, clusters=clusters)
 
   return(list(b11 = b11,
               b22 = b22,

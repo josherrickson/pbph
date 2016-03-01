@@ -7,6 +7,7 @@
 #' @param model For Bread & Meat that can be calculated using sandwich
 #'   package, we only need the model, either first or second stage,
 #'   depending.
+#' @param clusters For Meat only; list of cluster variables.
 #' @param eta Estimated version of the coefficient on the interaction
 #'   between predicted and treatment. This could be from a model or a
 #'   hypothesis.
@@ -30,13 +31,13 @@ bread22 <- function(model) {
 }
 
 ##' @rdname bread_and_meat
-meat11 <- function(model) {
-  sandwich::meat(model) * length(residuals(model))
+meat11 <- function(model, clusters=list()) {
+  meat(model, clusters=clusters) * length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
-meat22 <- function(model) {
-  sandwich::meat(model) * length(residuals(model))
+meat22 <- function(model, clusters=list()) {
+  meat(model, clusters=clusters) * length(residuals(model))
 }
 
 ##' @rdname bread_and_meat

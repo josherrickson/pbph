@@ -4,10 +4,12 @@
 \alias{createBreadAndMeat}
 \title{Computes Bread and Meat matrices.}
 \usage{
-createBreadAndMeat(object)
+createBreadAndMeat(object, clusters = list())
 }
 \arguments{
 \item{object}{A pblm object.}
+
+\item{clusters}{A list of cluster variables to pass to meat.}
 }
 \value{
 A list of b11, b22, m11, and m22.
