@@ -17,7 +17,7 @@ document: FUNC=document
 vignette: FUNC=build_vignettes
 clean-vignette: FUNC=clean_vignettes
 build: FUNC=build
-dependencies test check document vignette clean_vignettes build: .devtools
+dependencies test check document vignette clean-vignette build: .devtools
 
-clean: clean-vignettes
+clean: clean-vignette
 	git clean -Xfd
