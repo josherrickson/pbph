@@ -68,33 +68,33 @@ vcov.pblm <- function(object) {
 ##' @return A summary
 ##' @export
 ##' @author Josh Errickson
-setMethod("summary", "pblm",
-          function(object, ...) {
-            ss <- summary(as(object, "lm"), ...)
+##' s
+summary.pblm <- function(object, ...) {
+  ss <- summary(as(object, "lm"), ...)
 
-            ss$cov.unscaled <- vcov(object)
+  ss$cov.unscaled <- vcov(object)
 
-            # Input corrected Std. Error
-            ss$coefficients[,2] <- sqrt(diag(ss$cov.unscaled))
+  # Input corrected Std. Error
+  ss$coefficients[,2] <- sqrt(diag(ss$cov.unscaled))
 
-            # Correct test statistic & p-value.
-            ss$coefficients[2,3] <- hypothesisTest(object)
-            mod1 <- object$epb$mod1
-            df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
-            ss$coefficients[2,4] <- 2 * pt(abs(ss$coefficients[2,3]),
-                                           df,
-                                           lower.tail=FALSE)
+  # Correct test statistic & p-value.
+  ss$coefficients[2,3] <- hypothesisTest(object)
+  mod1 <- object$epb$mod1
+  df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
+  ss$coefficients[2,4] <- 2 * pt(abs(ss$coefficients[2,3]),
+                                 df,
+                                 lower.tail=FALSE)
 
-            # Correct test statistic & p-value for intercept with
-            # corrected Std. Error.
-            ss$coefficients[1,3] <- ss$coef[1,1] / ss$coeff[1,2]
-            ss$coefficients[1,4] <- 2 * pnorm(abs(ss$coef[1,3]),
-                                              lower.tail=FALSE)
+  # Correct test statistic & p-value for intercept with
+  # corrected Std. Error.
+  ss$coefficients[1,3] <- ss$coef[1,1] / ss$coeff[1,2]
+  ss$coefficients[1,4] <- 2 * pnorm(abs(ss$coef[1,3]),
+                                    lower.tail=FALSE)
 
-            class(ss) <- "summary.pblm"
+  class(ss) <- "summary.pblm"
 
-            return(ss)
-          } )
+  return(ss)
+}
 
 ##' Print `summary.pblm` objects correctly
 ##'

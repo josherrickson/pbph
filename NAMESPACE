@@ -2,10 +2,10 @@
 
 S3method(confint,pblm)
 S3method(print,summary.pblm)
+S3method(summary,pblm)
 export(meat)
 export(pblm)
 export(sandwich)
-exportMethods(summary)
 import(sandwich)
 importFrom(methods,as)
 importFrom(methods,setClass)
