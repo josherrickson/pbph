@@ -13,11 +13,7 @@
 A covariance matrix.
 }
 \description{
-Returns a covariance matrix. Computed using enhanced PB
-methods. The variance for pred should NOT be used directly in
-confidence intervals.
-}
-\author{
-Josh Errickson
+Returns a covariance matrix. Computed using enhanced PB methods. The
+variance for pred should NOT be used directly in confidence intervals.
 }
 

@@ -1,24 +1,20 @@
 ##' (Internal) Fit the second stage Enhanced Peters-Belson model.
 ##'
-##' Given a first stage model fit only on the control group, fit a
-##' second stage model with formula.
+##' Given a first stage model fit only on the control group, fit a second stage
+##' model with formula.
 ##'
 ##' resp - pred ~ pred | treatment == 1
 ##'
 ##' @param mod1 First stage model fit
-##' @param trtmt A vector of treatment statuses, should be all `0`
-##'   or `1`.
+##' @param trtmt A vector of treatment statuses, should be all `0` or `1`.
 ##' @param data Data where variables in `form` live.
-##' @param center Default FALSE. Should the predicted values be
-##'   centered in the second stage?
-##'
-##' @return A list consisting of `mod2`, the second stage model, and
-##'   `pred`, the predicted values from `mod1`.
-##' @author Josh Errickson
-##'
+##' @param center Default FALSE. Should the predicted values be centered in the
+##'   second stage?
+##' @return A list consisting of `mod2`, the second stage model, and `pred`, the
+##'   predicted values from `mod1`.
 makemod2 <- function(mod1, trtmt, data, center=FALSE) {
 
-  # center the covariates. Why do we do this?
+  # Center the covariates to orthogonalize intercept and slope.
   if (center) {
     data.center <- data
     numeric_cols <- sapply(data, is.numeric)

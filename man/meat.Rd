@@ -19,7 +19,7 @@ meat(x, adjust = FALSE, clusters = list(), ...)
 A meat matrix
 }
 \description{
-This `meat` function is an overloaded function of `meat` from the
-`sandwich` package which enables a `clusters` argument.
+This `meat` function is an overloaded function of `meat` from the `sandwich`
+package which enables a `clusters` argument.
 }
 

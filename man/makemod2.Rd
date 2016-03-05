@@ -9,26 +9,22 @@ makemod2(mod1, trtmt, data, center = FALSE)
 \arguments{
 \item{mod1}{First stage model fit}
 
-\item{trtmt}{A vector of treatment statuses, should be all `0`
-or `1`.}
+\item{trtmt}{A vector of treatment statuses, should be all `0` or `1`.}
 
 \item{data}{Data where variables in `form` live.}
 
-\item{center}{Default FALSE. Should the predicted values be
-centered in the second stage?}
+\item{center}{Default FALSE. Should the predicted values be centered in the
+second stage?}
 }
 \value{
-A list consisting of `mod2`, the second stage model, and
-  `pred`, the predicted values from `mod1`.
+A list consisting of `mod2`, the second stage model, and `pred`, the
+  predicted values from `mod1`.
 }
 \description{
-Given a first stage model fit only on the control group, fit a
-second stage model with formula.
+Given a first stage model fit only on the control group, fit a second stage
+model with formula.
 }
 \details{
 resp - pred ~ pred | treatment == 1
-}
-\author{
-Josh Errickson
 }
 

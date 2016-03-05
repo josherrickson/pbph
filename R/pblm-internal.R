@@ -1,15 +1,12 @@
-##' (Internal) Return covariance matrix associated with a given choice
-##' of eta.
+##' (Internal) Return covariance matrix associated with a given choice of eta.
 ##'
-##' For a given eta, the covariance can vary. For example, etahat or
-##' eta_0.
+##' For a given eta, the covariance can vary. For example, etahat or eta_0.
 ##' @param eta Value of eta to use.
 ##' @param object A pblm object.
-##' @param breadAndMeat By default, will create breadAndMeat
-##'   associated with 'object'. If speed a concern, it is faster to
-##'   compute this once and pass into corrVar.
+##' @param breadAndMeat By default, will create breadAndMeat associated with
+##'   'object'. If speed a concern, it is faster to compute this once and pass
+##'   into corrVar.
 ##' @return A covariance matrix
-##' @author Josh Errickson
 corrVar <- function(eta, object,
                     breadAndMeat=createBreadAndMeat(object, clusters=object$epb$clusters)) {
 
@@ -33,24 +30,20 @@ corrVar <- function(eta, object,
 
 ##' (Internal) Conducts a hypothesis test for a given null.
 ##'
-##'
 ##' @param object A pblm object.
 ##' @param null Defaults to 0.
-##' @return A test statistic, with distribution t(k) where k is the
-##'   number of parameters in the first stage model, less 2.
-##' @author Josh Errickson
+##' @return A test statistic, with distribution t(k) where k is the number of
+##'   parameters in the first stage model, less 2.
 hypothesisTest <- function(object, null=0) {
   return( (object$coef[2] - null) / sqrt(corrVar(eta=null, object)[2,2]))
 }
 
 
-##' (Internal) Computes a confidence interval for eta via test
-##' inversion.
+##' (Internal) Computes a confidence interval for eta via test inversion.
 ##'
 ##' @param object A pblm object.
 ##' @param level Confidence level. Default is 95\%.
 ##' @return Vector of length two with the lower and upper bounds.
-##' @author Josh Errickson
 testinverse <- function(object, level=.95) {
 
   bAndM <- createBreadAndMeat(object, object$epb$clusters)
@@ -97,7 +90,6 @@ testinverse <- function(object, level=.95) {
 ##'
 ##' @param b11,b21,b22,m11,m22 Pieces of bread and meat.
 ##' @return Variance estimate.
-##' @author Josh Errickson
 correctedvar <- function(b11, b21, b22, m11, m22) {
   covmat <- (b22 %*% (m22 + b21 %*% b11 %*% m11 %*% b11 %*% t(b21)) %*% b22)
   dimnames(covmat) <- list(c("treatment", "pred"),

@@ -17,7 +17,4 @@ A summary
 \description{
 Similar to `summary.lm`.
 }
-\author{
-Josh Errickson
-}
 

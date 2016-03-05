@@ -2,7 +2,7 @@
 % Please edit documentation in R/bread_and_meat.R
 \name{createBreadAndMeat}
 \alias{createBreadAndMeat}
-\title{Computes Bread and Meat matrices.}
+\title{(Internal) Computes Bread and Meat matrices.}
 \usage{
 createBreadAndMeat(object, clusters = list())
 }
@@ -15,10 +15,7 @@ createBreadAndMeat(object, clusters = list())
 A list of b11, b22, m11, and m22.
 }
 \description{
-Computes the pieces of the Bread and Meat which do not depend on
-eta. (e.g. all but B21)
-}
-\author{
-Josh Errickson
+Computes the pieces of the Bread and Meat which do not depend on eta. (e.g.
+all but B21)
 }
 

@@ -15,7 +15,4 @@ Variance estimate.
 \description{
 (Internal) Compute B^-1*M*B^T
 }
-\author{
-Josh Errickson
-}
 

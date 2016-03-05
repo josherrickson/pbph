@@ -7,17 +7,16 @@ pblm <- setClass("pblm", contains = "lm")
 ##' @param mod1 First stage fitted model.
 ##' @param treatment Vector of 0/1 treatment indicators.
 ##' @param data Data where variables in `form` live.
-##' @param center Default TRUE. Should the predicted values be
-##'   centered in the second stage?
+##' @param center Default TRUE. Should the predicted values be centered in the
+##'   second stage?
 ##' @param clusters List of clusters
-##' @return A pblm object which extends lm. Can be passed to `summary`
-##'   or `confint`.
+##' @return A pblm object which extends lm. Can be passed to `summary` or
+##'   `confint`.
 ##'
-##'   The return contains an additional object, `epb`, which `lm`
-##'   doesn't include. `epb` is a list which contains several pieces
-##'   necessary for `summary` and `confint` support.
+##'   The return contains an additional object, `epb`, which `lm` doesn't
+##'   include. `epb` is a list which contains several pieces necessary for
+##'   `summary` and `confint` support.
 ##' @export
-##' @author Josh Errickson
 pblm <- function(mod1, treatment, data, center=TRUE, clusters=list()) {
   if( !all(treatment %in% 0:1)) {
     stop("treatment must be indicator (0/1) for treatment status")
@@ -49,13 +48,10 @@ pblm <- function(mod1, treatment, data, center=TRUE, clusters=list()) {
 
 ##' Returns covariance matrix calculated via sandwich estimation.
 ##'
-##' Returns a covariance matrix. Computed using enhanced PB
-##' methods. The variance for pred should NOT be used directly in
-##' confidence intervals.
-##'
+##' Returns a covariance matrix. Computed using enhanced PB methods. The
+##' variance for pred should NOT be used directly in confidence intervals.
 ##' @param object pblm object.
 ##' @return A covariance matrix.
-##' @author Josh Errickson
 vcov.pblm <- function(object) {
   return(corrVar(object$coef[2], object))
 }
@@ -67,7 +63,6 @@ vcov.pblm <- function(object) {
 ##' @param ... Additional arguments to `summary.lm`.
 ##' @return A summary
 ##' @export
-##' @author Josh Errickson
 summary.pblm <- function(object, ...) {
   ss <- summary(as(object, "lm"), ...)
 
@@ -100,7 +95,6 @@ summary.pblm <- function(object, ...) {
 ##' @param x A `summary.pblm` object.
 ##' @param ... Additional arguments to `print`.
 ##' @return Outputs a printed result similar to `print.summary.lm`.
-##' @author Josh Errickson
 ##' @export
 print.summary.pblm <- function(x, ...) {
   class(x) <- "summary.lm"
@@ -114,19 +108,15 @@ print.summary.pblm <- function(x, ...) {
 ##' @param parm Parameters
 ##' @param level Confidence level.
 ##' @param ... Additional arguments to `confint.lm`.
-##' @param wald.style Logical. Defaults to FALSE so the method
-##'   performs test inversion to obtain proper coverage. If TRUE,
-##'   generates wald-style CI's, which will likely suffer from
-##'   undercoverage.
-##' @param forceDisplayConfInt Logical. Defaults to FALSE. If a
-##'   hypothesis test for the interaction term fails, a confidence
-##'   interval is unreliable (and ultimately unnecessary) and thus not
-##'   returned. Set this to TRUE to force computation of the interval
-##'   regardless of the hypothesis test.
+##' @param wald.style Logical. Defaults to FALSE so the method performs test
+##'   inversion to obtain proper coverage. If TRUE, generates wald-style CI's,
+##'   which will likely suffer from undercoverage.
+##' @param forceDisplayConfInt Logical. Defaults to FALSE. If a hypothesis test
+##'   for the interaction term fails, a confidence interval is unreliable (and
+##'   ultimately unnecessary) and thus not returned. Set this to TRUE to force
+##'   computation of the interval regardless of the hypothesis test.
 ##' @return Confidence intervals
 ##' @export
-##' @author Josh Errickson
-##'
 confint.pblm <- function(object, parm, level = 0.95, ...,
                          wald.style=FALSE, forceDisplayConfInt=FALSE) {
   if (wald.style & forceDisplayConfInt) {
@@ -136,9 +126,9 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
   # Temp disabling this
   forceDisplayConfInt <- TRUE
 
-  # Do not use confint(as(object, "lm")). `confint.lm` includes a call
-  # to vcov; doing it that way will return the originals rather than
-  # the corrected versions.
+  # Do not use confint(as(object, "lm")). `confint.lm` includes a call to vcov;
+  # doing it that way will return the originals rather than the corrected
+  # versions.
   ci <- confint.lm(object, parm=parm, level=level,...)
   if ("pred" %in% rownames(ci) & !wald.style) {
     if (summary(object)$coef[2,4] > .05 & !forceDisplayConfInt) {

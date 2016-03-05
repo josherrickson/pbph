@@ -2,8 +2,7 @@
 % Please edit documentation in R/pblm-internal.R
 \name{testinverse}
 \alias{testinverse}
-\title{(Internal) Computes a confidence interval for eta via test
-inversion.}
+\title{(Internal) Computes a confidence interval for eta via test inversion.}
 \usage{
 testinverse(object, level = 0.95)
 }
@@ -16,10 +15,6 @@ testinverse(object, level = 0.95)
 Vector of length two with the lower and upper bounds.
 }
 \description{
-(Internal) Computes a confidence interval for eta via test
-inversion.
-}
-\author{
-Josh Errickson
+(Internal) Computes a confidence interval for eta via test inversion.
 }
 

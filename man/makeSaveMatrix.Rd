@@ -18,7 +18,4 @@ An empty matrix.
 Given a vector of column names and a number of reps, generates an
 appropriately sized matrix with given column names.
 }
-\author{
-Josh Errickson
-}
 

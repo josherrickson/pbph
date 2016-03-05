@@ -20,15 +20,13 @@ meat22(model, clusters = list())
 bread21(eta, resp, covs, pred, treatment)
 }
 \arguments{
-\item{model}{For Bread & Meat that can be calculated using sandwich
-package, we only need the model, either first or second stage,
-depending.}
+\item{model}{For Bread & Meat that can be calculated using sandwich package,
+we only need the model, either first or second stage, depending.}
 
 \item{clusters}{For Meat only; list of cluster variables.}
 
-\item{eta}{Estimated version of the coefficient on the interaction
-between predicted and treatment. This could be from a model or a
-hypothesis.}
+\item{eta}{Estimated version of the coefficient on the interaction between
+predicted and treatment. This could be from a model or a hypothesis.}
 
 \item{resp}{Vector of responses.}
 
@@ -39,9 +37,8 @@ hypothesis.}
 \item{treatment}{Vector of 0/1 treatment indicators.}
 }
 \description{
-Computes the Bread and Meat matricies. The diagonal elements are
-typical sandwich estimators, with scaling, and thus only use the
-\code{model} argument. The off-diagonal Bread element requires
-further specification.
+Computes the Bread and Meat matricies. The diagonal elements are typical
+sandwich estimators, with scaling, and thus only use the \code{model}
+argument. The off-diagonal Bread element requires further specification.
 }
 

@@ -12,13 +12,10 @@ hypothesisTest(object, null = 0)
 \item{null}{Defaults to 0.}
 }
 \value{
-A test statistic, with distribution t(k) where k is the
-  number of parameters in the first stage model, less 2.
+A test statistic, with distribution t(k) where k is the number of
+  parameters in the first stage model, less 2.
 }
 \description{
 (Internal) Conducts a hypothesis test for a given null.
-}
-\author{
-Josh Errickson
 }
 

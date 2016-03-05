@@ -13,23 +13,20 @@ pblm(mod1, treatment, data, center = TRUE, clusters = list())
 
 \item{data}{Data where variables in `form` live.}
 
-\item{center}{Default TRUE. Should the predicted values be
-centered in the second stage?}
+\item{center}{Default TRUE. Should the predicted values be centered in the
+second stage?}
 
 \item{clusters}{List of clusters}
 }
 \value{
-A pblm object which extends lm. Can be passed to `summary`
-  or `confint`.
+A pblm object which extends lm. Can be passed to `summary` or
+  `confint`.
 
-  The return contains an additional object, `epb`, which `lm`
-  doesn't include. `epb` is a list which contains several pieces
-  necessary for `summary` and `confint` support.
+  The return contains an additional object, `epb`, which `lm` doesn't
+  include. `epb` is a list which contains several pieces necessary for
+  `summary` and `confint` support.
 }
 \description{
 Performs enhanced Peters-Belson on the data.
-}
-\author{
-Josh Errickson
 }
 

@@ -17,7 +17,4 @@ Outputs a printed result similar to `print.summary.lm`.
 \description{
 Print `summary.pblm` objects correctly
 }
-\author{
-Josh Errickson
-}
 

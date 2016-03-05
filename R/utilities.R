@@ -1,14 +1,11 @@
 ##' Internal function to add a column for the intercept to a matrix.
 ##'
-##' Given a matrix or data.frame of size nxp, returns an nx(p+1)
-##' object where the first column is an intercept; if the intercept is
-##' not already in the object (defined as a first column being all
-##' 1's).
+##' Given a matrix or data.frame of size nxp, returns an nx(p+1) object where
+##' the first column is an intercept; if the intercept is not already in the
+##' object (defined as a first column being all 1's).
 ##'
 ##' @param x A matrix or data.frame.
 ##' @return If `x` has no intercept, a matrix with an intercept column
-##' @author Josh Errickson
-##'
 addIntercept <- function(x) {
   if (class(x) == "data.frame") {
     if (any(x[,1] != 1)) {
@@ -40,8 +37,6 @@ addIntercept <- function(x) {
 ##' @param colNames Vector of column names.
 ##' @param reps Total reps.
 ##' @return An empty matrix.
-##' @author Josh Errickson
-##'
 makeSaveMatrix <- function(colNames, reps) {
   stopifnot(is.numeric(reps))
 
@@ -59,8 +54,6 @@ makeSaveMatrix <- function(colNames, reps) {
 ##' @param b Coefficient on first-order term.
 ##' @param c Coefficient on the constant.
 ##' @return Zeroes of the function a*x^2 + b*x + c = 0.
-##' @author Josh Errickson
-##'
 quad <- function(a,b,c) {
   # Short circuit if we get into imaginary number land.
   if (b^2 < 4 * a * c) {

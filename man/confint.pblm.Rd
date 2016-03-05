@@ -16,24 +16,19 @@
 
 \item{...}{Additional arguments to `confint.lm`.}
 
-\item{wald.style}{Logical. Defaults to FALSE so the method
-performs test inversion to obtain proper coverage. If TRUE,
-generates wald-style CI's, which will likely suffer from
-undercoverage.}
+\item{wald.style}{Logical. Defaults to FALSE so the method performs test
+inversion to obtain proper coverage. If TRUE, generates wald-style CI's,
+which will likely suffer from undercoverage.}
 
-\item{forceDisplayConfInt}{Logical. Defaults to FALSE. If a
-hypothesis test for the interaction term fails, a confidence
-interval is unreliable (and ultimately unnecessary) and thus not
-returned. Set this to TRUE to force computation of the interval
-regardless of the hypothesis test.}
+\item{forceDisplayConfInt}{Logical. Defaults to FALSE. If a hypothesis test
+for the interaction term fails, a confidence interval is unreliable (and
+ultimately unnecessary) and thus not returned. Set this to TRUE to force
+computation of the interval regardless of the hypothesis test.}
 }
 \value{
 Confidence intervals
 }
 \description{
 Similar to `confint.lm`.
-}
-\author{
-Josh Errickson
 }
 

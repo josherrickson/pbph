@@ -13,12 +13,8 @@ addIntercept(x)
 If `x` has no intercept, a matrix with an intercept column
 }
 \description{
-Given a matrix or data.frame of size nxp, returns an nx(p+1)
-object where the first column is an intercept; if the intercept is
-not already in the object (defined as a first column being all
-1's).
-}
-\author{
-Josh Errickson
+Given a matrix or data.frame of size nxp, returns an nx(p+1) object where
+the first column is an intercept; if the intercept is not already in the
+object (defined as a first column being all 1's).
 }
 

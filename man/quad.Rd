@@ -19,7 +19,4 @@ Zeroes of the function a*x^2 + b*x + c = 0.
 \description{
 Given an expression a*x^2 + b*x + c = 0, solve for x.
 }
-\author{
-Josh Errickson
-}
 

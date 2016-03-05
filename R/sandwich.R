@@ -1,12 +1,12 @@
 ##' Sandwich estimator allowing clustering
 ##'
-##' This `sandwich` function is an overloaded function of `sandwich`
-##' from the `sandwich` package which enables a `clusters` argument.
+##' This `sandwich` function is an overloaded function of `sandwich` from the
+##' `sandwich` package which enables a `clusters` argument.
 ##' @param x a fitted model object.
-##' @param bread. either a bread matrix or a function for computing
-##'   this via `bread.(x)`.
-##' @param meat. either a meat matrix or a function for computing
-##'   this via `meat.(x)`.
+##' @param bread. either a bread matrix or a function for computing this via
+##'   `bread.(x)`.
+##' @param meat. either a meat matrix or a function for computing this via
+##'   `meat.(x)`.
 ##' @param clusters A list of variables to cluster on.
 ##' @param ... Additional arguments to `meat`.
 ##' @return A covariance matrix.
@@ -25,8 +25,8 @@ sandwich <- function (x, bread. = bread, meat. = meat, clusters = list(), ...) {
 
 ##' Clustered meat matrix for a sandwich estimator
 ##'
-##' This `meat` function is an overloaded function of `meat` from the
-##' `sandwich` package which enables a `clusters` argument.
+##' This `meat` function is an overloaded function of `meat` from the `sandwich`
+##' package which enables a `clusters` argument.
 ##' @param x a fitted model object.
 ##' @param adjust See `sandwich::meat`.
 ##' @param clusters A list of variables to cluster on.
@@ -55,8 +55,3 @@ meat <- function(x, adjust = FALSE, clusters=list(), ...) {
   rownames(rval) <- colnames(rval) <- colnames(psi)
   return(rval)
 }
-
-# This allows a user to access sandwich's bread when loading pblm
-# without forcing them to load the full sandwich package (as sandwich
-# is only an Import instead of a Depends.
-# bread <- sandwich::bread

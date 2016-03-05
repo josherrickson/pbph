@@ -2,8 +2,7 @@
 % Please edit documentation in R/pblm-internal.R
 \name{corrVar}
 \alias{corrVar}
-\title{(Internal) Return covariance matrix associated with a given choice
-of eta.}
+\title{(Internal) Return covariance matrix associated with a given choice of eta.}
 \usage{
 corrVar(eta, object, breadAndMeat = createBreadAndMeat(object, clusters =
   object$epb$clusters))
@@ -13,18 +12,14 @@ corrVar(eta, object, breadAndMeat = createBreadAndMeat(object, clusters =
 
 \item{object}{A pblm object.}
 
-\item{breadAndMeat}{By default, will create breadAndMeat
-associated with 'object'. If speed a concern, it is faster to
-compute this once and pass into corrVar.}
+\item{breadAndMeat}{By default, will create breadAndMeat associated with
+'object'. If speed a concern, it is faster to compute this once and pass
+into corrVar.}
 }
 \value{
 A covariance matrix
 }
 \description{
-For a given eta, the covariance can vary. For example, etahat or
-eta_0.
-}
-\author{
-Josh Errickson
+For a given eta, the covariance can vary. For example, etahat or eta_0.
 }
 
