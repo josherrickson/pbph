@@ -68,7 +68,6 @@ vcov.pblm <- function(object) {
 ##' @return A summary
 ##' @export
 ##' @author Josh Errickson
-##' s
 summary.pblm <- function(object, ...) {
   ss <- summary(as(object, "lm"), ...)
 
