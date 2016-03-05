@@ -4,32 +4,32 @@ pc <- .4
 informative <- .4
 true_t <- .5
 sigma2 <- 1
-true_inter <- seq(-1,2,by=.5)
+true_inter <- seq(-1,2,by = .5)
 
 reps <- 100
 bigsave <- makeSaveMatrix(c("truth", "estimate", "overall_un",
                             "overall_cov", "finite_un", "finite_cov",
                             "inf_un", "inf_cov", "disjoint_un",
                             "disjoint_cov"),
-                          reps=length(true_inter))
+                          reps = length(true_inter))
 for (j in 1:length(true_inter)) {
   ti <- true_inter[j]
   save <- makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"),
                          reps)
   for (i in 1:reps) {
-    covs <- data.frame(matrix(rnorm(n*p), nrow=n))
+    covs <- data.frame(matrix(rnorm(n*p), nrow = n))
     truebeta <- rep(0, p)
     truebeta[sample(1:p, round(informative*p))] <- rnorm(round(informative*p),0,1)
 
-    treatment <- rep(0:1, c(n*pc, n*(1-pc)))
+    treatment <- rep(0:1, c(n*pc, n*(1 - pc)))
 
     noise <- rnorm(n)
-    yc_un <- as.matrix(covs)%*%truebeta
+    yc_un <- as.matrix(covs) %*% truebeta
     yt_un <- yc_un + true_t*treatment + ti*treatment*yc_un
-    resp <- ifelse(treatment==1, yt_un, yc_un) + noise
-    d <- data.frame(y=resp, covs)
+    resp <- ifelse(treatment == 1, yt_un, yc_un) + noise
+    d <- data.frame(y = resp, covs)
 
-    mod1 <- lm(y ~ ., data=d, subset=treatment==0)
+    mod1 <- lm(y ~ ., data = d, subset = treatment == 0)
 
     e <- pblm(mod1, treatment, d)
     ci <- confint(e, "pred")
@@ -44,9 +44,9 @@ for (j in 1:length(true_inter)) {
       stop(paste("Problem:", type))
     }
     type <- switch(type,
-                   finite=1,
-                   infinite=2,
-                   disjoint=3)
+                   finite = 1,
+                   infinite = 2,
+                   disjoint = 3)
 
     save[i,] <- c(e$coef[2], ci[1], ci[2], type, covered)
 
@@ -54,10 +54,10 @@ for (j in 1:length(true_inter)) {
   save <- data.frame(save)
   save$type <- as.factor(save$type)
   levels(save$type) <- 1:3
-  save$covered <- factor(save$covered, levels=0:1)
+  save$covered <- factor(save$covered, levels = 0:1)
 
-  #bytype <- aggregate(save$covered, by=list(save$type), FUN=mean)[,2]
-  overall <- mean(save$covered==1)
+  #bytype <- aggregate(save$covered, by = list(save$type), FUN = mean)[,2]
+  overall <- mean(save$covered == 1)
 
   bigsave[j,] <- c(ti, mean(save$estimate), table(save$covered),
                    as.vector(table(save$covered, save$type)))
@@ -65,9 +65,9 @@ for (j in 1:length(true_inter)) {
 }
 
 #pdf("~/Desktop/coverage.pdf")
-#plot(bigsave[,3]~bigsave[,1], type='l', ylim=c(80,100), xlab="True Eta", ylab="Coverage")
-#abline(h=95)
-#legend("topright", legend=c("Basic", "General", "Simplified"), lty=c(1,1), col=1:3)
+#plot(bigsave[,3]~bigsave[,1], type = 'l', ylim = c(80,100), xlab = "True Eta", ylab = "Coverage")
+#abline(h = 95)
+#legend("topright", legend = c("Basic", "General", "Simplified"), lty = c(1,1), col = 1:3)
 #dev.off()
 
 bigsave

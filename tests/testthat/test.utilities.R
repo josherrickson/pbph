@@ -1,8 +1,8 @@
 context("Utilites")
 
 test_that("addIntercept", {
-  d <- data.frame(x=1:4, y=1:4)
-  m <- matrix(1:8, ncol=2)
+  d <- data.frame(x = 1:4, y = 1:4)
+  m <- matrix(1:8, ncol = 2)
 
   dout <- addIntercept(d)
   expect_true(class(dout) == class(d))
@@ -66,10 +66,10 @@ test_that("quadratic formula", {
   # examples from http://regentsprep.org/Regents/math/algtrig/ATE3/quadformula.htm
   expect_true(all.equal(quad(1,2,-8), c(-4,2)))
   expect_true(all.equal(quad(3,-10,5),
-                        c((5-sqrt(10))/3,(5+sqrt(10))/3)))
+                        c((5 - sqrt(10))/3,(5 + sqrt(10))/3)))
   expect_true(all.equal(quad(1,4,5),
                         c(NA, NA)))
   expect_true(all.equal(quad(1,-4,4), c(2,2)))
   expect_true(all.equal(quad(2,1,-.5),
-                        c((-1-sqrt(5))/4,(-1+sqrt(5))/4)))
+                        c((-1 - sqrt(5))/4,(-1 + sqrt(5))/4)))
 })

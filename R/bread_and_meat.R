@@ -28,13 +28,13 @@ bread22 <- function(model) {
 }
 
 ##' @rdname bread_and_meat
-meat11 <- function(model, clusters=list()) {
-  meat(model, clusters=clusters) * length(residuals(model))
+meat11 <- function(model, clusters = list()) {
+  meat(model, clusters = clusters) * length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
-meat22 <- function(model, clusters=list()) {
-  meat(model, clusters=clusters) * length(residuals(model))
+meat22 <- function(model, clusters = list()) {
+  meat(model, clusters = clusters) * length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
@@ -42,12 +42,11 @@ bread21 <- function(eta, resp, covs, pred, treatment) {
   covsInt <- addIntercept(covs)
 
   # Replace tauhat with tauhat_eta0
-  tau <- lm(resp - (1 + eta) * pred ~ 1, subset=(treatment == 1))$coef
+  tau <- lm(resp - (1 + eta) * pred ~ 1, subset = (treatment == 1))$coef
 
-  rbind(apply(- (1 + eta) * covsInt[treatment == 1,,drop=FALSE], 2, sum),
-        apply( (resp[treatment == 1] - tau -
-                  2 * (1 + eta) * pred[treatment == 1]) *
-                 covsInt[treatment == 1,,drop=FALSE],
+  rbind(apply(-(1 + eta) * covsInt[treatment == 1,,drop = FALSE], 2, sum),
+        apply( (resp[treatment == 1] - tau - 2 * (1 + eta) * pred[treatment == 1]) *
+                 covsInt[treatment == 1,,drop = FALSE],
               2, sum))
 }
 
@@ -58,20 +57,18 @@ bread21 <- function(eta, resp, covs, pred, treatment) {
 ##' @param object A pblm object.
 ##' @param clusters A list of cluster variables to pass to meat.
 ##' @return A list of b11, b22, m11, and m22.
-createBreadAndMeat <- function(object, clusters=list()) {
+createBreadAndMeat <- function(object, clusters = list()) {
 
   mod1 <- object$epb$mod1
 
   b11 <- bread11(mod1)
   b22 <- bread22(object)
 
-  clusters.control <- lapply(clusters,
-                               function(x) x[object$epb$treatment == 0])
-  clusters.treatment <- lapply(clusters,
-                               function(x) x[object$epb$treatment == 1])
+  clusters.control <- lapply(clusters, function(x) x[object$epb$treatment == 0])
+  clusters.treatment <- lapply(clusters, function(x) x[object$epb$treatment == 1])
 
-  m11 <- meat11(mod1, clusters=clusters.control)
-  m22 <- meat22(object, clusters=clusters.treatment)
+  m11 <- meat11(mod1, clusters = clusters.control)
+  m22 <- meat22(object, clusters = clusters.treatment)
 
   return(list(b11 = b11,
               b22 = b22,

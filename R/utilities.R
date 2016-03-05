@@ -18,7 +18,7 @@ addIntercept <- function(x) {
   if (class(x) == "matrix") {
     if (any(x[,1] != 1)) {
       x <- cbind(rep(1, nrow(x)), x)
-      if(!is.null(colnames(x))) {
+      if (!is.null(colnames(x))) {
         colnames(x)[1] <- "Intercept"
       }
     }
@@ -42,7 +42,7 @@ makeSaveMatrix <- function(colNames, reps) {
 
   colNames <- as.character(colNames)
 
-  save <- matrix(nrow=reps, ncol=length(colNames))
+  save <- matrix(nrow = reps, ncol = length(colNames))
   colnames(save) <- colNames
   return(save)
 }

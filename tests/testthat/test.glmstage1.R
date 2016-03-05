@@ -2,19 +2,19 @@ context("First stage glm")
 
 test_that("logistic", {
   set.seed(1)
-  d <- data.frame(abc=sample(0:1, 10, TRUE),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = sample(0:1, 10, TRUE),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
-  suppressWarnings(mod1g <- glm(abc ~ x + z, data=d, subset=t==0, family="binomial"))
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
+  suppressWarnings(mod1g <- glm(abc ~ x + z, data = d, subset = t == 0, family = "binomial"))
 
   e <- pblm(mod1, t, d)
   eg <- pblm(mod1g, t, d)
 
   expect_is(eg, "pblm")
-  expect_equal(eg, as(eg, "lm"), check.attributes=FALSE)
+  expect_equal(eg, as(eg, "lm"), check.attributes = FALSE)
 
   expect_true(length(coef(eg)) == 2)
   expect_equal(names(coef(eg)), c("treatment", "pred"))
@@ -44,19 +44,19 @@ test_that("logistic", {
 
 test_that("poisson", {
   set.seed(1)
-  d <- data.frame(abc=rpois(10, 3),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = rpois(10, 3),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
-  suppressWarnings(mod1p <- glm(abc ~ x + z, data=d, subset=t==0, family="poisson"))
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
+  suppressWarnings(mod1p <- glm(abc ~ x + z, data = d, subset = t == 0, family = "poisson"))
 
   e <- pblm(mod1, t, d)
   ep <- pblm(mod1p, t, d)
 
   expect_is(ep, "pblm")
-  expect_equal(ep, as(ep, "lm"), check.attributes=FALSE)
+  expect_equal(ep, as(ep, "lm"), check.attributes = FALSE)
 
   expect_true(length(coef(ep)) == 2)
   expect_equal(names(coef(ep)), c("treatment", "pred"))

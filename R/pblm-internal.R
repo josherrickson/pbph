@@ -8,7 +8,7 @@
 ##'   into corrVar.
 ##' @return A covariance matrix
 corrVar <- function(eta, object,
-                    breadAndMeat=createBreadAndMeat(object, clusters=object$epb$clusters)) {
+                    breadAndMeat = createBreadAndMeat(object, clusters = object$epb$clusters)) {
 
   mod1 <- object$epb$mod1
   data <- object$epb$data
@@ -34,8 +34,8 @@ corrVar <- function(eta, object,
 ##' @param null Defaults to 0.
 ##' @return A test statistic, with distribution t(k) where k is the number of
 ##'   parameters in the first stage model, less 2.
-hypothesisTest <- function(object, null=0) {
-  return( (object$coef[2] - null) / sqrt(corrVar(eta=null, object)[2,2]))
+hypothesisTest <- function(object, null = 0) {
+  return( (object$coef[2] - null) / sqrt(corrVar(eta = null, object)[2,2]))
 }
 
 
@@ -44,7 +44,7 @@ hypothesisTest <- function(object, null=0) {
 ##' @param object A pblm object.
 ##' @param level Confidence level. Default is 95\%.
 ##' @return Vector of length two with the lower and upper bounds.
-testinverse <- function(object, level=.95) {
+testinverse <- function(object, level = .95) {
 
   bAndM <- createBreadAndMeat(object, object$epb$clusters)
 

@@ -12,7 +12,7 @@
 ##' @return A covariance matrix.
 ##' @export
 ##' @import sandwich
-sandwich <- function (x, bread. = bread, meat. = meat, clusters = list(), ...) {
+sandwich <- function(x, bread. = bread, meat. = meat, clusters = list(), ...) {
   if (is.list(x) && !is.null(x$na.action))
     class(x$na.action) <- "omit"
   if (is.function(bread.))
@@ -34,7 +34,7 @@ sandwich <- function (x, bread. = bread, meat. = meat, clusters = list(), ...) {
 ##' @return A meat matrix
 ##' @export
 ##' @import sandwich
-meat <- function(x, adjust = FALSE, clusters=list(), ...) {
+meat <- function(x, adjust = FALSE, clusters = list(), ...) {
   if (is.list(x) && !is.null(x$na.action))
     class(x$na.action) <- "omit"
   psi <- sandwich::estfun(x, ...)
@@ -44,7 +44,7 @@ meat <- function(x, adjust = FALSE, clusters=list(), ...) {
   # Drop any empty cluster variables
   clusters <- clusters[!sapply(clusters, is.null)]
   if (length(clusters) > 0) {
-    psi <- aggregate(psi, by=clusters, FUN=sum)
+    psi <- aggregate(psi, by = clusters, FUN = sum)
     # aggregate adds columns identifying subgroups
     psi <- as.matrix(psi[, -c(1:length(clusters))])
   }

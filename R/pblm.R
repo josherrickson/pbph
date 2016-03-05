@@ -3,7 +3,6 @@ pblm <- setClass("pblm", contains = "lm")
 ##' Enhanced Peters-Belson method
 ##'
 ##' Performs enhanced Peters-Belson on the data.
-##'
 ##' @param mod1 First stage fitted model.
 ##' @param treatment Vector of 0/1 treatment indicators.
 ##' @param data Data where variables in `form` live.
@@ -17,8 +16,8 @@ pblm <- setClass("pblm", contains = "lm")
 ##'   include. `epb` is a list which contains several pieces necessary for
 ##'   `summary` and `confint` support.
 ##' @export
-pblm <- function(mod1, treatment, data, center=TRUE, clusters=list()) {
-  if( !all(treatment %in% 0:1)) {
+pblm <- function(mod1, treatment, data, center = TRUE, clusters = list()) {
+  if (!all(treatment %in% 0:1)) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
 
@@ -30,16 +29,16 @@ pblm <- function(mod1, treatment, data, center=TRUE, clusters=list()) {
     stop("treatment must be same length as number of observations in data.")
   }
 
-  mm <- makemod2(mod1, treatment, data, center=center)
+  mm <- makemod2(mod1, treatment, data, center = center)
 
   pred <- mm$pred
   mod2 <- mm$mod2
 
-  mod2$epb <- list(mod1=mod1,
-                   pred=pred,
-                   treatment=treatment,
-                   data=data,
-                   clusters=clusters)
+  mod2$epb <- list(mod1      = mod1,
+                   pred      = pred,
+                   treatment = treatment,
+                   data      = data,
+                   clusters  = clusters)
 
   mod2 <- as(mod2, "pblm")
 
@@ -77,13 +76,13 @@ summary.pblm <- function(object, ...) {
   df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
   ss$coefficients[2,4] <- 2 * pt(abs(ss$coefficients[2,3]),
                                  df,
-                                 lower.tail=FALSE)
+                                 lower.tail = FALSE)
 
   # Correct test statistic & p-value for intercept with
   # corrected Std. Error.
   ss$coefficients[1,3] <- ss$coef[1,1] / ss$coeff[1,2]
   ss$coefficients[1,4] <- 2 * pnorm(abs(ss$coef[1,3]),
-                                    lower.tail=FALSE)
+                                    lower.tail = FALSE)
 
   class(ss) <- "summary.pblm"
 
@@ -118,7 +117,7 @@ print.summary.pblm <- function(x, ...) {
 ##' @return Confidence intervals
 ##' @export
 confint.pblm <- function(object, parm, level = 0.95, ...,
-                         wald.style=FALSE, forceDisplayConfInt=FALSE) {
+                         wald.style = FALSE, forceDisplayConfInt = FALSE) {
   if (wald.style & forceDisplayConfInt) {
     warning("Argument 'forceDisplayConfInt' ignored when 'wald.style' is TRUE.")
   }
@@ -129,14 +128,14 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
   # Do not use confint(as(object, "lm")). `confint.lm` includes a call to vcov;
   # doing it that way will return the originals rather than the corrected
   # versions.
-  ci <- confint.lm(object, parm=parm, level=level,...)
+  ci <- confint.lm(object, parm = parm, level = level,...)
   if ("pred" %in% rownames(ci) & !wald.style) {
     if (summary(object)$coef[2,4] > .05 & !forceDisplayConfInt) {
       cat("Interaction term not significant, suppressing associated confidence interval. ")
-      cat("Use 'forceDisplayConfInt=TRUE' to force it.\n")
+      cat("Use 'forceDisplayConfInt = TRUE' to force it.\n")
       ci["pred",] <- c(NA, NA)
     } else {
-      ti <- testinverse(object, level=level)
+      ti <- testinverse(object, level = level)
       ci["pred",] <- ti
       attr(ci, "type") <- attr(ti, "type")
     }

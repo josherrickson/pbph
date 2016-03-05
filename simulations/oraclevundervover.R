@@ -9,27 +9,27 @@ saveCols <- c("truth", "estimate", "lb", "ub", "isfinite","F-stat",
               "R^2", "adj.R^2", "sigma^2", "mean_res^2", "max_beta",
               "min_p", "sig_betas")
 
-saveoracle <- makeSaveMatrix(saveCols, reps=reps)
-saveunder <- makeSaveMatrix(saveCols, reps=reps)
-saveover <- makeSaveMatrix(saveCols, reps=reps)
+saveoracle <- makeSaveMatrix(saveCols, reps = reps)
+saveunder <- makeSaveMatrix(saveCols, reps = reps)
+saveover <- makeSaveMatrix(saveCols, reps = reps)
 
 for (i in seq_len(reps)) {
   ti <- rnorm(1)
   tt <- rnorm(1)
 
-  covs <- data.frame(matrix(rnorm(n*p), nrow=n))
+  covs <- data.frame(matrix(rnorm(n*p), nrow = n))
   truebeta <- c(rnorm(2), 0,0,0)
-  treatment <- rep(0:1, c(n*pc, n*(1-pc)))
+  treatment <- rep(0:1, c(n*pc, n*(1 - pc)))
 
   noise <- rnorm(n)
-  yc_un <- as.matrix(covs)%*%truebeta
+  yc_un <- as.matrix(covs) %*% truebeta
   yt_un <- yc_un + tt*treatment + ti*treatment*yc_un
-  resp <- ifelse(treatment==1, yt_un, yc_un) + noise
-  d <- data.frame(y=resp, covs)
+  resp <- ifelse(treatment == 1, yt_un, yc_un) + noise
+  d <- data.frame(y = resp, covs)
 
-  mod1oracle <- lm(y ~ X1 + X2, data=d, subset=treatment==0)
-  mod1under  <- lm(y ~ X1     , data=d, subset=treatment==0)
-  mod1over   <- lm(y ~ .      , data=d, subset=treatment==0)
+  mod1oracle <- lm(y ~ X1 + X2, data = d, subset = treatment == 0)
+  mod1under  <- lm(y ~ X1     , data = d, subset = treatment == 0)
+  mod1over   <- lm(y ~ .      , data = d, subset = treatment == 0)
 
   sm1oracle <- summary(mod1oracle)
   sm1under  <- summary(mod1under)

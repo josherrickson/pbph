@@ -10,17 +10,17 @@ test_that("making pblm object", {
 })
 
 test_that("pblm input/output", {
-  d <- data.frame(abc=rnorm(10),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
   expect_is(e, "pblm")
-  expect_equal(e, as(e, "lm"), check.attributes=FALSE)
+  expect_equal(e, as(e, "lm"), check.attributes = FALSE)
 
   expect_true(length(coef(e)) == 2)
   expect_equal(names(coef(e)), c("treatment", "pred"))
@@ -42,19 +42,19 @@ test_that("pblm input/output", {
 
   expect_error(pblm(mod1, c(0,0,0,0,0,1,1,1,1,2), d),
                "must be indicator")
-  expect_error(pblm(lm(abc ~ ., data=d), t, d),
+  expect_error(pblm(lm(abc ~ ., data = d), t, d),
                "only on control")
   expect_error(pblm(mod1, t[1:9], d),
                "same length")
 })
 
 test_that("corrVar and vcov", {
-  d <- data.frame(abc=rnorm(10),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
@@ -73,12 +73,12 @@ test_that("corrVar and vcov", {
 })
 
 test_that("createBreadAndMeat", {
-  d <- data.frame(abc=rnorm(10),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
@@ -93,12 +93,12 @@ test_that("createBreadAndMeat", {
 
 test_that("Hypothesis Test", {
 
-  d <- data.frame(abc=rnorm(10),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
@@ -109,12 +109,12 @@ test_that("Hypothesis Test", {
 })
 
 test_that("summary.pblm", {
-  d <- data.frame(abc=rnorm(10),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
@@ -124,11 +124,11 @@ test_that("summary.pblm", {
 
   expect_equal(e$coef, s$coef[,1])
   expect_true(all.equal(s$coef[2,3], hypothesisTest(e),
-                        check.attributes=FALSE))
+                        check.attributes = FALSE))
 
   expect_true(all.equal(s$coef[2,4],
-                        2*pt(abs(hypothesisTest(e)),2, lower.tail=FALSE),
-                        check.attributes=FALSE))
+                        2*pt(abs(hypothesisTest(e)),2, lower.tail = FALSE),
+                        check.attributes = FALSE))
   expect_equal(s$cov.unscaled, vcov(e))
 
   expect_identical(summary.lm(e), summary(as(e, "lm")))
@@ -143,13 +143,13 @@ test_that("confint.pblm", {
   # Force finite CI
   set.seed(32432)
   n <- 100
-  d <- data.frame(abc=rnorm(n),
-                  x=rnorm(n),
-                  z=rnorm(n))
-  t <- rep(0:1, each=n/2)
+  d <- data.frame(abc = rnorm(n),
+                  x = rnorm(n),
+                  z = rnorm(n))
+  t <- rep(0:1, each = n/2)
   d$abc <- d$x + t + d$x*t*.5 + rnorm(n)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
@@ -160,7 +160,7 @@ test_that("confint.pblm", {
   expect_equal(rownames(ci), c("treatment", "pred"))
 
   # Ci's should have lower and upper correct
-  expect_true(all(apply(ci, 1, function(x) diff(x)>0)))
+  expect_true(all(apply(ci, 1, function(x) diff(x) > 0)))
 
   expect_equal(ci[1,], confint.lm(e)[1,])
   expect_false(isTRUE(all.equal(ci[2,], confint.lm(e)[2,])))
@@ -170,12 +170,12 @@ test_that("confint.pblm", {
 
   # Force infinite CI
   set.seed(4)
-  d <- data.frame(abc=rnorm(10),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
@@ -190,49 +190,49 @@ test_that("CI arguments", {
   # Force finite CI
   set.seed(32432)
   n <- 100
-  d <- data.frame(abc=rnorm(n),
-                  x=rnorm(n),
-                  z=rnorm(n))
-  t <- rep(0:1, each=n/2)
+  d <- data.frame(abc = rnorm(n),
+                  x = rnorm(n),
+                  z = rnorm(n))
+  t <- rep(0:1, each = n/2)
   d$abc <- d$x + t + d$x*t*.5 + rnorm(n)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
   ci <- confint(e)
   ci
 
-  ci1 <- confint(e, parm="treatment")
+  ci1 <- confint(e, parm = "treatment")
   expect_equal(rownames(ci1), "treatment")
-  expect_equal(ci1[1,], ci[1,], check.attributes=FALSE)
+  expect_equal(ci1[1,], ci[1,], check.attributes = FALSE)
 
-  ci2 <- confint(e, parm="pred")
+  ci2 <- confint(e, parm = "pred")
   expect_equal(rownames(ci2), "pred")
-  expect_equal(ci2[1,], ci[2,], check.attributes=FALSE)
+  expect_equal(ci2[1,], ci[2,], check.attributes = FALSE)
 
-  ci3 <- confint(e, parm=c("pred", "pred", "treatment"))
+  ci3 <- confint(e, parm = c("pred", "pred", "treatment"))
   expect_equal(rownames(ci3), c("pred", "pred", "treatment"))
 
   # Confidence level should shrink
-  ci4 <- confint(e, level=.5)
+  ci4 <- confint(e, level = .5)
   expect_true(all((ci4 - ci)[,1] > 0))
   expect_true(all((ci4 - ci)[,2] < 0))
 })
 
 test_that("wald-style CI's", {
   set.seed(8)
-  d <- data.frame(abc=rnorm(10),
-                  x=rnorm(10),
-                  z=rnorm(10))
-  t <- rep(0:1, each=5)
+  d <- data.frame(abc = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
 
-  mod1 <- lm(abc ~ x + z, data=d, subset=t==0)
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
   e <- pblm(mod1, t, d)
 
   ci <- confint(e)
-  ci2 <- confint(e, wald.style=TRUE)
+  ci2 <- confint(e, wald.style = TRUE)
 
   expect_false(identical(ci[2,],ci2[2,]))
 
