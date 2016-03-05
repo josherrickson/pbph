@@ -19,6 +19,5 @@ Similar to `summary.lm`.
 }
 \author{
 Josh Errickson
-s
 }
 
