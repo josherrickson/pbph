@@ -1,0 +1,32 @@
+---
+title: "Enhanced Peters-Belson"
+author: "Josh Errickson"
+date: "`r Sys.Date()`"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Matching with Optmatch}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, prompt=TRUE)
+devtools::load_all(export_all=FALSE)
+```
+
+# Basic Use
+
+A basic example:
+
+```{r}
+data(CO2)
+mod1 <- lm(uptake ~ conc + Type, data=CO2, subset=Treatment == "nonchilled")
+CO2$pred <- predict(mod1, newdata=CO2)
+mod2naive <- lm(uptake - pred ~ pred, data=CO2, subset=Treatment == "chilled")
+summary(mod2naive)$coef
+confint(mod2naive, parm="pred")
+
+mod2 <- pblm(mod1, CO2$Treatment == "chilled", CO2)
+summary(mod2)$coef
+confint(mod2, parm="pred")
+```
