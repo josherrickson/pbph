@@ -28,8 +28,6 @@ test_that("logistic", {
   sg.lm <- summary.lm(eg)
 
   expect_is(sg, "summary.pblm")
-  # If it doesn't print properly, it won't say this
-  expect_that(sg, prints_text("F-statistic"))
 
   expect_identical(rownames(sg$coef), rownames(sg.lm$coef))
   expect_identical(colnames(sg$coef), colnames(sg.lm$coef))
@@ -71,8 +69,6 @@ test_that("poisson", {
   sp.lm <- summary.lm(ep)
 
   expect_is(sp, "summary.pblm")
-  # If it doesn't print properly, it won't say this
-  expect_that(sp, prints_text("F-statistic"))
 
   expect_identical(rownames(sp$coef), rownames(sp.lm$coef))
   expect_identical(colnames(sp$coef), colnames(sp.lm$coef))
