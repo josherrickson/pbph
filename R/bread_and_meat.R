@@ -5,7 +5,7 @@
 #' argument. The off-diagonal Bread element requires further specification.
 #' @param model For Bread & Meat that can be calculated using sandwich package,
 #'   we only need the model, either first or second stage, depending.
-#' @param clusters For Meat only; list of cluster variables.
+#' @param cluster For Meat only; A vector defining clusters.
 #' @param eta Estimated version of the coefficient on the interaction between
 #'   predicted and treatment. This could be from a model or a hypothesis.
 #' @param resp Vector of responses.
@@ -28,13 +28,13 @@ bread22 <- function(model) {
 }
 
 ##' @rdname bread_and_meat
-meat11 <- function(model, clusters = list()) {
-  meat(model, clusters = clusters) * length(residuals(model))
+meat11 <- function(model, cluster = NULL) {
+  meat(model, cluster = cluster) * length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
-meat22 <- function(model, clusters = list()) {
-  meat(model, clusters = clusters) * length(residuals(model))
+meat22 <- function(model, cluster = NULL) {
+  meat(model, cluster = cluster) * length(residuals(model))
 }
 
 ##' @rdname bread_and_meat
@@ -55,20 +55,20 @@ bread21 <- function(eta, resp, covs, pred, treatment) {
 ##' Computes the pieces of the Bread and Meat which do not depend on eta. (e.g.
 ##' all but B21)
 ##' @param object A pblm object.
-##' @param clusters A list of cluster variables to pass to meat.
+##' @param cluster A vector defining clustering.
 ##' @return A list of b11, b22, m11, and m22.
-createBreadAndMeat <- function(object, clusters = list()) {
+createBreadAndMeat <- function(object, cluster = NULL) {
 
   mod1 <- object$epb$mod1
 
   b11 <- bread11(mod1)
   b22 <- bread22(object)
 
-  clusters.control <- lapply(clusters, function(x) x[object$epb$treatment == 0])
-  clusters.treatment <- lapply(clusters, function(x) x[object$epb$treatment == 1])
+  cluster.control <- cluster[object$epb$treatment == 0]
+  cluster.treatment <- cluster[object$epb$treatment == 1]
 
-  m11 <- meat11(mod1, clusters = clusters.control)
-  m22 <- meat22(object, clusters = clusters.treatment)
+  m11 <- meat11(mod1, cluster = cluster.control)
+  m22 <- meat22(object, cluster = cluster.treatment)
 
   return(list(b11 = b11,
               b22 = b22,

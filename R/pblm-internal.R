@@ -8,7 +8,7 @@
 ##'   into corrVar.
 ##' @return A covariance matrix
 corrVar <- function(eta, object,
-                    breadAndMeat = createBreadAndMeat(object, clusters = object$epb$clusters)) {
+                    breadAndMeat = createBreadAndMeat(object, cluster = object$epb$cluster)) {
 
   mod1 <- object$epb$mod1
   data <- object$epb$data
@@ -46,7 +46,7 @@ hypothesisTest <- function(object, null = 0) {
 ##' @return Vector of length two with the lower and upper bounds.
 testinverse <- function(object, level = .95) {
 
-  bAndM <- createBreadAndMeat(object, object$epb$clusters)
+  bAndM <- createBreadAndMeat(object, object$epb$cluster)
 
   tosolve <- function(eta) {
     corrected <- corrVar(eta, object, bAndM)[2,2]

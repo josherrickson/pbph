@@ -13,9 +13,9 @@ bread11(model)
 
 bread22(model)
 
-meat11(model, clusters = list())
+meat11(model, cluster = NULL)
 
-meat22(model, clusters = list())
+meat22(model, cluster = NULL)
 
 bread21(eta, resp, covs, pred, treatment)
 }
@@ -23,7 +23,7 @@ bread21(eta, resp, covs, pred, treatment)
 \item{model}{For Bread & Meat that can be calculated using sandwich package,
 we only need the model, either first or second stage, depending.}
 
-\item{clusters}{For Meat only; list of cluster variables.}
+\item{cluster}{For Meat only; A vector defining clusters.}
 
 \item{eta}{Estimated version of the coefficient on the interaction between
 predicted and treatment. This could be from a model or a hypothesis.}

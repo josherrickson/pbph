@@ -4,7 +4,7 @@
 \alias{sandwich}
 \title{Sandwich estimator allowing clustering}
 \usage{
-sandwich(x, bread. = bread, meat. = meat, clusters = list(), ...)
+sandwich(x, bread. = bread, meat. = meat, cluster = NULL, ...)
 }
 \arguments{
 \item{x}{a fitted model object.}
@@ -15,7 +15,7 @@ sandwich(x, bread. = bread, meat. = meat, clusters = list(), ...)
 \item{meat.}{either a meat matrix or a function for computing this via
 `meat.(x)`.}
 
-\item{clusters}{A list of variables to cluster on.}
+\item{cluster}{A variable identifying cluster.}
 
 \item{...}{Additional arguments to `meat`.}
 }

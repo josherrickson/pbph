@@ -4,14 +4,14 @@
 \alias{meat}
 \title{Clustered meat matrix for a sandwich estimator}
 \usage{
-meat(x, adjust = FALSE, clusters = list(), ...)
+meat(x, adjust = FALSE, cluster = NULL, ...)
 }
 \arguments{
 \item{x}{a fitted model object.}
 
 \item{adjust}{See `sandwich::meat`.}
 
-\item{clusters}{A list of variables to cluster on.}
+\item{cluster}{A vector identifying cluster membership}
 
 \item{...}{Additional arguments to `sandwich::estfun`.}
 }

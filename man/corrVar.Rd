@@ -4,8 +4,8 @@
 \alias{corrVar}
 \title{(Internal) Return covariance matrix associated with a given choice of eta.}
 \usage{
-corrVar(eta, object, breadAndMeat = createBreadAndMeat(object, clusters =
-  object$epb$clusters))
+corrVar(eta, object, breadAndMeat = createBreadAndMeat(object, cluster =
+  object$epb$cluster))
 }
 \arguments{
 \item{eta}{Value of eta to use.}

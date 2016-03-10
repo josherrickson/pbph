@@ -7,20 +7,28 @@
 ##'   `bread.(x)`.
 ##' @param meat. either a meat matrix or a function for computing this via
 ##'   `meat.(x)`.
-##' @param clusters A list of variables to cluster on.
+##' @param cluster A variable identifying cluster.
 ##' @param ... Additional arguments to `meat`.
 ##' @return A covariance matrix.
 ##' @export
 ##' @import sandwich
-sandwich <- function(x, bread. = bread, meat. = meat, clusters = list(), ...) {
+sandwich <- function(x, bread. = bread, meat. = meat, cluster = NULL, ...) {
   if (is.list(x) && !is.null(x$na.action))
     class(x$na.action) <- "omit"
   if (is.function(bread.))
     bread. <- bread.(x)
   if (is.function(meat.))
-    meat. <- meat.(x, clusters = clusters, ...)
+    meat. <- meat.(x, cluster = cluster, ...)
+  if (!is.null(cluster)) {
+    M <- length(unique(cluster))
+    N <- length(cluster)
+    K <- x$rank
+    dfc <- (M / (M - 1)) * ((N - 1) / (N - K))
+  } else {
+    dfc <- 1
+  }
   n <- NROW(sandwich::estfun(x))
-  return(1/n * (bread. %*% meat. %*% bread.))
+  return(dfc* 1/n * (bread. %*% meat. %*% bread.))
 }
 
 ##' Clustered meat matrix for a sandwich estimator
@@ -29,25 +37,23 @@ sandwich <- function(x, bread. = bread, meat. = meat, clusters = list(), ...) {
 ##' package which enables a `clusters` argument.
 ##' @param x a fitted model object.
 ##' @param adjust See `sandwich::meat`.
-##' @param clusters A list of variables to cluster on.
+##' @param cluster A vector identifying cluster membership
 ##' @param ... Additional arguments to `sandwich::estfun`.
 ##' @return A meat matrix
 ##' @export
 ##' @import sandwich
-meat <- function(x, adjust = FALSE, clusters = list(), ...) {
+meat <- function(x, adjust = FALSE, cluster = NULL, ...) {
   if (is.list(x) && !is.null(x$na.action))
     class(x$na.action) <- "omit"
   psi <- sandwich::estfun(x, ...)
+
   k <- NCOL(psi)
   n <- NROW(psi)
 
-  # Drop any empty cluster variables
-  clusters <- clusters[!sapply(clusters, is.null)]
-  if (length(clusters) > 0) {
-    psi <- aggregate(psi, by = clusters, FUN = sum)
-    # aggregate adds columns identifying subgroups
-    psi <- as.matrix(psi[, -c(1:length(clusters))])
+  if (!is.null(cluster)) {
+    psi <- aggregate(psi, by = list(cluster), FUN = sum)[,-1]
   }
+
 
   rval <- crossprod(as.matrix(psi))/n
   if (adjust)
