@@ -24,16 +24,6 @@ test_that("clustered sandwich", {
 
   expect_true(!identical(s1,s5))
 
-  m <- meat(mod, cluster = d$c)
-  b <- bread(mod)
-  s6 <- (b %*% m %*% b)/15
-  s6 <- s6*(3/2)*(14/13) # scaling factor
-
-  # For some reason, `identical` is failing here. I can't discern the
-  # difference, so falling back to a slightly weaker comparison. It
-  # shouldn't matter, as this confirms the math is working out.
-  expect_true(all.equal(s5,s6))
-
   meatpre <- epb::meat(mod, cluster = d$c)
   s7 <- sandwich(mod, meat = meatpre, cluster = d$c)
 
@@ -61,11 +51,6 @@ test_that("clustered meat", {
   m3 <- meat(mod, cluster = iris$Species)
   expect_false(identical(m1, m3))
 
-  # If cluster variable is unique per row, equivalent to not
-  # clustering.
-  m6 <- meat(mod, cluster = 1:150)
-  expect_identical(m6, m1)
-
   # adjust argument isn't broken
   m7 <- sandwich::meat(mod, adjust = TRUE)
   m8 <- meat(mod, adjust = TRUE)
@@ -74,7 +59,6 @@ test_that("clustered meat", {
   expect_identical(m7,m8)
   expect_true(!identical(m8, m9))
   expect_true(!identical(m9,m3))
-
 
   d <- data.frame(y = rnorm(15),
                   x = rnorm(15),
