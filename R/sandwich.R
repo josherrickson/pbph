@@ -19,16 +19,8 @@ sandwich <- function(x, bread. = bread, meat. = meat, cluster = NULL, ...) {
     bread. <- bread.(x)
   if (is.function(meat.))
     meat. <- meat.(x, cluster = cluster, ...)
-  if (!is.null(cluster)) {
-    M <- length(unique(cluster))
-    N <- length(cluster)
-    K <- x$rank
-    dfc <- (M / (M - 1)) * ((N - 1) / (N - K))
-  } else {
-    dfc <- 1
-  }
   n <- NROW(sandwich::estfun(x))
-  return(dfc* 1/n * (bread. %*% meat. %*% bread.))
+  return(1/n * (bread. %*% meat. %*% bread.))
 }
 
 ##' Clustered meat matrix for a sandwich estimator
@@ -52,10 +44,15 @@ meat <- function(x, adjust = FALSE, cluster = NULL, ...) {
 
   if (!is.null(cluster)) {
     psi <- aggregate(psi, by = list(cluster), FUN = sum)[,-1]
+    M <- length(unique(cluster))
+    N <- length(cluster)
+    K <- x$rank
+    dfc <- (M / (M - 1)) * ((N - 1) / (N - K))
+  } else {
+    dfc <- 1
   }
 
-
-  rval <- crossprod(as.matrix(psi))/n
+  rval <- dfc * crossprod(as.matrix(psi))/n
   if (adjust)
     rval <- n/(n - k) * rval
   rownames(rval) <- colnames(rval) <- colnames(psi)
