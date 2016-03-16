@@ -30,3 +30,17 @@ mod2 <- pblm(mod1, CO2$Treatment == "chilled", CO2)
 summary(mod2)$coef
 confint(mod2, parm="pred")
 ```
+
+
+# Clusters
+
+We implement support for clusters by overloading `meat` (and `sandwich`) from the `sandwich` package and adding a `cluster` argument. 
+
+```{r}
+data(iris)
+mod <- lm(Sepal.Length ~ Petal.Width + Petal.Length, data = iris)
+sandwich::meat(mod)
+meat(mod)
+meat(mod, cluster = iris$Species)
+```
+
