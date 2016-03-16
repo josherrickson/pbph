@@ -44,15 +44,16 @@ meat <- function(x, adjust = FALSE, cluster = NULL, ...) {
 
   if (!is.null(cluster)) {
     psi <- aggregate(psi, by = list(cluster), FUN = sum)[,-1]
-    M <- length(unique(cluster))
+    # Finite population corrected is needed
+    C <- length(unique(cluster))
     N <- length(cluster)
-    K <- x$rank
-    dfc <- (M / (M - 1)) * ((N - 1) / (N - K))
+    P <- x$rank
+    fpc <- (C / (C - 1)) * ((N - 1) / (N - P))
   } else {
-    dfc <- 1
+    fpc <- 1
   }
 
-  rval <- dfc * crossprod(as.matrix(psi))/n
+  rval <- fpc * crossprod(as.matrix(psi))/n
   if (adjust)
     rval <- n/(n - k) * rval
   rownames(rval) <- colnames(rval) <- colnames(psi)
