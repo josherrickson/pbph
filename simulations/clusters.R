@@ -22,7 +22,8 @@ for (j in 1:length(true_inter)) {
     truebeta[sample(1:p, round(informative*p))] <- rnorm(round(informative*p),0,1)
 
     treatment <- rep(0:1, c(n*pc, n*(1 - pc)))
-    cluster <- rep(1:10, times = n / 10)[1:n]
+    C <- 10
+    cluster <- rep(1:(n/C), times = C)[1:n]
 
     noise <- rnorm(n)
     yc_un <- as.matrix(covs) %*% truebeta
