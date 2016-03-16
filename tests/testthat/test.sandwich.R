@@ -51,14 +51,21 @@ test_that("clustered meat", {
   m3 <- meat(mod, cluster = iris$Species)
   expect_false(identical(m1, m3))
 
-  # adjust argument isn't broken
-  m7 <- sandwich::meat(mod, adjust = TRUE)
-  m8 <- meat(mod, adjust = TRUE)
-  m9 <- meat(mod, adjust = TRUE, cluster = iris$Species)
 
+  # adjust isn't broken
+  m4 <- sandwich::meat(mod, adjust = TRUE)
+  m5 <- meat(mod, adjust = TRUE)
+
+  expect_identical(m4, m5)
+
+
+  # When passing a cluster, should always use adjust = TRUE
+  m6 <- meat(mod, cluster = iris$Species)
+  m7 <- meat(mod, adjust = TRUE, cluster = iris$Species)
+  m8 <- meat(mod, adjust = FALSE, cluster = iris$Species)
+
+  expect_identical(m6,m7)
   expect_identical(m7,m8)
-  expect_true(!identical(m8, m9))
-  expect_true(!identical(m9,m3))
 
   d <- data.frame(y = rnorm(15),
                   x = rnorm(15),

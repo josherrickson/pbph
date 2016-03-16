@@ -28,7 +28,8 @@ sandwich <- function(x, bread. = bread, meat. = meat, cluster = NULL, ...) {
 ##' This `meat` function is an overloaded function of `meat` from the `sandwich`
 ##' package which enables a `clusters` argument.
 ##' @param x a fitted model object.
-##' @param adjust See `sandwich::meat`.
+##' @param adjust See `sandwich::meat`. If a cluster is given, this argument is ignored as
+##'   the adjustment is always used.
 ##' @param cluster A vector identifying cluster membership
 ##' @param ... Additional arguments to `sandwich::estfun`.
 ##' @return A meat matrix
@@ -44,16 +45,10 @@ meat <- function(x, adjust = FALSE, cluster = NULL, ...) {
 
   if (!is.null(cluster)) {
     psi <- aggregate(psi, by = list(cluster), FUN = sum)[,-1]
-    # Finite population corrected is needed
-    C <- length(unique(cluster))
-    N <- length(cluster)
-    P <- x$rank
-    fpc <- (C / (C - 1)) * ((N - 1) / (N - P))
-  } else {
-    fpc <- 1
+    adjust <- TRUE
   }
 
-  rval <- fpc * crossprod(as.matrix(psi))/n
+  rval <- crossprod(as.matrix(psi))/n
   if (adjust)
     rval <- n/(n - k) * rval
   rownames(rval) <- colnames(rval) <- colnames(psi)
