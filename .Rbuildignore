@@ -1,5 +1,3 @@
 Makefile
 load.R
 simulations
-^.*\.Rproj$
-^\.Rproj\.user$
