@@ -23,7 +23,7 @@ for (j in 1:length(true_inter)) {
 
     treatment <- rep(0:1, c(n*pc, n*(1 - pc)))
     C <- 10
-    cluster <- rep(1:(n/C), times = C)[1:n]
+    cluster <- rep(1:(n/C), each = C)[1:n]
 
     noise <- rnorm(n)
     yc_un <- as.matrix(covs) %*% truebeta
