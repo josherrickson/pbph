@@ -1,15 +1,16 @@
 ##' Sandwich estimator allowing clustering
 ##'
-##' This `sandwich` function is an overloaded function of `sandwich` from the
-##' `sandwich` package which enables a `clusters` argument.
+##' This \code{sandwich} function is an overloaded function of
+##' \code{sandwich} from the \code{sandwich} package which enables a
+##' \code{clusters} argument.
 ##' @param x a fitted model object.
-##' @param bread. either a bread matrix or a function for computing this via
-##'   `bread.(x)`.
-##' @param meat. either a meat matrix or a function for computing this via
-##'   `meat.(x)`.
+##' @param bread. either a bread matrix or a function for computing
+##'   this via \code{bread.(x)}.
+##' @param meat. either a meat matrix or a function for computing this
+##'   via \code{meat.(x)}.
 ##' @param cluster A variable identifying cluster.
-##' @param ... Additional arguments to `meat`.
-##' @return A covariance matrix.
+##' @param ... Additional arguments to \code{meat}.
+##' @return A covariance \code{matrix}.
 ##' @export
 ##' @import sandwich
 sandwich <- function(x, bread. = bread, meat. = meat, cluster = NULL, ...) {
@@ -25,14 +26,15 @@ sandwich <- function(x, bread. = bread, meat. = meat, cluster = NULL, ...) {
 
 ##' Clustered meat matrix for a sandwich estimator
 ##'
-##' This `meat` function is an overloaded function of `meat` from the `sandwich`
-##' package which enables a `clusters` argument.
+##' This \code{meat} function is an overloaded function of \code{meat}
+##' from the \code{sandwich} package which enables a \code{clusters}
+##' argument.
 ##' @param x a fitted model object.
-##' @param adjust See `sandwich::meat`. If a cluster is given, this argument is ignored as
-##'   the adjustment is always used.
+##' @param adjust See \code{sandwich::meat}. If a cluster is given,
+##'   this argument is ignored as the adjustment is always used.
 ##' @param cluster A vector identifying cluster membership
-##' @param ... Additional arguments to `sandwich::estfun`.
-##' @return A meat matrix
+##' @param ... Additional arguments to \code{sandwich::estfun}.
+##' @return A meat \code{matrix}.
 ##' @export
 ##' @import sandwich
 meat <- function(x, adjust = FALSE, cluster = NULL, ...) {

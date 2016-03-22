@@ -7,15 +7,15 @@
 makeSaveMatrix(colNames, reps)
 }
 \arguments{
-\item{colNames}{Vector of column names.}
+\item{colNames}{A \code{vector} of column names.}
 
 \item{reps}{Total reps.}
 }
 \value{
-An empty matrix.
+An empty \code{matrix}.
 }
 \description{
-Given a vector of column names and a number of reps, generates an
-appropriately sized matrix with given column names.
+Given a \code{vector} of column names and a number of \code{reps}, generates an
+appropriately sized \code{matrix} with given column names.
 }
 

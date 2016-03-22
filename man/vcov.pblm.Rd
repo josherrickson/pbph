@@ -7,13 +7,14 @@
 \method{vcov}{pblm}(object)
 }
 \arguments{
-\item{object}{pblm object.}
+\item{object}{\code{pblm} object.}
 }
 \value{
-A covariance matrix.
+A covariance \code{matrix}.
 }
 \description{
-Returns a covariance matrix. Computed using enhanced PB methods. The
-variance for pred should NOT be used directly in confidence intervals.
+Returns a covariance \code{matrix}. Computed using enhanced PB
+methods. The variance for pred should NOT be used directly in
+confidence intervals.
 }
 

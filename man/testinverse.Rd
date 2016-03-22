@@ -7,12 +7,13 @@
 testinverse(object, level = 0.95)
 }
 \arguments{
-\item{object}{A pblm object.}
+\item{object}{A \code{pblm} object.}
 
 \item{level}{Confidence level. Default is 95\%.}
 }
 \value{
-Vector of length two with the lower and upper bounds.
+A \code{vector} of length two with the lower and upper
+  bounds.
 }
 \description{
 (Internal) Computes a confidence interval for eta via test inversion.

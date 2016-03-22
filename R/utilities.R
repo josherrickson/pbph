@@ -1,11 +1,14 @@
 ##' Internal function to add a column for the intercept to a matrix.
 ##'
-##' Given a matrix or data.frame of size nxp, returns an nx(p+1) object where
-##' the first column is an intercept; if the intercept is not already in the
-##' object (defined as a first column being all 1's).
+##' Given a \code{matrix} or \code{data.frame} of size nxp, returns an
+##' nx(p+1) object of the same type where the first column is an
+##' intercept if the intercept is not already in the object (defined
+##' as a first column being all 1's).
 ##'
-##' @param x A matrix or data.frame.
-##' @return If `x` has no intercept, a matrix with an intercept column
+##' @param x A \code{matrix} or \code{data.frame}.
+##' @return A \code{matrix} (if \code{x} is a \code{matrix}) or
+##'   \code{data.frame} (if \code{x} is a \code{data.frame})
+##'   guaranteed to have an intercept column.
 addIntercept <- function(x) {
   if (class(x) == "data.frame") {
     if (any(x[,1] != 1)) {
@@ -31,12 +34,12 @@ addIntercept <- function(x) {
 
 ##' Generate an empty matrix suitable for saving simulation results.
 ##'
-##' Given a vector of column names and a number of reps, generates an
-##' appropriately sized matrix with given column names.
+##' Given a \code{vector} of column names and a number of \code{reps}, generates an
+##' appropriately sized \code{matrix} with given column names.
 ##'
-##' @param colNames Vector of column names.
+##' @param colNames A \code{vector} of column names.
 ##' @param reps Total reps.
-##' @return An empty matrix.
+##' @return An empty \code{matrix}.
 makeSaveMatrix <- function(colNames, reps) {
   stopifnot(is.numeric(reps))
 

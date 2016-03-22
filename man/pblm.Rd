@@ -11,20 +11,21 @@ pblm(mod1, treatment, data, center = TRUE, cluster = NULL)
 
 \item{treatment}{Vector of 0/1 treatment indicators.}
 
-\item{data}{Data where variables in `form` live.}
+\item{data}{Data where variables in \code{form} live.}
 
-\item{center}{Default TRUE. Should the predicted values be centered in the
-second stage?}
+\item{center}{Default \code{TRUE}. Should the predicted values be
+centered in the second stage?}
 
-\item{cluster}{A vector defining the clusters.}
+\item{cluster}{A \code{vector} defining the clusters.}
 }
 \value{
-A pblm object which extends lm. Can be passed to `summary` or
-  `confint`.
+A \code{pblm} object which extends \code{lm}. Can be
+  passed to \code{summary} or \code{confint}.
 
-  The return contains an additional object, `epb`, which `lm` doesn't
-  include. `epb` is a list which contains several pieces necessary for
-  `summary` and `confint` support.
+  The return contains an additional object, \code{epb}, which
+  \code{lm} doesn't include. \code{epb} is a list which contains
+  several pieces necessary for \code{summary} and \code{confint}
+  support.
 }
 \description{
 Performs enhanced Peters-Belson on the data.

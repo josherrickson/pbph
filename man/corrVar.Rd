@@ -10,16 +10,17 @@ corrVar(eta, object, breadAndMeat = createBreadAndMeat(object, cluster =
 \arguments{
 \item{eta}{Value of eta to use.}
 
-\item{object}{A pblm object.}
+\item{object}{A \code{pblm} object.}
 
-\item{breadAndMeat}{By default, will create breadAndMeat associated with
-'object'. If speed a concern, it is faster to compute this once and pass
-into corrVar.}
+\item{breadAndMeat}{By default, will create \code{breadAndMeat}
+associated with \code{object}. If speed a concern, it is faster
+to compute this once and pass into corrVar.}
 }
 \value{
-A covariance matrix
+A covariance \code{matrix}.
 }
 \description{
-For a given eta, the covariance can vary. For example, etahat or eta_0.
+For a given eta, the covariance can vary. For example, etahat or
+eta_0.
 }
 

@@ -9,17 +9,19 @@ meat(x, adjust = FALSE, cluster = NULL, ...)
 \arguments{
 \item{x}{a fitted model object.}
 
-\item{adjust}{See `sandwich::meat`.}
+\item{adjust}{See \code{sandwich::meat}. If a cluster is given,
+this argument is ignored as the adjustment is always used.}
 
 \item{cluster}{A vector identifying cluster membership}
 
-\item{...}{Additional arguments to `sandwich::estfun`.}
+\item{...}{Additional arguments to \code{sandwich::estfun}.}
 }
 \value{
-A meat matrix
+A meat \code{matrix}.
 }
 \description{
-This `meat` function is an overloaded function of `meat` from the `sandwich`
-package which enables a `clusters` argument.
+This \code{meat} function is an overloaded function of \code{meat}
+from the \code{sandwich} package which enables a \code{clusters}
+argument.
 }
 

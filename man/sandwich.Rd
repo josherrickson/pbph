@@ -9,21 +9,22 @@ sandwich(x, bread. = bread, meat. = meat, cluster = NULL, ...)
 \arguments{
 \item{x}{a fitted model object.}
 
-\item{bread.}{either a bread matrix or a function for computing this via
-`bread.(x)`.}
+\item{bread.}{either a bread matrix or a function for computing
+this via \code{bread.(x)}.}
 
-\item{meat.}{either a meat matrix or a function for computing this via
-`meat.(x)`.}
+\item{meat.}{either a meat matrix or a function for computing this
+via \code{meat.(x)}.}
 
 \item{cluster}{A variable identifying cluster.}
 
-\item{...}{Additional arguments to `meat`.}
+\item{...}{Additional arguments to \code{meat}.}
 }
 \value{
-A covariance matrix.
+A covariance \code{matrix}.
 }
 \description{
-This `sandwich` function is an overloaded function of `sandwich` from the
-`sandwich` package which enables a `clusters` argument.
+This \code{sandwich} function is an overloaded function of
+\code{sandwich} from the \code{sandwich} package which enables a
+\code{clusters} argument.
 }
 

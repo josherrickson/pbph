@@ -6,12 +6,13 @@
 ##' resp - pred ~ pred | treatment == 1
 ##'
 ##' @param mod1 First stage model fit
-##' @param trtmt A vector of treatment statuses, should be all `0` or `1`.
-##' @param data Data where variables in `form` live.
-##' @param center Default FALSE. Should the predicted values be centered in the
-##'   second stage?
-##' @return A list consisting of `mod2`, the second stage model, and `pred`, the
-##'   predicted values from `mod1`.
+##' @param trtmt A vector of treatment statuses, should be all
+##'   \code{0} or \code{1}.
+##' @param data Data where variables in \code{form} live.
+##' @param center Default \code{FALSE}. Should the predicted values be
+##'   centered in the second stage?
+##' @return A \code{list} consisting of \code{mod2}, the second stage
+##'   model, and \code{pred}, the predicted values from \code{mod1}.
 makemod2 <- function(mod1, trtmt, data, center = FALSE) {
 
   # Center the covariates to orthogonalize intercept and slope.

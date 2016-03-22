@@ -5,16 +5,17 @@ pblm <- setClass("pblm", contains = "lm")
 ##' Performs enhanced Peters-Belson on the data.
 ##' @param mod1 First stage fitted model.
 ##' @param treatment Vector of 0/1 treatment indicators.
-##' @param data Data where variables in `form` live.
-##' @param center Default TRUE. Should the predicted values be centered in the
-##'   second stage?
-##' @param cluster A vector defining the clusters.
-##' @return A pblm object which extends lm. Can be passed to `summary` or
-##'   `confint`.
+##' @param data Data where variables in \code{form} live.
+##' @param center Default \code{TRUE}. Should the predicted values be
+##'   centered in the second stage?
+##' @param cluster A \code{vector} defining the clusters.
+##' @return A \code{pblm} object which extends \code{lm}. Can be
+##'   passed to \code{summary} or \code{confint}.
 ##'
-##'   The return contains an additional object, `epb`, which `lm` doesn't
-##'   include. `epb` is a list which contains several pieces necessary for
-##'   `summary` and `confint` support.
+##'   The return contains an additional object, \code{epb}, which
+##'   \code{lm} doesn't include. \code{epb} is a list which contains
+##'   several pieces necessary for \code{summary} and \code{confint}
+##'   support.
 ##' @export
 pblm <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
   if (!all(treatment %in% 0:1)) {
@@ -47,20 +48,15 @@ pblm <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
 
 ##' Returns covariance matrix calculated via sandwich estimation.
 ##'
-##' Returns a covariance matrix. Computed using enhanced PB methods. The
-##' variance for pred should NOT be used directly in confidence intervals.
-##' @param object pblm object.
-##' @return A covariance matrix.
+##' Returns a covariance \code{matrix}. Computed using enhanced PB
+##' methods. The variance for pred should NOT be used directly in
+##' confidence intervals.
+##' @param object \code{pblm} object.
+##' @return A covariance \code{matrix}.
 vcov.pblm <- function(object) {
   return(corrVar(object$coef[2], object))
 }
 
-##' Summary for pblm object
-##'
-##' Similar to `summary.lm`.
-##' @param object An object of class `pblm`.
-##' @param ... Additional arguments to `summary.lm`.
-##' @return A summary
 ##' @export
 summary.pblm <- function(object, ...) {
   ss <- summary(as(object, "lm"), ...)
@@ -89,11 +85,6 @@ summary.pblm <- function(object, ...) {
   return(ss)
 }
 
-##' Print `summary.pblm` objects correctly
-##'
-##' @param x A `summary.pblm` object.
-##' @param ... Additional arguments to `print`.
-##' @return Outputs a printed result similar to `print.summary.lm`.
 ##' @export
 print.summary.pblm <- function(x, ...) {
   class(x) <- "summary.lm"
@@ -102,18 +93,20 @@ print.summary.pblm <- function(x, ...) {
 
 ##' Confidence intervals for pblm object
 ##'
-##' Similar to `confint.lm`.
-##' @param object An object of class `pblm`.
+##' Similar to \code{confint.lm}.
+##' @param object An object of class \code{pblm}.
 ##' @param parm Parameters
 ##' @param level Confidence level.
-##' @param ... Additional arguments to `confint.lm`.
-##' @param wald.style Logical. Defaults to FALSE so the method performs test
-##'   inversion to obtain proper coverage. If TRUE, generates wald-style CI's,
-##'   which will likely suffer from undercoverage.
-##' @param forceDisplayConfInt Logical. Defaults to FALSE. If a hypothesis test
-##'   for the interaction term fails, a confidence interval is unreliable (and
-##'   ultimately unnecessary) and thus not returned. Set this to TRUE to force
-##'   computation of the interval regardless of the hypothesis test.
+##' @param ... Additional arguments to \code{confint.lm}.
+##' @param wald.style Logical. Defaults to \code{FALSE} so the method
+##'   performs test inversion to obtain proper coverage. If
+##'   \code{TRUE}, generates wald-style CI's, which will likely suffer
+##'   from undercoverage.
+##' @param forceDisplayConfInt Logical. Defaults to \code{FALSE}. If a
+##'   hypothesis test for the interaction term fails, a confidence
+##'   interval is unreliable (and ultimately unnecessary) and thus not
+##'   returned. Set this to \code{TRUE} to force computation of the
+##'   interval regardless of the hypothesis test.
 ##' @return Confidence intervals
 ##' @export
 confint.pblm <- function(object, parm, level = 0.95, ...,

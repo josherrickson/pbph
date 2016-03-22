@@ -7,14 +7,17 @@
 addIntercept(x)
 }
 \arguments{
-\item{x}{A matrix or data.frame.}
+\item{x}{A \code{matrix} or \code{data.frame}.}
 }
 \value{
-If `x` has no intercept, a matrix with an intercept column
+A \code{matrix} (if \code{x} is a \code{matrix}) or
+  \code{data.frame} (if \code{x} is a \code{data.frame})
+  guaranteed to have an intercept column.
 }
 \description{
-Given a matrix or data.frame of size nxp, returns an nx(p+1) object where
-the first column is an intercept; if the intercept is not already in the
-object (defined as a first column being all 1's).
+Given a \code{matrix} or \code{data.frame} of size nxp, returns an
+nx(p+1) object of the same type where the first column is an
+intercept if the intercept is not already in the object (defined
+as a first column being all 1's).
 }
 

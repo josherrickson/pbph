@@ -1,12 +1,13 @@
 ##' (Internal) Return covariance matrix associated with a given choice of eta.
 ##'
-##' For a given eta, the covariance can vary. For example, etahat or eta_0.
+##' For a given eta, the covariance can vary. For example, etahat or
+##' eta_0.
 ##' @param eta Value of eta to use.
-##' @param object A pblm object.
-##' @param breadAndMeat By default, will create breadAndMeat associated with
-##'   'object'. If speed a concern, it is faster to compute this once and pass
-##'   into corrVar.
-##' @return A covariance matrix
+##' @param object A \code{pblm} object.
+##' @param breadAndMeat By default, will create \code{breadAndMeat}
+##'   associated with \code{object}. If speed a concern, it is faster
+##'   to compute this once and pass into corrVar.
+##' @return A covariance \code{matrix}.
 corrVar <- function(eta, object,
                     breadAndMeat = createBreadAndMeat(object, cluster = object$epb$cluster)) {
 
@@ -30,10 +31,10 @@ corrVar <- function(eta, object,
 
 ##' (Internal) Conducts a hypothesis test for a given null.
 ##'
-##' @param object A pblm object.
+##' @param object A \code{pblm} object.
 ##' @param null Defaults to 0.
-##' @return A test statistic, with distribution t(k) where k is the number of
-##'   parameters in the first stage model, less 2.
+##' @return A test statistic, with distribution t(k) where k is the
+##'   number of parameters in the first stage model, less 2.
 hypothesisTest <- function(object, null = 0) {
   return( (object$coef[2] - null) / sqrt(corrVar(eta = null, object)[2,2]))
 }
@@ -41,9 +42,10 @@ hypothesisTest <- function(object, null = 0) {
 
 ##' (Internal) Computes a confidence interval for eta via test inversion.
 ##'
-##' @param object A pblm object.
+##' @param object A \code{pblm} object.
 ##' @param level Confidence level. Default is 95\%.
-##' @return Vector of length two with the lower and upper bounds.
+##' @return A \code{vector} of length two with the lower and upper
+##'   bounds.
 testinverse <- function(object, level = .95) {
 
   bAndM <- createBreadAndMeat(object, object$epb$cluster)
