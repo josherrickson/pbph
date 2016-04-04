@@ -6,12 +6,13 @@ true_t <- .1
 sigma2 <- .3
 true_inter <- seq(-.4,.4,by = .1)
 
-reps <- 1000
-bigsave <- epb:::makeSaveMatrix(c("truth", "coverage"),
-                          reps = length(true_inter))
+reps <- 100
+bigsave <- epb:::makeSaveMatrix(c("truth", "coverage", "finite",
+                                  "inf", "disjoint"),
+                                reps = length(true_inter))
 for (j in 1:length(true_inter)) {
   ti <- round(true_inter[j], 1)
-  save <- vector(length = reps)
+  save <- epb:::makeSaveMatrix(c("covered", "type"), reps=reps)
   for (i in 1:reps) {
 
     covs <- data.frame(matrix(rnorm(n*p), nrow = n))
@@ -27,10 +28,31 @@ for (j in 1:length(true_inter)) {
     mod1 <- glm(y ~ ., data = d[treatment == 0,], family = 'binomial',)
     mod2 <- pblm(mod1, treatment, d)
 
-    save[i] <- 2*pt(abs(hypothesisTest(mod2, ti)), mod1$df.null, lower.tail = FALSE)
+    ci <- confint(mod2, "pred")
+    type <- attr(ci, "type")
+    if (type == "finite") {
+      covered <- ci[1] < ti & ti < ci[2]
+    } else if (type == "infinite") {
+      covered <- TRUE
+    } else if (type == "disjoint") {
+      covered <- ti < ci[1] | ci[2] < ti
+    } else {
+      stop(paste("Problem:", type))
+    }
+    type <- switch(type,
+                   finite = 1,
+                   infinite = 2,
+                   disjoint = 3)
+
+
+    save[i,] <- c(covered, type)
+
   }
-  coveraged <- table(save <= .05)["FALSE"]
-  bigsave[j,] <- c(ti, coveraged)
+  coveraged <- table(save[,1])
+  bigsave[j,] <- c(ti, coveraged,
+                   sum(save[,2] == 1),
+                   sum(save[,2] == 2),
+                   sum(save[,2] == 3))
 
 }
 
