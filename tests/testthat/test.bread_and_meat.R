@@ -13,7 +13,7 @@ test_that("bread", {
 
   mod1 <- lm(form, data = d, subset = treatment == 0)
 
-  m <- makemod2(mod1, treatment, d)
+  m <- pblm(mod1, treatment, d, center = FALSE)
 
   # B11
   b11 <- bread11(mod1)
@@ -23,16 +23,24 @@ test_that("bread", {
                check.attributes = FALSE)
 
   #B21
-  tau <- lm(resp - (1+eta0)*m$pred ~ 1, subset = treatment == 1)$coef
-  b21 <- bread21(eta = 1, resp, covs, m$pred, treatment)
+  tau <- lm(resp - (1+eta0)*m$epb$pred ~ 1, subset = treatment == 1)$coef
+  b21 <- bread21(eta = 1, resp, covs, m$epb$pred, treatment)
   expect_equal(b21, matrix(c(-8,-46/3, -14, -503/12,
                              -24, -175/3 ), nrow = 2),
                check.attributes = FALSE)
 
   #B22
-  b22 <- bread22(m$mod2)
+  b22 <- bread22(m)
   expect_equal(solve(b22), matrix(c(4,23/3,23/3,251/9), nrow = 2),
                check.attributes = FALSE)
+
+  # If we center in the second stage, intercept and pred should be
+  # independent
+  m2 <- pblm(mod1, treatment, d, center = TRUE)
+  b22.2 <- bread22(m2)
+  expect_equal(solve(b22.2), matrix(c(4, 0, 0, 475/36), nrow = 2),
+               check.attributes = FALSE)
+
 })
 
 test_that("meat", {

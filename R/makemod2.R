@@ -9,35 +9,27 @@
 ##' @param trtmt A vector of treatment statuses, should be all
 ##'   \code{0} or \code{1}.
 ##' @param data Data where variables in \code{form} live.
-##' @param center Default \code{FALSE}. Should the predicted values be
+##' @param center Default \code{TRUE}. Should the predicted values be
 ##'   centered in the second stage?
 ##' @return A \code{list} consisting of \code{mod2}, the second stage
 ##'   model, and \code{pred}, the predicted values from \code{mod1}.
-makemod2 <- function(mod1, trtmt, data, center = FALSE) {
-
-  # Center the covariates to orthogonalize intercept and slope.
-  if (center) {
-    data.center <- data
-    numeric_cols <- sapply(data, is.numeric)
-    data.center[numeric_cols] <- data.frame(scale(data[numeric_cols],
-                                                  scale = FALSE))
-  }
+makemod2 <- function(mod1, trtmt, data, center = TRUE) {
 
   # Get predicted values.
-  predicted <- predict(mod1,
-                       type = "response",
-                       newdata = if (center) data.center else data)
+  predicted <- predict(mod1, type = "response", newdata = data)
 
   # Second stage linear model.
   respname <- formula(mod1)[[2]]
   newdata <- data.frame(pred      = predicted[trtmt == 1],
                         treatment = rep(1, sum(trtmt)))
-  newdata[[paste0(respname, "_t")]] <- eval(respname, envir = data)[trtmt == 1]
+  newdata[[paste0(respname, "_t - pred")]] <- eval(respname, envir = data)[trtmt == 1] - newdata$pred
 
+  if (center) newdata$pred <- scale(newdata$pred, scale=FALSE)
 
-  mod2 <- lm(as.formula(paste0(respname,
-                               "_t - pred ~ treatment + pred + 0")),
-             data = newdata)
+  form <- as.formula(paste0("`",respname,
+                            "_t - pred` ~ treatment + pred + 0"))
+
+  mod2 <- lm(form, data = newdata)
 
   mod2$call$formula <- as.formula(paste0(respname,
                                   "_t - pred ~ treatment + pred"))
