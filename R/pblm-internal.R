@@ -14,11 +14,7 @@ corrVar <- function(eta, object,
   mod1 <- object$epb$mod1
   data <- object$epb$data
 
-  b21 <- bread21(eta,
-                 resp = eval(formula(mod1)[[2]], envir = data),
-                 covs = model.matrix(formula(mod1), data = data),
-                 pred = object$epb$pred,
-                 treatment = object$epb$treatment)
+  b21 <- bread21(object, eta)
 
   corrected <- correctedvar(breadAndMeat$b11,
                                          b21,

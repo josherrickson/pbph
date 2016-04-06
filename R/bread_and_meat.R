@@ -5,26 +5,49 @@
 #' argument. The off-diagonal Bread element requires further specification.
 #' @param model For Bread & Meat that can be calculated using sandwich package,
 #'   we only need the model, either first or second stage, depending.
-#' @param cluster For Meat only; A vector defining clusters.
 #' @param eta Estimated version of the coefficient on the interaction between
 #'   predicted and treatment. This could be from a model or a hypothesis.
-#' @param resp Vector of responses.
-#' @param covs Data frame of covariates.
-#' @param treatment Vector of 0/1 treatment indicators.
-#' @param pred Predicted values from first stage.
+#' @param cluster For Meat only; A vector defining clusters.
 #' @import sandwich
 #' @name bread_and_meat
 NULL
 #> NULL
 
+##' Return scaling factor for GLM mdoels
+##'
+##' @param model A model (lm or glm).
+##' @param newdata Data to generate the scale.
+##' @return Scaling factor. 1 if lm.
+glmScale <- function(model, newdata) {
+  if (is(model, "glm")) {
+    logodds <- predict(model, type = "link", newdata=newdata)
+    switch(model$family$family,
+           "binomial" = scale <- exp(-logodds) / (1 + exp(-logodds)) ^ 2,
+           "poisson" = scale <- exp(logodds),
+           stop(paste("glm family", model$family$family,
+                      "not yet supported")
+                )
+           )
+  } else {
+    return(1)
+  }
+
+  return(scale)
+}
+
 ##' @rdname bread_and_meat
 bread11 <- function(model) {
-  sandwich::bread(model) / length(residuals(model))
+  x <- model.matrix(model)
+  scale <- glmScale(model, newdata=model.frame(model))
+
+  solve(crossprod(x, x * scale))
 }
 
 ##' @rdname bread_and_meat
 bread22 <- function(model) {
-  sandwich::bread(model) / length(residuals(model))
+  x <- model.matrix(model)
+
+  solve(crossprod(x))
 }
 
 ##' @rdname bread_and_meat
@@ -38,16 +61,26 @@ meat22 <- function(model, cluster = NULL) {
 }
 
 ##' @rdname bread_and_meat
-bread21 <- function(eta, resp, covs, pred, treatment) {
-  covsInt <- addIntercept(covs)
+bread21 <- function(model, eta) {
+  mod1 <- model$epb$mod1
+  data <- model$epb$data
+
+  treatment <- model$epb$treatment
+
+  resp <- eval(formula(mod1)[[2]], envir = data)[treatment == 1]
+  covs <- model.matrix(formula(mod1), data = data)
+  covs <- addIntercept(covs)[treatment == 1, , drop=FALSE]
+  pred <- model$epb$pred[treatment == 1]
+
+  scale <- glmScale(mod1, newdata=as.data.frame(covs))
 
   # Replace tauhat with tauhat_eta0
-  tau <- lm(resp - (1 + eta) * pred ~ 1, subset = (treatment == 1))$coef
+  tau <- lm(resp - (1 + eta) * pred ~ 1)$coef
 
-  rbind(apply(-(1 + eta) * covsInt[treatment == 1,,drop = FALSE], 2, sum),
-        apply( (resp[treatment == 1] - tau - 2 * (1 + eta) * pred[treatment == 1]) *
-                 covsInt[treatment == 1,,drop = FALSE],
-              2, sum))
+  b21.1 <- apply(-(1 + eta) * covs * scale, 2, sum)
+  b21.2 <- apply( (resp - tau - 2 * (1 + eta) * pred) * covs * scale, 2, sum)
+
+  rbind(b21.1, b21.2)
 }
 
 ##' (Internal) Computes Bread and Meat matrices.

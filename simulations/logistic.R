@@ -21,8 +21,9 @@ for (j in 1:length(true_inter)) {
 
     treatment <- rep(0:1, c(n*pc, n*(1 - pc)))
 
-    pr <- 1/(1 + exp(-as.matrix(covs) %*% truebeta)) + true_t*treatment + ti*treatment*yc_un
-    rep <- rbinom(n, 1, pmax(pmin(pr,1),0))
+    pr <- 1/(1 + exp(-as.matrix(covs) %*% truebeta))
+    pr <- pr + true_t*treatment + ti*treatment*pr
+    resp <- rbinom(n, 1, pmax(pmin(pr,1),0))
     d <- data.frame(y = resp, covs)
 
     mod1 <- glm(y ~ ., data = d[treatment == 0,], family = 'binomial',)

@@ -23,8 +23,7 @@ test_that("bread", {
                check.attributes = FALSE)
 
   #B21
-  tau <- lm(resp - (1+eta0)*m$epb$pred ~ 1, subset = treatment == 1)$coef
-  b21 <- bread21(eta = 1, resp, covs, m$epb$pred, treatment)
+  b21 <- bread21(m, eta = 1)
   expect_equal(b21, matrix(c(-8,-46/3, -14, -503/12,
                              -24, -175/3 ), nrow = 2),
                check.attributes = FALSE)
@@ -52,7 +51,7 @@ test_that("meat", {
 
   mod1 <- lm(form, data = d, subset = treatment == 0)
 
-  m <- makemod2(mod1, treatment, d)
+  m <- pblm(mod1, treatment, d)
 
   resp <- eval(form[[2]], envir = d)
   covs <- model.matrix(form, data = d)
@@ -66,7 +65,7 @@ test_that("meat", {
 
   # M22
   # check this
-  m22 <- meat22(m$mod2)
+  m22 <- meat22(m)
   #expect_equal(m22, matrix(c(60.652767005232462338,
   #                           176.40659484969751247,
   #                           176.40659484969751247,

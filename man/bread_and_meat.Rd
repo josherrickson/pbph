@@ -17,7 +17,7 @@ meat11(model, cluster = NULL)
 
 meat22(model, cluster = NULL)
 
-bread21(eta, resp, covs, pred, treatment)
+bread21(model, eta)
 }
 \arguments{
 \item{model}{For Bread & Meat that can be calculated using sandwich package,
@@ -27,14 +27,6 @@ we only need the model, either first or second stage, depending.}
 
 \item{eta}{Estimated version of the coefficient on the interaction between
 predicted and treatment. This could be from a model or a hypothesis.}
-
-\item{resp}{Vector of responses.}
-
-\item{covs}{Data frame of covariates.}
-
-\item{pred}{Predicted values from first stage.}
-
-\item{treatment}{Vector of 0/1 treatment indicators.}
 }
 \description{
 Computes the Bread and Meat matricies. The diagonal elements are typical

@@ -1,14 +1,16 @@
 context("First stage glm")
 
+
 test_that("logistic", {
   set.seed(1)
   d <- data.frame(abc = sample(0:1, 10, TRUE),
-                  x = rnorm(10),
-                  z = rnorm(10))
+                  x = c(2,5,4,2,1,2,4,3,4,1),
+                  z = c(2,2,1,3,6,2,2,4,0,9))
   t <- rep(0:1, each = 5)
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
-  suppressWarnings(mod1g <- glm(abc ~ x + z, data = d, subset = t == 0, family = "binomial"))
+  mod1g <- glm(abc ~ x + z, data = d, subset = t == 0,
+               family = "binomial")
 
   e <- pblm(mod1, t, d)
   eg <- pblm(mod1g, t, d)
@@ -39,6 +41,34 @@ test_that("logistic", {
 
 
 })
+
+test_that("bread and meat with glm", {
+  set.seed(1)
+  d <- data.frame(abc = sample(0:1, 10, TRUE),
+                  x = c(2,5,4,2,1,2,4,3,4,1),
+                  z = c(2,2,1,3,6,2,2,4,0,9))
+  t <- rep(0:1, each = 5)
+
+  mod1 <- glm(abc ~ x + z, data = d, subset = t == 0,
+              family = "binomial")
+
+  e <- pblm(mod1, t, d)
+
+  test <- solve(matrix(c(1,2,2,2,4,4,2,4,4),3) * .2287 +
+                matrix(c(1,5,2,5,25,10,2,10,4),3) * .1958 +
+                matrix(c(1,4,1,4,16,4,1,4,1),3) * .2339 +
+                matrix(c(1,2,3,2,4,6,3,6,9),3) * .2407 +
+                matrix(c(1,1,6,1,1,6,6,6,36),3) * .0527 )
+  expect_true(isTRUE(all.equal(test, bread11(mod1), tol=1e-3,
+                               check.attributes=FALSE)))
+
+  expect_true(isTRUE(all.equal(
+    solve(matrix(c(5, 0, 0, sum(model.matrix(e)[,"pred"]^2)), 2)),
+    bread22(e),
+    check.attributes=FALSE)))
+
+  })
+
 
 test_that("poisson", {
   set.seed(1)

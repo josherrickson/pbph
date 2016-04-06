@@ -4,7 +4,7 @@
 \alias{makemod2}
 \title{(Internal) Fit the second stage Enhanced Peters-Belson model.}
 \usage{
-makemod2(mod1, trtmt, data, center = FALSE)
+makemod2(mod1, trtmt, data, center = TRUE)
 }
 \arguments{
 \item{mod1}{First stage model fit}
@@ -14,7 +14,7 @@ makemod2(mod1, trtmt, data, center = FALSE)
 
 \item{data}{Data where variables in \code{form} live.}
 
-\item{center}{Default \code{FALSE}. Should the predicted values be
+\item{center}{Default \code{TRUE}. Should the predicted values be
 centered in the second stage?}
 }
 \value{
