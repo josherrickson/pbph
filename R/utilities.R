@@ -12,7 +12,7 @@
 addIntercept <- function(x) {
   if (class(x) == "data.frame") {
     if (any(x[,1] != 1)) {
-      x$Intercept <- rep(1,nrow(x))
+      x$Intercept <- 1
       x <- x[,c(ncol(x), 1:(ncol(x) - 1))]
     }
     return(x)
@@ -20,13 +20,20 @@ addIntercept <- function(x) {
 
   if (class(x) == "matrix") {
     if (any(x[,1] != 1)) {
-      x <- cbind(rep(1, nrow(x)), x)
+      x <- cbind(1, x)
       if (!is.null(colnames(x))) {
         colnames(x)[1] <- "Intercept"
       }
     }
     return(x)
   }
+
+  if (is(x, "vector")) {
+    x <- cbind(1, x)
+    colnames(x)[1] <- "Intercept"
+    return(x)
+  }
+
   warning(paste0("Don't know how to add intercept to ",
                  class(x), "."))
   return(x)

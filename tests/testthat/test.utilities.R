@@ -26,11 +26,12 @@ test_that("addIntercept", {
   expect_true(all(m2out == mout))
   expect_true(all(colnames(m2out) == c("Intercept", colnames(m))))
 
-  # Handling other objects
-  expect_warning(v1 <- addIntercept(1:3), "intercept to integer")
-  expect_warning(v2 <- addIntercept("abc"), "intercept to character")
-  expect_identical(v1, 1:3)
-  expect_identical(v2, "abc")
+  # Vectors
+  v1 <- addIntercept(1)
+  expect_identical(v1, matrix(c(1,1), ncol=2, dimnames=list(NULL, c("Intercept", "x"))))
+
+  v2 <- addIntercept(1:10)
+  expect_identical(v2, matrix(c(rep(1,10),1:10), byrow=FALSE, ncol=2, dimnames=list(NULL, c("Intercept", "x"))))
 })
 
 
