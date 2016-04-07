@@ -26,7 +26,7 @@ for (j in 1:length(true_inter)) {
     resp <- rbinom(n, 1, pmax(pmin(pr,1),0))
     d <- data.frame(y = resp, covs)
 
-    mod1 <- glm(y ~ ., data = d[treatment == 0,], family = 'binomial',)
+    mod1 <- glm(y ~ ., data = d[treatment == 0,], family = binomial)
     mod2 <- pblm(mod1, treatment, d)
 
     ci <- confint(mod2, "pred")
