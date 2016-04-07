@@ -16,6 +16,7 @@ License: GPL-3
 LazyData: true
 Suggests:
     testthat,
+    roxygen2,
     knitr,
     rmarkdown
 RoxygenNote: 5.0.1

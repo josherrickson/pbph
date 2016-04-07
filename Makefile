@@ -8,9 +8,11 @@ interactive:
 	@$(LOAD) R -q --no-save
 
 .devtools:
-	@$(RCMD) "library(devtools); devtools:::$(FUNC)()"
+	@$(RCMD) "devtools:::$(FUNC)($(DEVTOOLSARG))"
 
+DEVTOOLSARG=
 dependencies: FUNC=install_deps
+dependencies: DEVTOOLSARG=dependencies=TRUE
 test: FUNC=test
 check: FUNC=check
 document: FUNC=document
