@@ -20,10 +20,10 @@ NULL
 ##' @return Scaling factor. 1 if lm.
 glmScale <- function(model, newdata) {
   if (is(model, "glm")) {
-    logodds <- predict(model, type = "link", newdata=newdata)
+    resp <- predict(model, type = "response", newdata = newdata)
     switch(model$family$family,
-           "binomial" = scale <- exp(logodds) / (1 + exp(logodds)) ^ 2,
-           "poisson" = scale <- exp(logodds),
+           "binomial" = scale <- resp*(1-resp),
+           "poisson" = scale <- resp,
            stop(paste("glm family", model$family$family,
                       "not yet supported")
                 )
