@@ -22,7 +22,7 @@ glmScale <- function(model, newdata) {
   if (is(model, "glm")) {
     logodds <- predict(model, type = "link", newdata=newdata)
     switch(model$family$family,
-           "binomial" = scale <- exp(-logodds) / (1 + exp(-logodds)) ^ 2,
+           "binomial" = scale <- exp(logodds) / (1 + exp(logodds)) ^ 2,
            "poisson" = scale <- exp(logodds),
            stop(paste("glm family", model$family$family,
                       "not yet supported")
