@@ -49,7 +49,7 @@ for (j in 1:length(true_inter)) {
     save[i,] <- c(covered, type)
 
   }
-  coveraged <- table(save[,1])
+  coveraged <- table(save[,1])["1"]
   bigsave[j,] <- c(ti, coveraged,
                    sum(save[,2] == 1),
                    sum(save[,2] == 2),
