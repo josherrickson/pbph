@@ -61,6 +61,9 @@ confint(mod2)
 #> [1] "finite"
 ```
 
+The negative coefficient (-.799) on `pred` shows evidence that students with lower predicted test score in the absense of treatment are showing a
+larger treatment effect than those with higher predicted test scores.
+
 ## Development
 
 Included are both a Makefile and an RStudio project file. Either can be used.
