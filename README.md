@@ -27,37 +27,38 @@ devtools::install_github("josherrickson/epb")
 
 ## Usage
 
-A short example. Lets predict the effect of `Treatment == "chilled"` on `uptake` in this CO2 data set.
+A short example. Lets predict the effect of an afterschool program on an end-of-term exam on the `eottest` (fake) data.
 
 
 ```r
-data(CO2)
-mod1 <- lm(uptake ~ conc + Type, data = CO2, subset = (Treatment == "nonchilled"))
-mod2 <- pblm(mod1, treatment = (CO2$Treatment == "chilled"), data = CO2)
+data(eottest)
+mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
+mod2 <- pblm(mod1, treatment = eottest$afterschool, data = eottest)
 summary(mod2)
 #> 
 #> Call:
-#> lm(formula = uptake_t - pred ~ treatment + pred, data = newdata)
+#> lm(formula = test_t - pred ~ treatment + pred, data = newdata)
 #> 
 #> Residuals:
-#>      Min       1Q   Median       3Q      Max 
-#> -16.8462  -3.2198   0.1601   4.0107  13.1441 
+#>     Min      1Q  Median      3Q     Max 
+#> -9.1368 -1.0697 -0.1559  2.2389  2.7636 
 #> 
 #> Coefficients:
 #>           Estimate Std. Error t value Pr(>|t|)    
-#> treatment  -6.8595     1.4579  -4.705 2.54e-06 ***
-#> pred        0.1463     0.5508   0.304    0.762    
+#> treatment 14.32344    0.57302  24.996  < 2e-16 ***
+#> pred      -0.79942    0.08846  -5.354 5.26e-05 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> Residual standard error: 6.645 on 40 degrees of freedom
-#> Multiple R-squared:  0.5343,	Adjusted R-squared:  0.511 
-#> F-statistic: 22.95 on 2 and 40 DF,  p-value: 2.3e-07
-confint(mod2, parm="pred")
-#>          2.5 %     97.5 %
-#> pred -69.45056 -0.4285882
+#> Residual standard error: 2.697 on 18 degrees of freedom
+#> Multiple R-squared:  0.9766,	Adjusted R-squared:  0.974 
+#> F-statistic: 375.1 on 2 and 18 DF,  p-value: 2.131e-15
+confint(mod2)
+#>                2.5 %    97.5 %
+#> treatment 13.1195694 15.527304
+#> pred      -0.9788453 -0.591279
 #> attr(,"type")
-#> [1] "disjoint"
+#> [1] "finite"
 ```
 
 ## Development

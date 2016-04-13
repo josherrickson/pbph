@@ -5,3 +5,4 @@ simulations
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
+^data-raw$
