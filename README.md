@@ -58,11 +58,23 @@ Development
 
 Included are both a Makefile and an RStudio project file. Either can be used.
 
-If using the Makefile, useful commands include
+After cloning the repo, the first thing to do is ensure all dependencies are installed.
+
+If using RStudio, after loading the project file, run
+
+``` r
+devtools::install_deps(dependencies = TRUE)
+```
+
+If using the Makefile, you can run
+
+    make dependencies
+
+Additional useful Makefile commands include
 
 -   `make interactive`: Starts up an interactive session with `epb` loaded.
 -   `make test`: Test all testthat files in `tests/testthat` directory.
 -   `make check`: Runs `R CMD check` on the package.
 -   `make document`: Convert all inline roxygen documentation into .Rd files, and update NAMESPACE as needed.
 -   `make vignette`: Builds any vignettes in `vignettes/` directory.
--   `make clean`: Removes files built by `make vignette`, `make document` or `make check`. Should not be generally necessary, but can be useful for debugging.
+-   `make clean`: Removes files built by `make vignette`. Should not be generally necessary, but can be useful for debugging.
