@@ -2,9 +2,9 @@
 epb: Enhanced Peters-Belson implementation for R
 ================================================
 
-The `epb` package implements a two-stage variation of the Peters-Belson approach to treatment effect detection in a causal inference framework. Traditional Peters-Belson methods generate a model to predict $\\hat{Y}\_c$, the predicted outcome in the absense of treatment, then estimate the average $Y - \\hat{Y}\_c$ in the treatment group to obtain a treatment effect estimate (the ETT, or effect of treatment on the treated, to be precise).
+The `epb` package implements a two-stage variation of the Peters-Belson approach to treatment effect detection in a causal inference framework. Traditional Peters-Belson methods generate a model to predict the outcome in the absense of treatment, then estimate the treatemtn effect by the difference in that predicted outcome and the observed outcome in the treatment group.
 
-The enhanced version of this uses $\\hat{Y}\_c$ in a second stage regression model, to allow us to answer whether an individual's predicted risk (their predicted response in the absense of treatment) affects the treatment effect.
+The enhanced version of this uses the predicted response in the absense of treatment in a second stage regression model, to allow us to answer whether an individual's predicted risk (their predicted response in the absense of treatment) affects the treatment effect.
 
 Consider a classroom of students. We are testing whether students enrolled in an after-school program show a performance increase on an end-of-term standardized exam. It is relatively straightforward to test whether students enrolled in that program show an improvement on their exam scores. However, we may hypothesize that we would see little-to-no improvement amongst those students who would perform well on the test regardless of intervention, but will be a large benefit on those students who would perform poorly. The enchanced Peters-Belson method addresses this.
 
