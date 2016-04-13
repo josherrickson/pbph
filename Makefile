@@ -23,3 +23,6 @@ dependencies test check document vignette clean-vignette build: .devtools
 
 clean: clean-vignette
 	git clean -Xfd
+
+knit-README:
+	@$(LOAD) R -q --no-save -e "knitr::knit('README.Rmd', 'README.md')"
