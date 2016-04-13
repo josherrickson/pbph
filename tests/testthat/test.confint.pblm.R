@@ -15,7 +15,7 @@ test_that("confint.pblm", {
 
   e <- pblm(mod1, t, d)
 
-  ci <- confint(e)
+  ci <- confint(e, forceDisplayConfInt = TRUE)
   ci
 
   expect_equal(dim(ci), c(2,2))
@@ -41,7 +41,7 @@ test_that("confint.pblm", {
 
   e <- pblm(mod1, t, d)
 
-  ci <- confint(e)
+  ci <- confint(e, forceDisplayConfInt = TRUE)
 
   expect_true(all(!is.finite(ci[2,])))
 
@@ -62,22 +62,22 @@ test_that("CI arguments", {
 
   e <- pblm(mod1, t, d)
 
-  ci <- confint(e)
+  ci <- confint(e, forceDisplayConfInt = TRUE)
   ci
 
-  ci1 <- confint(e, parm = "treatment")
+  ci1 <- confint(e, parm = "treatment", forceDisplayConfInt = TRUE)
   expect_equal(rownames(ci1), "treatment")
-  expect_equal(ci1[1,], ci[1,], check.attributes = FALSE)
+  expect_equal(ci1[1,], ci[1,])
 
-  ci2 <- confint(e, parm = "pred")
+  ci2 <- confint(e, parm = "pred", forceDisplayConfInt = TRUE)
   expect_equal(rownames(ci2), "pred")
-  expect_equal(ci2[1,], ci[2,], check.attributes = FALSE)
+  expect_equal(ci2[1,], ci[2,])
 
-  ci3 <- confint(e, parm = c("pred", "pred", "treatment"))
+  ci3 <- confint(e, parm = c("pred", "pred", "treatment"), forceDisplayConfInt = TRUE)
   expect_equal(rownames(ci3), c("pred", "pred", "treatment"))
 
   # Confidence level should shrink
-  ci4 <- confint(e, level = .5)
+  ci4 <- confint(e, level = .5, forceDisplayConfInt = TRUE)
   expect_true(all((ci4 - ci)[,1] > 0))
   expect_true(all((ci4 - ci)[,2] < 0))
 })
@@ -93,9 +93,37 @@ test_that("wald-style CI's", {
 
   e <- pblm(mod1, t, d)
 
-  ci <- confint(e)
+  ci <- confint(e, forceDisplayConfInt = TRUE)
   ci2 <- confint(e, wald.style = TRUE)
 
   expect_false(identical(ci[2,],ci2[2,]))
+
+})
+
+test_that("forceDisplayConfInt and returnShape", {
+
+  set.seed(8)
+  d <- data.frame(abc = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10))
+  t <- rep(0:1, each = 5)
+
+  mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
+
+  e <- pblm(mod1, t, d)
+
+  expect_output(c1 <- confint(e), "suppressing associated confidence interval")
+  expect_silent(c2 <- confint(e, forceDisplayConfInt = TRUE))
+  expect_true(all(!is.na(c1[1,])))
+  expect_true(all(is.na(c1[2,])))
+  expect_true(all(!is.na(c2[1,])))
+  expect_true(all(!is.na(c2[2,])))
+
+  expect_silent(c3 <- confint(e, returnShape = TRUE))
+  expect_true(all(!is.na(c3)))
+  expect_equal(attr(c3, "type"), "finite")
+
+  expect_silent(c4 <- confint(e, returnShape = TRUE, forceDisplayConfInt = FALSE))
+  expect_identical(c3,c4)
 
 })

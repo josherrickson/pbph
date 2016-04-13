@@ -34,7 +34,7 @@ for (j in 1:length(true_inter)) {
     mod1 <- lm(y ~ ., data = d, subset = treatment == 0)
 
     e <- pblm(mod1, treatment, d, cluster = cluster)
-    ci <- confint(e, "pred")
+    ci <- confint(e, "pred", returnType = TRUE)
     type <- attr(ci, "type")
     if (type == "finite") {
       covered <- ci[1] < ti & ti < ci[2]

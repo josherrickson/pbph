@@ -107,16 +107,20 @@ print.summary.pblm <- function(x, ...) {
 ##'   interval is unreliable (and ultimately unnecessary) and thus not
 ##'   returned. Set this to \code{TRUE} to force computation of the
 ##'   interval regardless of the hypothesis test.
+##' @param returnShape Logical. Defaults to \code{FALSE}. If \code{TRUE},
+##'   adds an attribute to the output the defines the shape of the
+##'   confidence region. If \code{TRUE}, \code{forceDisplayConfInt} is
+##'   set to \code{TRUE} as well.
 ##' @return Confidence intervals
 ##' @export
 confint.pblm <- function(object, parm, level = 0.95, ...,
-                         wald.style = FALSE, forceDisplayConfInt = FALSE) {
+                         wald.style = FALSE, forceDisplayConfInt = FALSE,
+                         returnShape = FALSE) {
   if (wald.style & forceDisplayConfInt) {
     warning("Argument 'forceDisplayConfInt' ignored when 'wald.style' is TRUE.")
   }
 
-  # Temp disabling this
-  forceDisplayConfInt <- TRUE
+  if (returnShape) forceDisplayConfInt <- TRUE
 
   # Do not use confint(as(object, "lm")). `confint.lm` includes a call to vcov;
   # doing it that way will return the originals rather than the corrected
@@ -125,12 +129,12 @@ confint.pblm <- function(object, parm, level = 0.95, ...,
   if ("pred" %in% rownames(ci) & !wald.style) {
     if (summary(object)$coef[2,4] > .05 & !forceDisplayConfInt) {
       cat("Interaction term not significant, suppressing associated confidence interval. ")
-      cat("Use 'forceDisplayConfInt = TRUE' to force it.\n")
+      cat("Use 'forceDisplayConfInt = TRUE' to override.\n")
       ci["pred",] <- c(NA, NA)
     } else {
       ti <- testinverse(object, level = level)
       ci["pred",] <- ti
-      attr(ci, "type") <- attr(ti, "type")
+      if (returnShape) attr(ci, "type") <- attr(ti, "type")
     }
   }
   return(ci)

@@ -31,8 +31,8 @@ for (i in seq_len(reps)) {
   e <- pblm(mod1, treatment, d)
   sm <- summary(e)
 
-  save[i,] <- c(ti, e$coef[2], confint(e)["pred",],
-                all(is.finite(confint(e)["pred",])), smod1$fstat[1],
+  save[i,] <- c(ti, e$coef[2], confint(e, returnType = TRUE)["pred",],
+                all(is.finite(confint(e, returnType = TRUE)["pred",])), smod1$fstat[1],
                 smod1$r.s, smod1$adj.r.s, smod1$sigma,
                 sum(smod1$res^2), max(abs(smod1$coef)),
                 min(smod1$coef[-1,4]))

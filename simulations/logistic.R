@@ -29,7 +29,7 @@ for (j in 1:length(true_inter)) {
     mod1 <- glm(y ~ ., data = d[treatment == 0,], family = binomial)
     mod2 <- pblm(mod1, treatment, d)
 
-    ci <- confint(mod2, "pred")
+    ci <- confint(mod2, "pred", returnType = TRUE)
     type <- attr(ci, "type")
     if (type == "finite") {
       covered <- ci[1] < ti & ti < ci[2]

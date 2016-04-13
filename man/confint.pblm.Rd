@@ -5,7 +5,7 @@
 \title{Confidence intervals for pblm object}
 \usage{
 \method{confint}{pblm}(object, parm, level = 0.95, ..., wald.style = FALSE,
-  forceDisplayConfInt = FALSE)
+  forceDisplayConfInt = FALSE, returnShape = FALSE)
 }
 \arguments{
 \item{object}{An object of class \code{pblm}.}
@@ -26,6 +26,11 @@ hypothesis test for the interaction term fails, a confidence
 interval is unreliable (and ultimately unnecessary) and thus not
 returned. Set this to \code{TRUE} to force computation of the
 interval regardless of the hypothesis test.}
+
+\item{returnShape}{Logical. Defaults to \code{FALSE}. If \code{TRUE},
+adds an attribute to the output the defines the shape of the
+confidence region. If \code{TRUE}, \code{forceDisplayConfInt} is
+set to \code{TRUE} as well.}
 }
 \value{
 Confidence intervals

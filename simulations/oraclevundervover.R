@@ -42,8 +42,8 @@ for (i in seq_len(reps)) {
   smunder  <- summary(eunder)
   smover   <- summary(eover)
 
-  saveoracle[i,] <- c(ti, eoracle$coef[2], confint(eoracle)["pred",],
-                      all(is.finite(confint(eoracle)["pred",])),
+  saveoracle[i,] <- c(ti, eoracle$coef[2], confint(eoracle, returnType = TRUE)["pred",],
+                      all(is.finite(confint(eoracle, returnType = TRUE)["pred",])),
                       sm1oracle$fstat[1], sm1oracle$r.s,
                       sm1oracle$adj.r.s, sm1oracle$sigma,
                       mean(sm1oracle$res^2),
@@ -51,8 +51,8 @@ for (i in seq_len(reps)) {
                       min(sm1oracle$coef[-1,4]),
                       sum(sm1oracle$coef[-1,4] < .05))
 
-  saveover[i,] <- c(ti, eover$coef[2], confint(eover)["pred",],
-                      all(is.finite(confint(eover)["pred",])),
+  saveover[i,] <- c(ti, eover$coef[2], confint(eover, returnType = TRUE)["pred",],
+                      all(is.finite(confint(eover, returnType = TRUE)["pred",])),
                       sm1over$fstat[1], sm1over$r.s,
                       sm1over$adj.r.s, sm1over$sigma,
                       mean(sm1over$res^2),
@@ -60,8 +60,8 @@ for (i in seq_len(reps)) {
                       min(sm1over$coef[-1,4]),
                       sum(sm1over$coef[-1,4] < .05))
 
-  saveunder[i,] <- c(ti, eunder$coef[2], confint(eunder)["pred",],
-                      all(is.finite(confint(eunder)["pred",])),
+  saveunder[i,] <- c(ti, eunder$coef[2], confint(eunder, returnType = TRUE)["pred",],
+                      all(is.finite(confint(eunder, returnType = TRUE)["pred",])),
                       sm1under$fstat[1], sm1under$r.s,
                       sm1under$adj.r.s, sm1under$sigma,
                       mean(sm1under$res^2),
