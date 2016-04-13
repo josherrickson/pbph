@@ -1,1 +1,5 @@
 inst/doc
+vignettes/*.R
+vignettes/*.pdf
+vignettes/*.md
+.Rproj.user
