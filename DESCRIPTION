@@ -1,6 +1,6 @@
 Package: epb
 Title: Enhanced Peters-Belson Method
-Version: 0.0.0.9000
+Version: 0.1.0.9000
 Authors@R: person("Josh", "Errickson", email = "josh@errickson.net", role = c("aut", "cre"))
 Description: Produces proper estimates in the Enhanced Peters-Belson method; to
     address whether there is an interaction between predicted outcome and treatment.
