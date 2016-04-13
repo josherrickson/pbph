@@ -3,3 +3,5 @@ load.R
 simulations
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^README\.Rmd$
+^README-.*\.png$
