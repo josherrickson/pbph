@@ -1,3 +1,9 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
@@ -6,6 +12,10 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "README-"
 )
+```
+
+```{r, echo = FALSE, message=FALSE, include=FALSE}
+library(epb)
 ```
 
 # epb: Enhanced Peters-Belson implementation for R
