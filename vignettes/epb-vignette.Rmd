@@ -16,25 +16,23 @@ library(epb)
 
 # Basic Use
 
-A basic example:
+A short example. Lets predict the effect of an afterschool program on an end-of-term exam on the `eottest` (fake) data.
 
 ```{r}
-data(CO2)
-mod1 <- lm(uptake ~ conc + Type, data=CO2, subset=Treatment == "nonchilled")
-CO2$pred <- predict(mod1, newdata=CO2)
-mod2naive <- lm(uptake - pred ~ pred, data=CO2, subset=Treatment == "chilled")
-summary(mod2naive)$coef
-confint(mod2naive, parm="pred")
-
-mod2 <- pblm(mod1, CO2$Treatment == "chilled", CO2)
-summary(mod2)$coef
-confint(mod2, parm="pred")
+data(eottest)
+mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
+mod2 <- pblm(mod1, treatment = eottest$afterschool, data = eottest)
+summary(mod2)
+confint(mod2)
 ```
+
+The negative coefficient (-.799) on `pred` shows evidence that students with lower predicted test score in the absense of treatment are showing a
+larger treatment effect than those with higher predicted test scores.
 
 
 # Clusters
 
-We implement support for clusters by overloading `meat` (and `sandwich`) from the `sandwich` package and adding a `cluster` argument. 
+We implement support for clusters by overloading `meat` (and `sandwich`) from the `sandwich` package and adding a `cluster` argument.
 
 ```{r}
 data(iris)
@@ -43,4 +41,3 @@ sandwich::meat(mod)
 meat(mod)
 meat(mod, cluster = iris$Species)
 ```
-
