@@ -75,7 +75,8 @@ test_that("corrVar and vcov", {
 test_that("createBreadAndMeat", {
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
-                  z = rnorm(10))
+                  z = rnorm(10),
+                  c = c(1,1,1,2,2,3,3,4,4,4))
   t <- rep(0:1, each = 5)
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
@@ -89,6 +90,17 @@ test_that("createBreadAndMeat", {
   expect_identical(names(bnm), c("b11", "b22", "m11", "m22"))
   expect_true(all(c(3,3,2,2,3,3,2,2) == sapply(bnm, dim)))
 
+  e2 <- pblm(mod1, t, d, cluster = c)
+  expect_identical(e$coef, e2$coef)
+
+  bnm.nocluster <- createBreadAndMeat(e2)
+  expect_identical(bnm, bnm.nocluster)
+
+  bnm.cluster <- createBreadAndMeat(e2, cluster = d$c)
+  expect_identical(bnm$b11, bnm.cluster$b11)
+  expect_identical(bnm$b22, bnm.cluster$b22)
+  expect_true(!isTRUE(all.equal(bnm$m11, bnm.cluster$m11)))
+  expect_true(!isTRUE(all.equal(bnm$m22, bnm.cluster$m22)))
 })
 
 test_that("Hypothesis Test", {
@@ -136,4 +148,36 @@ test_that("summary.pblm", {
 
   expect_equal(slm$coef[,1], s$coef[,1])
   expect_true(all(!slm$coef[,-1] == s$coef[,-1]))
+})
+
+test_that("testinverse", {
+  data(eottest)
+  mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
+  mod2 <- pblm(mod1, eottest$afterschool, eottest)
+
+  t <- testinverse(mod2)
+  expect_is(t, "numeric")
+  expect_equal(length(t), 2)
+  expect_true(t[1] < t[2])
+  expect_equal(attr(t, "type"), "finite")
+
+  t2 <- testinverse(mod2, .9)
+  expect_true(t[1] < t2[1] & t[2] > t2[2])
+
+  t3 <- testinverse(mod2, .99)
+  expect_true(t[1] > t3[1] & t[2] < t3[2])
+
+
+  # No relationship, infinite CI
+  set.seed(1)
+  eottest$test <- rnorm(nrow(eottest))
+  mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
+  mod2 <- pblm(mod1, eottest$afterschool, eottest)
+
+  t <- testinverse(mod2)
+  expect_is(t, "numeric")
+  expect_equal(length(t), 2)
+  expect_true(all(!is.finite(t)))
+  expect_equal(attr(t, "type"), "infinite")
+
 })

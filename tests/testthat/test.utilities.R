@@ -32,6 +32,13 @@ test_that("addIntercept", {
 
   v2 <- addIntercept(1:10)
   expect_identical(v2, matrix(c(rep(1,10),1:10), byrow=FALSE, ncol=2, dimnames=list(NULL, c("Intercept", "x"))))
+
+  # Unknown class
+  s <- 1
+  expect_silent(s1 <- addIntercept(s))
+  class(s) <- "foo"
+  expect_warning(s2 <- addIntercept(s), "intercept to foo")
+  expect_identical(s, s2)
 })
 
 

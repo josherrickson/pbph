@@ -98,6 +98,7 @@ test_that("wald-style CI's", {
 
   expect_false(identical(ci[2,],ci2[2,]))
 
+  expect_warning(confint(e, forceDisplayConfInt = TRUE, wald.style = TRUE), "ignored")
 })
 
 test_that("forceDisplayConfInt and returnShape", {
