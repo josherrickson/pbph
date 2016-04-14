@@ -2,7 +2,7 @@
 epb: Enhanced Peters-Belson implementation for R
 ================================================
 
-[![Travis-CI Build Status](https://travis-ci.org/josherrickson/epb.svg?branch=master)](https://travis-ci.org/josherrickson/epb)
+[![Travis-CI Build Status](https://travis-ci.org/josherrickson/epb.svg?branch=master)](https://travis-ci.org/josherrickson/epb) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/josherrickson/epb?branch=master&svg=true)](https://ci.appveyor.com/project/josherrickson/epb)
 
 The `epb` package implements a two-stage variation of the Peters-Belson approach to treatment effect detection in a causal inference framework. Traditional Peters-Belson methods generate a model to predict the outcome in the absense of treatment, then estimate the treatment effect by the difference in that predicted outcome and the observed outcome in the treatment group.
 

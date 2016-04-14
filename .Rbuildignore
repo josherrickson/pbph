@@ -7,3 +7,4 @@ simulations
 ^README-.*\.png$
 ^data-raw$
 ^\.travis\.yml$
+^appveyor\.yml$
