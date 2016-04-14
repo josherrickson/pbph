@@ -2,17 +2,21 @@
 epb: Enhanced Peters-Belson implementation for R
 ================================================
 
-The `epb` package implements a two-stage variation of the Peters-Belson approach to treatment effect detection in a causal inference framework. Traditional Peters-Belson methods generate a model to predict the outcome in the absense of treatment, then estimate the treatemtn effect by the difference in that predicted outcome and the observed outcome in the treatment group.
+The `epb` package implements a two-stage variation of the Peters-Belson approach to treatment effect detection in a causal inference framework. Traditional Peters-Belson methods generate a model to predict the outcome in the absense of treatment, then estimate the treatment effect by the difference in that predicted outcome and the observed outcome in the treatment group.
 
-The enhanced version of this uses the predicted response in the absense of treatment in a second stage regression model, to allow us to answer whether an individual's predicted risk (their predicted response in the absense of treatment) affects the treatment effect.
+The enhanced version implemented in this package uses the predicted response in the absense of treatment in a second stage regression model, to allow us to examine whether an individual's predicted risk (their predicted response in the absense of treatment) affects the treatment effect.
 
 Consider a classroom of students. We are testing whether students enrolled in an after-school program show a performance increase on an end-of-term standardized exam. It is relatively straightforward to test whether students enrolled in that program show an improvement on their exam scores. However, we may hypothesize that we would see little-to-no improvement amongst those students who would perform well on the test regardless of intervention, but will be a large benefit on those students who would perform poorly. The enchanced Peters-Belson method addresses this.
+
+Installation
+------------
 
 `epb` is not yet available on CRAN. To use, please install `devtools` and use `install_github` to obtain a working version.
 
 ``` r
 install.packages("devtools")
 devtools::install_github("josherrickson/epb")
+library(epb)
 ```
 
 Usage
@@ -47,8 +51,6 @@ confint(mod2)
 #>                2.5 %    97.5 %
 #> treatment 13.0566651 15.590208
 #> pred      -0.9788453 -0.591279
-#> attr(,"type")
-#> [1] "finite"
 ```
 
 The negative coefficient (-.799) on `pred` shows evidence that students with lower predicted test score in the absense of treatment are showing a larger treatment effect than those with higher predicted test scores.
