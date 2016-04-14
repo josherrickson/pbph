@@ -20,6 +20,8 @@ library(epb)
 
 # epb: Enhanced Peters-Belson implementation for R
 
+[![Travis-CI Build Status](https://travis-ci.org/josherrickson/epb.svg?branch=master)](https://travis-ci.org/josherrickson/epb)
+
 The `epb` package implements a two-stage variation of the Peters-Belson approach to
 treatment effect detection in a causal inference framework. Traditional Peters-Belson
 methods generate a model to predict the outcome in the absense of treatment, then estimate
