@@ -6,3 +6,4 @@ simulations
 ^README\.Rmd$
 ^README-.*\.png$
 ^data-raw$
+^\.travis\.yml$
