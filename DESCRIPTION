@@ -19,6 +19,7 @@ Suggests:
     testthat,
     roxygen2,
     knitr,
-    rmarkdown
+    rmarkdown,
+    covr
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
