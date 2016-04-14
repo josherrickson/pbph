@@ -2,6 +2,6 @@
 ##'
 ##' @docType package
 ##' @name epb
-##' @importFrom methods setClass
+##' @import methods stats
 NULL
 ##> NULL
