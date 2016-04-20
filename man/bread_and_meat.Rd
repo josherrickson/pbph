@@ -29,7 +29,7 @@ we only need the model, either first or second stage, depending.}
 predicted and treatment. This could be from a model or a hypothesis.}
 }
 \description{
-Computes the Bread and Meat matricies. The diagonal elements are typical
+Computes the Bread and Meat matrices. The diagonal elements are typical
 sandwich estimators, with scaling, and thus only use the \code{model}
 argument. The off-diagonal Bread element requires further specification.
 }

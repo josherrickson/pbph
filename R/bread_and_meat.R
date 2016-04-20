@@ -1,6 +1,6 @@
 #' (Internal) Piece-wise generation of Bread and Meat matrices.
 #'
-#' Computes the Bread and Meat matricies. The diagonal elements are typical
+#' Computes the Bread and Meat matrices. The diagonal elements are typical
 #' sandwich estimators, with scaling, and thus only use the \code{model}
 #' argument. The off-diagonal Bread element requires further specification.
 #' @param model For Bread & Meat that can be calculated using sandwich package,
@@ -13,7 +13,7 @@
 NULL
 #> NULL
 
-##' Return scaling factor for GLM mdoels
+##' (Internal) Return scaling factor for GLM models
 ##'
 ##' @param model A model (lm or glm).
 ##' @param newdata Data to generate the scale.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bread_and_meat.R
 \name{glmScale}
 \alias{glmScale}
-\title{Return scaling factor for GLM mdoels}
+\title{(Internal) Return scaling factor for GLM models}
 \usage{
 glmScale(model, newdata)
 }
@@ -15,6 +15,6 @@ glmScale(model, newdata)
 Scaling factor. 1 if lm.
 }
 \description{
-Return scaling factor for GLM mdoels
+(Internal) Return scaling factor for GLM models
 }
 
