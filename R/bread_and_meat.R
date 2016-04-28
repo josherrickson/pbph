@@ -22,7 +22,7 @@ glmScale <- function(model, newdata) {
   if (is(model, "glm")) {
     resp <- predict(model, type = "response", newdata = newdata)
     switch(model$family$family,
-           "binomial" = scale <- resp*(1-resp),
+           "binomial" = scale <- resp*(1 - resp),
            "poisson" = scale <- resp,
            stop(paste("glm family", model$family$family,
                       "not yet supported")

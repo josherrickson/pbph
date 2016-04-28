@@ -4,10 +4,10 @@ pc <- .4
 informative <- .4
 true_t <- .1
 sigma2 <- .3
-true_inter <- seq(-.4,.4,by = .1)
+true_inter <- seq(-.3, -1, by = -.1)
 
 reps <- 100
-bigsave <- epb:::makeSaveMatrix(c("truth", "coverage", "inf", "disjoint"),
+bigsave <- epb:::makeSaveMatrix(c("truth", "coverage", "cont", "disjoint"),
                                 reps = length(true_inter))
 for (j in 1:length(true_inter)) {
   ti <- round(true_inter[j], 1)
