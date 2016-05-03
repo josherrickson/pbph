@@ -7,15 +7,13 @@ sigma2 <- 1
 true_inter <- seq(-1,2,by = .5)
 
 reps <- 100
-bigsave <- makeSaveMatrix(c("truth", "estimate", "overall_un",
-  "overall_cov", "finite_un", "finite_cov",
-  "inf_un", "inf_cov", "disjoint_un",
-  "disjoint_cov"),
-  reps = length(true_inter))
+bigsave <- epb:::makeSaveMatrix(c("truth", "estimate", "overall_un",
+                            "overall_cov", "cont_un", "cont_cov",
+                            "disjoint_un", "disjoint_cov"),
+                          reps = length(true_inter))
 for (j in 1:length(true_inter)) {
   ti <- true_inter[j]
-  save <- makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"),
-    reps)
+  save <- epb:::makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"), reps)
   for (i in 1:reps) {
     covs <- data.frame(matrix(rnorm(n*p), nrow = n))
     truebeta <- rep(0, p)
@@ -34,28 +32,26 @@ for (j in 1:length(true_inter)) {
     mod1 <- lm(y ~ ., data = d, subset = treatment == 0)
 
     e <- pblm(mod1, treatment, d, cluster = cluster)
-    ci <- confint(e, "pred", returnType = TRUE)
+    ci <- confint(e, "pred", returnShape = TRUE)
     type <- attr(ci, "type")
-    if (type == "finite") {
+    if (type %in% c("finite", "infinite")) {
       covered <- ci[1] < ti & ti < ci[2]
-    } else if (type == "infinite") {
-      covered <- TRUE
     } else if (type == "disjoint") {
-      covered <- ti < ci[1] | ci[2] < ti
+      covered <- FALSE
     } else {
       stop(paste("Problem:", type))
     }
     type <- switch(type,
       finite = 1,
-      infinite = 2,
-      disjoint = 3)
+      infinite = 1,
+      disjoint = 2)
 
     save[i,] <- c(e$coef[2], ci[1], ci[2], type, covered)
 
   }
   save <- data.frame(save)
   save$type <- as.factor(save$type)
-  levels(save$type) <- 1:3
+  levels(save$type) <- 1:2
   save$covered <- factor(save$covered, levels = 0:1)
 
   #bytype <- aggregate(save$covered, by = list(save$type), FUN = mean)[,2]
