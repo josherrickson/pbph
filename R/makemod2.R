@@ -24,7 +24,8 @@ makemod2 <- function(mod1, trtmt, data, center = TRUE) {
                         treatment = rep(1, sum(trtmt)))
   newdata[[paste0(respname, "_t - pred")]] <- eval(respname, envir = data)[trtmt == 1] - newdata$pred
 
-  if (center) newdata$pred <- scale(newdata$pred, scale=FALSE)
+  # newdata is only treatment group from above, so this centering is on treatment only
+  if (center) newdata$pred <- scale(newdata$pred, scale = FALSE)
 
   form <- as.formula(paste0("`",respname,
                             "_t - pred` ~ treatment + pred + 0"))
