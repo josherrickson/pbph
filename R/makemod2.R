@@ -27,7 +27,7 @@ makemod2 <- function(mod1, trtmt, data, center = TRUE) {
   # newdata is only treatment group from above, so this centering is on treatment only
   if (center) newdata$pred <- scale(newdata$pred, scale = FALSE)
 
-  form <- as.formula(paste0("`",respname,
+  form <- as.formula(paste0("`", respname,
                             "_t - pred` ~ treatment + pred + 0"))
 
   mod2 <- lm(form, data = newdata)

@@ -69,10 +69,10 @@ bread21 <- function(model, eta) {
 
   resp <- eval(formula(mod1)[[2]], envir = data)[treatment == 1]
   covs <- model.matrix(formula(mod1), data = data)
-  covs <- addIntercept(covs)[treatment == 1, , drop=FALSE]
+  covs <- addIntercept(covs)[treatment == 1, , drop = FALSE]
   pred <- model$epb$pred[treatment == 1]
 
-  scale <- glmScale(mod1, newdata=as.data.frame(covs))
+  scale <- glmScale(mod1, newdata = as.data.frame(covs))
 
   # Replace tauhat with tauhat_eta0
   tau <- lm(resp - (1 + eta) * pred ~ 1)$coef
