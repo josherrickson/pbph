@@ -11,9 +11,6 @@
 corrVar <- function(eta, object,
                     breadAndMeat = createBreadAndMeat(object, cluster = object$epb$cluster)) {
 
-  mod1 <- object$epb$mod1
-  data <- object$epb$data
-
   b21 <- bread21(object, eta)
 
   corrected <- correctedvar(breadAndMeat$b11,

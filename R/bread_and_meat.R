@@ -65,12 +65,12 @@ bread21 <- function(model, eta) {
   mod1 <- model$epb$mod1
   data <- model$epb$data
 
-  treatment <- model$epb$treatment
+  treatment <- data$treatment
 
   resp <- eval(formula(mod1)[[2]], envir = data)[treatment == 1]
   covs <- model.matrix(formula(mod1), data = data)
   covs <- addIntercept(covs)[treatment == 1, , drop = FALSE]
-  pred <- model$epb$pred[treatment == 1]
+  pred <- data$pred[treatment == 1]
 
   scale <- glmScale(mod1, newdata = as.data.frame(covs))
 
@@ -93,12 +93,13 @@ bread21 <- function(model, eta) {
 createBreadAndMeat <- function(object, cluster = NULL) {
 
   mod1 <- object$epb$mod1
+  data <- object$epb$data
 
   b11 <- bread11(mod1)
   b22 <- bread22(object)
 
-  cluster.control <- cluster[object$epb$treatment == 0]
-  cluster.treatment <- cluster[object$epb$treatment == 1]
+  cluster.control <- cluster[data$treatment == 0]
+  cluster.treatment <- cluster[data$treatment == 1]
 
   m11 <- meat11(mod1, cluster = cluster.control)
   m22 <- meat22(object, cluster = cluster.treatment)

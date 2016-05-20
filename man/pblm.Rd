@@ -22,10 +22,10 @@ centered in the second stage?}
 A \code{pblm} object which extends \code{lm}. Can be
   passed to \code{summary} or \code{confint}.
 
-  The return contains an additional object, \code{epb}, which
-  \code{lm} doesn't include. \code{epb} is a list which contains
-  several pieces necessary for \code{summary} and \code{confint}
-  support.
+  The return contains an additional object, \code{epb}, which \code{lm}
+  doesn't include. \code{epb} contains \code{mod1}, a copy of the first
+  stage model, and \code{data}, which includes the \code{data} augmented
+  with \code{treatment} and \code{predicted}.
 }
 \description{
 Performs enhanced Peters-Belson on the data.

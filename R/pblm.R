@@ -12,10 +12,10 @@ pblm <- setClass("pblm", contains = "lm")
 ##' @return A \code{pblm} object which extends \code{lm}. Can be
 ##'   passed to \code{summary} or \code{confint}.
 ##'
-##'   The return contains an additional object, \code{epb}, which
-##'   \code{lm} doesn't include. \code{epb} is a list which contains
-##'   several pieces necessary for \code{summary} and \code{confint}
-##'   support.
+##'   The return contains an additional object, \code{epb}, which \code{lm}
+##'   doesn't include. \code{epb} contains \code{mod1}, a copy of the first
+##'   stage model, and \code{data}, which includes the \code{data} augmented
+##'   with \code{treatment} and \code{predicted}.
 ##' @export
 pblm <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
   if (!all(treatment %in% 0:1)) {
@@ -35,9 +35,10 @@ pblm <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
   pred <- mm$pred
   mod2 <- mm$mod2
 
+  data$treatment <- treatment
+  data$pred <- pred
+
   mod2$epb <- list(mod1      = mod1,
-                   pred      = pred,
-                   treatment = treatment,
                    data      = data,
                    cluster   = cluster)
 

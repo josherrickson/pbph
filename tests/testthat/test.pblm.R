@@ -34,11 +34,12 @@ test_that("pblm input/output", {
 
   # Checking extra pieces in pblm
   expect_true(!is.null(e$epb))
-  expect_equal(names(e$epb), c("mod1", "pred", "treatment", "data", "cluster"))
+  expect_equal(names(e$epb), c("mod1", "data", "cluster"))
   expect_equal(e$epb$mod1, mod1)
-  expect_equal(e$epb$treatment, t)
-  expect_equal(e$epb$data, d)
-  expect_true(length(e$epb$pred) == nrow(d))
+  expect_equal(names(e$epb$data), c(names(d), "treatment", "pred"))
+  expect_equal(e$epb$data$treatment, t)
+  expect_equal(e$epb$data[,1:3], d)
+  expect_true(length(e$epb$data$pred) == nrow(d))
 
   expect_error(pblm(mod1, c(0,0,0,0,0,1,1,1,1,2), d),
                "must be indicator")
