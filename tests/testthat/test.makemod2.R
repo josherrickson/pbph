@@ -8,7 +8,7 @@ test_that("makemod2", {
   treatment <- c(0,0,0,0,1,1,1,1)
   mod1 <- lm(form, data = d, subset = treatment == 0)
 
-  m <- makemod2(mod1, treatment, d, center=FALSE)
+  m <- makemod2(mod1, treatment, d, center = FALSE)
 
   expect_true(is.list(m))
 
@@ -40,7 +40,7 @@ test_that("makemod2 centered", {
   treatment <- c(0,0,0,0,1,1,1,1)
   mod1 <- lm(form, data = d, subset = treatment == 0)
 
-  m <- makemod2(mod1, treatment, d, center=TRUE)
+  m <- makemod2(mod1, treatment, d, center = TRUE)
 
   expect_true(is.list(m))
 
@@ -68,7 +68,8 @@ test_that("mod2 call should be informative", {
 
   m <- makemod2(mod1, treatment, d)
 
-  expect_true(m$mod2$call$formula[[2]][[2]] == "abc_t")
+  expect_true(m$mod2$call$formula[[2]] == "abc - pred")
+  expect_true(any(grepl("subset", names(m$mod2$call))))
   expect_true(all(!isTRUE(grepl("0", as.character(m$mod2$call$formula[[3]])))))
   expect_true(all(!isTRUE(grepl("y", colnames(model.frame(m$mod2))))))
 })

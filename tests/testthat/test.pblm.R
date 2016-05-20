@@ -28,7 +28,7 @@ test_that("pblm input/output", {
   # These are tested explicitly in makemod2, but checking that they
   # don't get overwritten when converting to pblm.
 
-  expect_true(e$call$formula[[2]][[2]] == "abc_t")
+  expect_true(e$call$formula[[2]] == "abc - pred")
   expect_true(all(!isTRUE(grepl("0", as.character(e$call$formula[[3]])))))
   expect_true(all(!isTRUE(grepl("y", colnames(model.frame(e))))))
 

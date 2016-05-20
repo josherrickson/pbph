@@ -4,12 +4,12 @@
 \alias{makemod2}
 \title{(Internal) Fit the second stage Enhanced Peters-Belson model.}
 \usage{
-makemod2(mod1, trtmt, data, center = TRUE)
+makemod2(mod1, treatment, data, center = TRUE)
 }
 \arguments{
 \item{mod1}{First stage model fit}
 
-\item{trtmt}{A vector of treatment statuses, should be all
+\item{treatment}{A vector of treatment statuses, should be all
 \code{0} or \code{1}.}
 
 \item{data}{Data where variables in \code{form} live.}
