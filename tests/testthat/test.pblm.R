@@ -91,7 +91,7 @@ test_that("createBreadAndMeat", {
   expect_identical(names(bnm), c("b11", "b22", "m11", "m22"))
   expect_true(all(c(3,3,2,2,3,3,2,2) == sapply(bnm, dim)))
 
-  e2 <- pblm(mod1, t, d, cluster = c)
+  e2 <- pblm(mod1, t, d, cluster = d$c)
   expect_identical(e$coef, e2$coef)
 
   bnm.nocluster <- createBreadAndMeat(e2)
