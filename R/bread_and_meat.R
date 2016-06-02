@@ -75,7 +75,8 @@ bread21 <- function(model, eta) {
   scale <- glmScale(mod1, newdata = as.data.frame(covs))
 
   # Replace tauhat with tauhat_eta0
-  tau <- lm(resp - (1 + eta) * pred ~ 1)$coef
+  # When eta = eta_0, the RHS is constant, so we just need the mean.
+  tau <- mean(resp - (1 + eta) * pred)
 
   b21.1 <- apply(-(1 + eta) * covs * scale, 2, sum)
   b21.2 <- apply( (resp - tau - 2 * (1 + eta) * pred) * covs * scale, 2, sum)
