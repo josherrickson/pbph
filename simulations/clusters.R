@@ -1,5 +1,5 @@
-n <- 100
-p <- 5
+n <- 4000
+p <- 24
 pc <- .4
 informative <- .4
 true_t <- .5
@@ -8,20 +8,25 @@ true_inter <- seq(-1,2,by = .5)
 
 reps <- 100
 bigsave <- epb:::makeSaveMatrix(c("truth", "estimate", "overall_un",
-                            "overall_cov", "cont_un", "cont_cov",
-                            "disjoint_un", "disjoint_cov"),
-                          reps = length(true_inter))
+                                  "overall_cov", "cont_un", "cont_cov",
+                                  "disjoint_un", "disjoint_cov"),
+                                reps = length(true_inter))
 for (j in 1:length(true_inter)) {
   ti <- true_inter[j]
-  save <- epb:::makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"), reps)
+  save <- epb:::makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"),
+                               reps)
   for (i in 1:reps) {
     covs <- data.frame(matrix(rnorm(n*p), nrow = n))
     truebeta <- rep(0, p)
     truebeta[sample(1:p, round(informative*p))] <- rnorm(round(informative*p),0,1)
 
-    treatment <- rep(0:1, c(n*pc, n*(1 - pc)))
-    C <- 10
-    cluster <- rep(1:(n/C), each = C)[1:n]
+    Cc <- 100
+    Ct <- 100
+    cluster <- c(sample(1:Cc, n*pc, TRUE),
+                sample((Cc + 1):(Cc + Ct), n*(1 - pc), TRUE))
+    tbyc <- rbinom(Cc + Ct, 1, 1 - pc)
+    treatment <- tbyc[cluster]
+
 
     noise <- rnorm(n)
     yc_un <- as.matrix(covs) %*% truebeta
@@ -34,17 +39,14 @@ for (j in 1:length(true_inter)) {
     e <- pblm(mod1, treatment, d, cluster = cluster)
     ci <- confint(e, "pred", returnShape = TRUE)
     type <- attr(ci, "type")
-    if (type %in% c("finite", "infinite")) {
-      covered <- ci[1] < ti & ti < ci[2]
-    } else if (type == "disjoint") {
-      covered <- FALSE
-    } else {
-      stop(paste("Problem:", type))
+    covered <- ci[1] < ti & ti < ci[2]
+    if (type == "disjoint") {
+      covered <- !covered
     }
     type <- switch(type,
-      finite = 1,
-      infinite = 1,
-      disjoint = 2)
+                   finite = 1,
+                   infinite = 1,
+                   disjoint = 2)
 
     save[i,] <- c(e$coef[2], ci[1], ci[2], type, covered)
 
@@ -58,7 +60,7 @@ for (j in 1:length(true_inter)) {
   overall <- mean(save$covered == 1)
 
   bigsave[j,] <- c(ti, mean(save$estimate), table(save$covered),
-    as.vector(table(save$covered, save$type)))
+                   as.vector(table(save$covered, save$type)))
 
 }
 
