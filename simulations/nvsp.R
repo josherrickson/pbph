@@ -56,3 +56,10 @@ for (i in seq_len(nrow(bigsave))) {
 }
 legend("bottomleft", legend = rownames(bigsave), col = 1:4, lty = 1)
 abline(h = .95, col = 'lightgrey', lty = 2)
+
+# Add lines for the rule
+f <- function(n) n^2*log(n)
+abline(v = 5, col = 1, lty = 2)
+abline(v = 7, col = 2, lty = 2)
+abline(v = 13, col = 3, lty = 2)
+abline(v = 18, col = 4, lty = 2)
