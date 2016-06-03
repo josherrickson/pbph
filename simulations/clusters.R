@@ -6,13 +6,14 @@ true_t <- .5
 sigma2 <- 1
 true_inter <- seq(-1,2,by = .5)
 
-reps <- 100
+reps <- 1000
 bigsave <- epb:::makeSaveMatrix(c("truth", "estimate", "overall_un",
                                   "overall_cov", "cont_un", "cont_cov",
                                   "disjoint_un", "disjoint_cov"),
                                 reps = length(true_inter))
 for (j in 1:length(true_inter)) {
   ti <- true_inter[j]
+  print(ti)
   save <- epb:::makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"),
                                reps)
   for (i in 1:reps) {
@@ -20,8 +21,8 @@ for (j in 1:length(true_inter)) {
     truebeta <- rep(0, p)
     truebeta[sample(1:p, round(informative*p))] <- rnorm(round(informative*p),0,1)
 
-    Cc <- 100
-    Ct <- 100
+    Cc <- 50
+    Ct <- 50
     cluster <- c(sample(1:Cc, n*pc, TRUE),
                 sample((Cc + 1):(Cc + Ct), n*(1 - pc), TRUE))
     tbyc <- rbinom(Cc + Ct, 1, 1 - pc)
