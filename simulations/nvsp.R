@@ -3,15 +3,18 @@ pc <- .5
 true_t <- .5
 sigma2 <- 1
 true_inter <- seq(-1,2,by = .5)
-ps <- 1:50
-ns <- c(50, 100, 500, 1000)
-reps <- 100
+ps <- 1:30
+ns <- c(25, 100, 200, 500, 1000)
+reps <- 1000
 bigsave <- matrix(ncol = length(ps),
                   nrow = length(ns))
+rownames(bigsave) <- ns
+colnames(bigsave) <- ps
 
 for (j in seq_along(ps)) {
+  print(j)
+  p <- ps[j]
   for (k in seq_along(ns)) {
-    p <- ps[j]
     n <- ns[k]
     if (p > .25*n) next()
     ti <- sample(true_inter,1)
@@ -44,8 +47,12 @@ for (j in seq_along(ps)) {
     bigsave[k,j] <- mean(save)
   }
 }
-rownames(bigsave) <- ns
-colnames(bigsave) <- ps
 bigsave
 
-#plot(bigsave ~ ps, ylim = c(.75, 1), type = 'l')
+plot(NULL, xlim = c(0, max(as.numeric(colnames(bigsave)))), ylim = c(.8, 1))
+for (i in seq_len(nrow(bigsave))) {
+  #lines(bigsave[i,] ~ as.numeric(colnames(bigsave)), col = i)
+  lines(predict(loess(bigsave[i,] ~ as.numeric(colnames(bigsave)))), col = i)
+}
+legend("bottomleft", legend = rownames(bigsave), col = 1:4, lty = 1)
+abline(h = .95, col = 'lightgrey', lty = 2)
