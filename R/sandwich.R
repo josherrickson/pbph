@@ -50,9 +50,11 @@ meat <- function(x, adjust = FALSE, cluster = NULL, ...) {
     adjust <- TRUE
   }
 
+  m <- NROW(psi)
+
   rval <- crossprod(as.matrix(psi))/n
   if (adjust)
-    rval <- n/(n - k) * rval
+    rval <- m/(m - 1) * (n - 1)/(n - k) * rval
   rownames(rval) <- colnames(rval) <- colnames(psi)
   return(rval)
 }
