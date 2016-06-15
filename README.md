@@ -11,7 +11,7 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/josherrickson/pbph/master.svg)](https://codecov.io/github/josherrickson/pbph?branch=master)
 [![Coverage Status](https://img.shields.io/coveralls/josherrickson/pbph.svg)](https://coveralls.io/r/josherrickson/pbph?branch=master)
 
-The `pbph` package implements a two-stage variation of the Peters-Belson approach to treatment effect detection in a causal inference
+The **pbph** package implements a two-stage variation of the Peters-Belson approach to treatment effect detection in a causal inference
 framework. Traditional Peters-Belson methods generate a model to predict the outcome in the absense of treatment, then estimate the treatment effect
 by the difference in that predicted outcome and the observed outcome in the treatment group.
 
@@ -26,7 +26,7 @@ intervention, but will be a large benefit on those students who would perform po
 
 ## Installation
 
-`pbph` is not yet available on CRAN. To use, please install `devtools` and use `install_github` to obtain a working version.
+**pbph** is not yet available on CRAN. To use, please install `devtools` and use `install_github` to obtain a working version.
 
 
 ```r
@@ -94,7 +94,7 @@ make dependencies
 
 Additional useful Makefile commands include
 
-- `make interactive`: Starts up an interactive session with `pbph` loaded.
+- `make interactive`: Starts up an interactive session with **pbph** loaded.
 - `make test`: Test all testthat files in `tests/testthat` directory.
 - `make check`: Runs `R CMD check` on the package.
 - `make document`: Convert all inline roxygen documentation into .Rd files, and update NAMESPACE as needed.
