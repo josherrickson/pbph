@@ -1,4 +1,4 @@
-## Use devtools to load current version of epb
+## Use devtools to load current version of pbph
 library(utils)
 library("devtools")
 library("testthat")

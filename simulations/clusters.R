@@ -7,14 +7,14 @@ sigma2 <- 1
 true_inter <- seq(-1,2,by = .5)
 
 reps <- 1000
-bigsave <- epb:::makeSaveMatrix(c("truth", "estimate", "overall_un",
+bigsave <- pbph:::makeSaveMatrix(c("truth", "estimate", "overall_un",
                                   "overall_cov", "cont_un", "cont_cov",
                                   "disjoint_un", "disjoint_cov"),
                                 reps = length(true_inter))
 for (j in 1:length(true_inter)) {
   ti <- true_inter[j]
   print(ti)
-  save <- epb:::makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"),
+  save <- pbph:::makeSaveMatrix(c("estimate", "lb", "ub", "type", "covered"),
                                reps)
   for (i in 1:reps) {
     covs <- data.frame(matrix(rnorm(n*p), nrow = n))
@@ -37,7 +37,7 @@ for (j in 1:length(true_inter)) {
 
     mod1 <- lm(y ~ ., data = d, subset = treatment == 0)
 
-    e <- pblm(mod1, treatment, d, cluster = cluster)
+    e <- pbph(mod1, treatment, d, cluster = cluster)
     ci <- confint(e, "pred", returnShape = TRUE)
     type <- attr(ci, "type")
     covered <- ci[1] < ti & ti < ci[2]

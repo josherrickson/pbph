@@ -1,5 +1,5 @@
 #' This generated data set simulates some student-level data for
-#' demonstrating the use of `pblm`.
+#' demonstrating the use of `pbph`.
 #'
 #'
 #' @title Student level demographic, performance and end-of-term test scores.

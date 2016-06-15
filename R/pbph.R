@@ -1,23 +1,23 @@
-pblm <- setClass("pblm", contains = "lm")
+pbph <- setClass("pbph", contains = "lm")
 
-##' Enhanced Peters-Belson method
+##' Peters-Belson with Prognostic Heterogeneity
 ##'
-##' Performs enhanced Peters-Belson on the data.
+##' Performs Peters-Belson with Prognostic Heterogeneity on the data.
 ##' @param mod1 First stage fitted model.
 ##' @param treatment Vector of 0/1 treatment indicators.
 ##' @param data Data where variables in \code{form} live.
 ##' @param center Default \code{TRUE}. Should the predicted values be
 ##'   centered in the second stage?
 ##' @param cluster A \code{vector} defining the clusters.
-##' @return A \code{pblm} object which extends \code{lm}. Can be
+##' @return A \code{pbph} object which extends \code{lm}. Can be
 ##'   passed to \code{summary} or \code{confint}.
 ##'
-##'   The return contains an additional object, \code{epb}, which \code{lm}
-##'   doesn't include. \code{epb} contains \code{mod1}, a copy of the first
+##'   The return contains an additional object, \code{pbph}, which \code{lm}
+##'   doesn't include. \code{pbph} contains \code{mod1}, a copy of the first
 ##'   stage model, and \code{data}, which includes the \code{data} augmented
 ##'   with \code{treatment} and \code{predicted}.
 ##' @export
-pblm <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
+pbph <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
   if (!all(treatment %in% 0:1)) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
@@ -38,28 +38,28 @@ pblm <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
   data$treatment <- treatment
   data$pred <- pred
 
-  mod2$epb <- list(mod1      = mod1,
+  mod2$pbph <- list(mod1      = mod1,
                    data      = data,
                    cluster   = cluster)
 
-  mod2 <- as(mod2, "pblm")
+  mod2 <- as(mod2, "pbph")
 
   return(mod2)
 }
 
 ##' Returns covariance matrix calculated via sandwich estimation.
 ##'
-##' Returns a covariance \code{matrix}. Computed using enhanced PB
+##' Returns a covariance \code{matrix}. Computed using PBPH
 ##' methods. The variance for pred should NOT be used directly in
 ##' confidence intervals.
-##' @param object \code{pblm} object.
+##' @param object \code{pbph} object.
 ##' @return A covariance \code{matrix}.
-vcov.pblm <- function(object) {
+vcov.pbph <- function(object) {
   return(corrVar(object$coef[2], object))
 }
 
 ##' @export
-summary.pblm <- function(object, ...) {
+summary.pbph <- function(object, ...) {
   ss <- summary(as(object, "lm"), ...)
 
   ss$cov.unscaled <- vcov(object)
@@ -69,7 +69,7 @@ summary.pblm <- function(object, ...) {
 
   # Correct test statistic & p-value.
   ss$coefficients[2,3] <- hypothesisTest(object)
-  mod1 <- object$epb$mod1
+  mod1 <- object$pbph$mod1
   df <- ifelse(is(mod1, "glm"), mod1$df.null, mod1$df)
   ss$coefficients[2,4] <- 2 * pt(abs(ss$coefficients[2,3]),
                                  df,
@@ -81,21 +81,21 @@ summary.pblm <- function(object, ...) {
   ss$coefficients[1,4] <- 2 * pnorm(abs(ss$coef[1,3]),
                                     lower.tail = FALSE)
 
-  class(ss) <- "summary.pblm"
+  class(ss) <- "summary.pbph"
 
   return(ss)
 }
 
 ##' @export
-print.summary.pblm <- function(x, ...) {
+print.summary.pbph <- function(x, ...) {
   class(x) <- "summary.lm"
   print(x, ...)
 }
 
-##' Confidence intervals for pblm object
+##' Confidence intervals for \code{pbph} object
 ##'
 ##' Similar to \code{confint.lm}.
-##' @param object An object of class \code{pblm}.
+##' @param object An object of class \code{pbph}.
 ##' @param parm Parameters
 ##' @param level Confidence level.
 ##' @param ... Additional arguments to \code{confint.lm}.
@@ -114,7 +114,7 @@ print.summary.pblm <- function(x, ...) {
 ##'   set to \code{TRUE} as well.
 ##' @return Confidence intervals
 ##' @export
-confint.pblm <- function(object, parm, level = 0.95, ...,
+confint.pbph <- function(object, parm, level = 0.95, ...,
                          wald.style = FALSE, forceDisplayConfInt = FALSE,
                          returnShape = FALSE) {
   if (wald.style & forceDisplayConfInt) {

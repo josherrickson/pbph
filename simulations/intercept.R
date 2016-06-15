@@ -25,7 +25,7 @@ for (i in seq_len(reps)) {
 
   mod1 <- lm(y ~ ., data = d, subset = treatment == 0)
 
-  e <- pblm(mod1, treatment, d)
+  e <- pbph(mod1, treatment, d)
   sm <- summary(e)
   smlm <- summary.lm(e)
 

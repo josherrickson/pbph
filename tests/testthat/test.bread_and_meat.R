@@ -13,7 +13,7 @@ test_that("bread", {
 
   mod1 <- lm(form, data = d, subset = treatment == 0)
 
-  m <- pblm(mod1, treatment, d, center = FALSE)
+  m <- pbph(mod1, treatment, d, center = FALSE)
 
   # B11
   b11 <- bread11(mod1)
@@ -35,7 +35,7 @@ test_that("bread", {
 
   # If we center in the second stage, intercept and pred should be
   # independent
-  m2 <- pblm(mod1, treatment, d, center = TRUE)
+  m2 <- pbph(mod1, treatment, d, center = TRUE)
   b22.2 <- bread22(m2)
   expect_equal(solve(b22.2), matrix(c(4, 0, 0, 475/36), nrow = 2),
                check.attributes = FALSE)
@@ -51,7 +51,7 @@ test_that("meat", {
 
   mod1 <- lm(form, data = d, subset = treatment == 0)
 
-  m <- pblm(mod1, treatment, d)
+  m <- pbph(mod1, treatment, d)
 
   resp <- eval(form[[2]], envir = d)
   covs <- model.matrix(form, data = d)

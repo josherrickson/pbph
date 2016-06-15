@@ -7,7 +7,7 @@
 createBreadAndMeat(object, cluster = NULL)
 }
 \arguments{
-\item{object}{A pblm object.}
+\item{object}{A pbph object.}
 
 \item{cluster}{A vector defining clustering.}
 }

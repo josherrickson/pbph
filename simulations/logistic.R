@@ -17,12 +17,12 @@ params <- rbind(params, data.frame(tau = c(-.25, -.25,
                                            -1.75, -2.25)))
 
 reps <- 1000
-bigsave <- epb:::makeSaveMatrix(c("true tau", "true eta", "coverage", "cont", "disjoint"),
+bigsave <- pbph:::makeSaveMatrix(c("true tau", "true eta", "coverage", "cont", "disjoint"),
                                 reps = nrow(params))
 for (j in 1:nrow(params)) {
   tt <- params[j, 1]
   ti <- params[j, 2]
-  save <- epb:::makeSaveMatrix(c("covered", "type"), reps = reps)
+  save <- pbph:::makeSaveMatrix(c("covered", "type"), reps = reps)
   for (i in 1:reps) {
 
     covs <- data.frame(matrix(rnorm(n*p), nrow = n))
@@ -37,7 +37,7 @@ for (j in 1:nrow(params)) {
     d <- data.frame(y = resp, covs)
 
     mod1 <- glm(y ~ ., data = d[treatment == 0, ], family = binomial)
-    mod2 <- pblm(mod1, treatment, d)
+    mod2 <- pbph(mod1, treatment, d)
 
     ci <- confint(mod2, "pred", returnShape = TRUE)
     type <- attr(ci, "type")
@@ -74,4 +74,3 @@ polygon(c(0, 3, 0), c(0, -3, -3), col = 'lightgreen')
 polygon(c(0, 1, 1, 0), y = c(0, -1, -2, -1), col = 'red')
 perc <- paste0(round(bigsave[,3]/reps*100), "%")
 text(bigsave[,1:2], labels = perc)
-

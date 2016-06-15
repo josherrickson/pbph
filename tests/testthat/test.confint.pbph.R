@@ -1,6 +1,6 @@
-context("confint.pblm")
+context("confint.pbph")
 
-test_that("confint.pblm", {
+test_that("confint.pbph", {
 
   # Force finite CI
   set.seed(32432)
@@ -13,7 +13,7 @@ test_that("confint.pblm", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   ci <- confint(e, forceDisplayConfInt = TRUE)
   ci
@@ -39,7 +39,7 @@ test_that("confint.pblm", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   ci <- confint(e, forceDisplayConfInt = TRUE)
 
@@ -60,7 +60,7 @@ test_that("CI arguments", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   ci <- confint(e, forceDisplayConfInt = TRUE)
   ci
@@ -91,7 +91,7 @@ test_that("wald-style CI's", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   ci <- confint(e, forceDisplayConfInt = TRUE)
   ci2 <- confint(e, wald.style = TRUE)
@@ -111,7 +111,7 @@ test_that("forceDisplayConfInt and returnShape", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   expect_output(c1 <- confint(e), "suppressing associated confidence interval")
   expect_silent(c2 <- confint(e, forceDisplayConfInt = TRUE))

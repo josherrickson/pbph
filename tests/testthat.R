@@ -1,4 +1,4 @@
 library(testthat)
-library(epb)
+library(pbph)
 
-test_check("epb")
+test_check("pbph")

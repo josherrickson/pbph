@@ -1,15 +1,15 @@
-context("pblm")
+context("pbph")
 
-test_that("making pblm object", {
+test_that("making pbph object", {
   s <- lm(1~1)
-  s <- as(s, "pblm")
-  expect_is(s, "pblm")
+  s <- as(s, "pbph")
+  expect_is(s, "pbph")
   expect_is(s, "lm")
   # These tests are likely tautologies, but assigning `s` to class
-  # `pblm` could error.
+  # `pbph` could error.
 })
 
-test_that("pblm input/output", {
+test_that("pbph input/output", {
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
                   z = rnorm(10))
@@ -17,35 +17,35 @@ test_that("pblm input/output", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
-  expect_is(e, "pblm")
+  expect_is(e, "pbph")
   expect_equal(e, as(e, "lm"), check.attributes = FALSE)
 
   expect_true(length(coef(e)) == 2)
   expect_equal(names(coef(e)), c("treatment", "pred"))
 
   # These are tested explicitly in makemod2, but checking that they
-  # don't get overwritten when converting to pblm.
+  # don't get overwritten when converting to pbph.
 
   expect_true(e$call$formula[[2]] == "abc - pred")
   expect_true(all(!isTRUE(grepl("0", as.character(e$call$formula[[3]])))))
   expect_true(all(!isTRUE(grepl("y", colnames(model.frame(e))))))
 
-  # Checking extra pieces in pblm
-  expect_true(!is.null(e$epb))
-  expect_equal(names(e$epb), c("mod1", "data", "cluster"))
-  expect_equal(e$epb$mod1, mod1)
-  expect_equal(names(e$epb$data), c(names(d), "treatment", "pred"))
-  expect_equal(e$epb$data$treatment, t)
-  expect_equal(e$epb$data[,1:3], d)
-  expect_true(length(e$epb$data$pred) == nrow(d))
+  # Checking extra pieces in pbph
+  expect_true(!is.null(e$pbph))
+  expect_equal(names(e$pbph), c("mod1", "data", "cluster"))
+  expect_equal(e$pbph$mod1, mod1)
+  expect_equal(names(e$pbph$data), c(names(d), "treatment", "pred"))
+  expect_equal(e$pbph$data$treatment, t)
+  expect_equal(e$pbph$data[,1:3], d)
+  expect_true(length(e$pbph$data$pred) == nrow(d))
 
-  expect_error(pblm(mod1, c(0,0,0,0,0,1,1,1,1,2), d),
+  expect_error(pbph(mod1, c(0,0,0,0,0,1,1,1,1,2), d),
                "must be indicator")
-  expect_error(pblm(lm(abc ~ ., data = d), t, d),
+  expect_error(pbph(lm(abc ~ ., data = d), t, d),
                "only on control")
-  expect_error(pblm(mod1, t[1:9], d),
+  expect_error(pbph(mod1, t[1:9], d),
                "same length")
 })
 
@@ -57,7 +57,7 @@ test_that("corrVar and vcov", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   cv <- corrVar(e$coef[2],e)
 
@@ -82,7 +82,7 @@ test_that("createBreadAndMeat", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   bnm <- createBreadAndMeat(e)
 
@@ -91,7 +91,7 @@ test_that("createBreadAndMeat", {
   expect_identical(names(bnm), c("b11", "b22", "m11", "m22"))
   expect_true(all(c(3,3,2,2,3,3,2,2) == sapply(bnm, dim)))
 
-  e2 <- pblm(mod1, t, d, cluster = d$c)
+  e2 <- pbph(mod1, t, d, cluster = d$c)
   expect_identical(e$coef, e2$coef)
 
   bnm.nocluster <- createBreadAndMeat(e2)
@@ -113,7 +113,7 @@ test_that("Hypothesis Test", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   ht <- hypothesisTest(e)
 
@@ -121,7 +121,7 @@ test_that("Hypothesis Test", {
   expect_equal(length(ht), 1)
 })
 
-test_that("summary.pblm", {
+test_that("summary.pbph", {
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
                   z = rnorm(10))
@@ -129,11 +129,11 @@ test_that("summary.pblm", {
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   s <- summary(e)
 
-  expect_is(s, "summary.pblm")
+  expect_is(s, "summary.pbph")
 
   expect_equal(e$coef, s$coef[,1])
   expect_true(all.equal(s$coef[2,3], hypothesisTest(e),
@@ -154,7 +154,7 @@ test_that("summary.pblm", {
 test_that("testinverse", {
   data(eottest)
   mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
-  mod2 <- pblm(mod1, eottest$afterschool, eottest)
+  mod2 <- pbph(mod1, eottest$afterschool, eottest)
 
   t <- testinverse(mod2)
   expect_is(t, "numeric")
@@ -173,7 +173,7 @@ test_that("testinverse", {
   set.seed(1)
   eottest$test <- rnorm(nrow(eottest))
   mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
-  mod2 <- pblm(mod1, eottest$afterschool, eottest)
+  mod2 <- pbph(mod1, eottest$afterschool, eottest)
 
   t <- testinverse(mod2)
   expect_is(t, "numeric")

@@ -1,4 +1,5 @@
-##' (Internal) Fit the second stage Enhanced Peters-Belson model.
+##' (Internal) Fit the second stage of the Peters-Belson with
+##' Prognostic Heterogeneity model.
 ##'
 ##' Given a first stage model fit only on the control group, fit a second stage
 ##' model with formula.

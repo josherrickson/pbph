@@ -62,8 +62,8 @@ meat22 <- function(model, cluster = NULL) {
 
 ##' @rdname bread_and_meat
 bread21 <- function(model, eta) {
-  mod1 <- model$epb$mod1
-  data <- model$epb$data
+  mod1 <- model$pbph$mod1
+  data <- model$pbph$data
 
   treatment <- data$treatment
 
@@ -88,13 +88,13 @@ bread21 <- function(model, eta) {
 ##'
 ##' Computes the pieces of the Bread and Meat which do not depend on eta. (e.g.
 ##' all but B21)
-##' @param object A pblm object.
+##' @param object A pbph object.
 ##' @param cluster A vector defining clustering.
 ##' @return A list of b11, b22, m11, and m22.
 createBreadAndMeat <- function(object, cluster = NULL) {
 
-  mod1 <- object$epb$mod1
-  data <- object$epb$data
+  mod1 <- object$pbph$mod1
+  data <- object$pbph$data
 
   b11 <- bread11(mod1)
   b22 <- bread22(object)

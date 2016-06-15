@@ -12,10 +12,10 @@ test_that("logistic", {
   mod1g <- glm(abc ~ x + z, data = d, subset = t == 0,
                family = "binomial")
 
-  e <- pblm(mod1, t, d)
-  eg <- pblm(mod1g, t, d)
+  e <- pbph(mod1, t, d)
+  eg <- pbph(mod1g, t, d)
 
-  expect_is(eg, "pblm")
+  expect_is(eg, "pbph")
   expect_equal(eg, as(eg, "lm"), check.attributes = FALSE)
 
   expect_true(length(coef(eg)) == 2)
@@ -23,13 +23,13 @@ test_that("logistic", {
 
   expect_true(e$coef[2] != eg$coef[2])
 
-  expect_identical(e$epb$mod1, mod1)
-  expect_identical(eg$epb$mod1, mod1g)
+  expect_identical(e$pbph$mod1, mod1)
+  expect_identical(eg$pbph$mod1, mod1g)
 
   sg <- summary(eg)
   sg.lm <- summary.lm(eg)
 
-  expect_is(sg, "summary.pblm")
+  expect_is(sg, "summary.pbph")
 
   expect_identical(rownames(sg$coef), rownames(sg.lm$coef))
   expect_identical(colnames(sg$coef), colnames(sg.lm$coef))
@@ -52,7 +52,7 @@ test_that("bread and meat with glm", {
   mod1 <- glm(abc ~ x + z, data = d, subset = t == 0,
               family = "binomial")
 
-  e <- pblm(mod1, t, d)
+  e <- pbph(mod1, t, d)
 
   test <- solve(matrix(c(1,2,2,2,4,4,2,4,4),3) * .2287 +
                 matrix(c(1,5,2,5,25,10,2,10,4),3) * .1958 +
@@ -80,10 +80,10 @@ test_that("poisson", {
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
   suppressWarnings(mod1p <- glm(abc ~ x + z, data = d, subset = t == 0, family = "poisson"))
 
-  e <- pblm(mod1, t, d)
-  ep <- pblm(mod1p, t, d)
+  e <- pbph(mod1, t, d)
+  ep <- pbph(mod1p, t, d)
 
-  expect_is(ep, "pblm")
+  expect_is(ep, "pbph")
   expect_equal(ep, as(ep, "lm"), check.attributes = FALSE)
 
   expect_true(length(coef(ep)) == 2)
@@ -91,14 +91,14 @@ test_that("poisson", {
 
   expect_true(e$coef[2] != ep$coef[2])
 
-  expect_identical(e$epb$mod1, mod1)
-  expect_identical(ep$epb$mod1, mod1p)
+  expect_identical(e$pbph$mod1, mod1)
+  expect_identical(ep$pbph$mod1, mod1p)
 
 
   sp <- summary(ep)
   sp.lm <- summary.lm(ep)
 
-  expect_is(sp, "summary.pblm")
+  expect_is(sp, "summary.pbph")
 
   expect_identical(rownames(sp$coef), rownames(sp.lm$coef))
   expect_identical(colnames(sp$coef), colnames(sp.lm$coef))

@@ -2,7 +2,8 @@
 % Please edit documentation in R/makemod2.R
 \name{makemod2}
 \alias{makemod2}
-\title{(Internal) Fit the second stage Enhanced Peters-Belson model.}
+\title{(Internal) Fit the second stage of the Peters-Belson with
+Prognostic Heterogeneity model.}
 \usage{
 makemod2(mod1, treatment, data, center = TRUE)
 }

@@ -35,9 +35,9 @@ for (i in seq_len(reps)) {
   sm1under  <- summary(mod1under)
   sm1over   <- summary(mod1over)
 
-  eoracle <- pblm(mod1oracle, treatment, d)
-  eunder  <- pblm(mod1under, treatment, d)
-  eover   <- pblm(mod1over, treatment, d)
+  eoracle <- pbph(mod1oracle, treatment, d)
+  eunder  <- pbph(mod1under, treatment, d)
+  eover   <- pbph(mod1over, treatment, d)
   smoracle <- summary(eoracle)
   smunder  <- summary(eunder)
   smover   <- summary(eover)

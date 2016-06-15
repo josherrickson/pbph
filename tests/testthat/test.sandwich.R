@@ -24,7 +24,7 @@ test_that("clustered sandwich", {
 
   expect_true(!identical(s1,s5))
 
-  meatpre <- epb::meat(mod, cluster = d$c)
+  meatpre <- pbph::meat(mod, cluster = d$c)
   s7 <- sandwich(mod, meat = meatpre, cluster = d$c)
 
   expect_identical(s5,s7)
