@@ -182,3 +182,16 @@ test_that("testinverse", {
   expect_equal(attr(t, "type"), "infinite")
 
 })
+
+
+test_that("print.summary.pbph", {
+  data(eottest)
+  mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
+  mod2 <- pbph(mod1, eottest$afterschool, eottest)
+
+  expect_is(summary(mod2), "summary.pbph")
+  # expect_output(print(summary(mod2)))
+  # capture_output stops print from actually printing! Will not affect an
+  # error from this line.
+  capture_output(expect_is(print(summary(mod2)), "summary.lm"))
+})
