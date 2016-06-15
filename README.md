@@ -26,7 +26,7 @@ intervention, but will be a large benefit on those students who would perform po
 
 ## Installation
 
-**pbph** is not yet available on CRAN. To use, please install `devtools` and use `install_github` to obtain a working version.
+**pbph** is not yet available on CRAN. To use, please install **devtools** and use `install_github` to obtain a working version.
 
 
 ```r
