@@ -56,12 +56,7 @@ testinverse <- function(object, level = .95) {
   dmat <- cbind(1, (-1:1), (-1:1)^2)
   coefs <- solve(t(dmat) %*% dmat) %*% t(dmat) %*% t
 
-  # Rather than deal with max vs min, use the sign on the quadratic
-  # form to flip the sign of `tosolve`.
-  signtosolve <- function(x) {
-    sign(coefs[3]) * tosolve(x)
-  }
-  midpoint <- sign(coefs[3])*nlm(signtosolve, object$coef[2])$minimum
+  midpoint <- coefs[1] - coefs[2]^2/(4*coefs[3])
 
   # If a is positive, convex and therefore finite.
   #   (Can show that all reject is impossible.)
