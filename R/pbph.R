@@ -135,7 +135,18 @@ confint.pbph <- function(object, parm, level = 0.95, ...,
     } else {
       ti <- testinverse(object, level = level)
       ci["pred",] <- ti
-      if (returnShape) attr(ci, "type") <- attr(ti, "type")
+      # If disjoint and we're not either forcing display or returning
+      # the shape, make it infinite. If we're either forcing display or
+      # returning shape, don't do that. Ensure returnShape = TRUE
+      # (probably redundant) just to ensure the shape is returned.
+      if (attr(ti, "type") == "disjoint") {
+        if (!forceDisplayConfInt & !returnShape) {
+          ci["pred",] <- c(-Inf, Inf)
+        } else {
+          returnShape <- TRUE
+        }
+      }
+      if (returnShape) attr(ci, "shape") <- attr(ti, "type")
     }
   }
   return(ci)

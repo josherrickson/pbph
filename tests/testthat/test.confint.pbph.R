@@ -122,9 +122,34 @@ test_that("forceDisplayConfInt and returnShape", {
 
   expect_silent(c3 <- confint(e, returnShape = TRUE))
   expect_true(all(!is.na(c3)))
-  expect_equal(attr(c3, "type"), "finite")
+  expect_equal(attr(c3, "shape"), "finite")
 
   expect_silent(c4 <- confint(e, returnShape = TRUE, forceDisplayConfInt = FALSE))
   expect_identical(c3,c4)
+
+})
+
+test_that("disjoint CI's", {
+  set.seed(3)
+  d <- data.frame(x = rnorm(10),
+                  z = rnorm(10))
+  d$y <- d$x + rnorm(10)
+  t <- rep(0:1, each = 5)
+
+  mod1 <- lm(y ~ x + z, data = d, subset = t == 0)
+
+  e <- pbph(mod1, t, d)
+  e$coef[2] <- 2 # kinda breaks everything, but ensures significance later on
+  expect_silent(c1 <- confint(e, "pred"))
+  expect_equal(dim(c1), c(1,2))
+  expect_true(all(!is.finite(c1)))
+  expect_true(is.null(attr(c1, "shape")))
+  c2 <- confint(e, "pred", returnShape = TRUE)
+  expect_true(all(is.finite(c2)))
+  expect_equal(attr(c2, "shape"), "disjoint")
+  c3 <- confint(e, "pred", forceDisplayConfInt = TRUE)
+  expect_identical(c2, c3)
+  c4 <- confint(e, "pred", forceDisplayConfInt = TRUE, returnShape = TRUE)
+  expect_identical(c2, c4)
 
 })
