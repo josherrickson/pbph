@@ -1,8 +1,12 @@
 set.seed(1)
 n <- 80
 eottest <- data.frame(afterschool = rep(0:1, each = n/2),
-                         male = sample(0:1, n, TRUE),
-                         gpa = sample(seq(1, 4, by = .1), n, TRUE) )
+                      male = sample(0:1, n, TRUE),
+                      gpa = sample(seq(1, 4, by = .1), n, TRUE),
+                      class = rep(c(101, 403, 203, 102, 301, 208, 404),
+                                  times = c(11, 12, 9, 8,
+                                            11, 12, 17))
+)
 
 # Generate relationship between predictors and response in control
 yc <- 60 + eottest$gpa*10 - eottest$male

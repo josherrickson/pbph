@@ -46,9 +46,8 @@ confint(mod2)
 We implement support for clusters by overloading `meat` (and `sandwich`) from the `sandwich` package and adding a `cluster` argument.
 
 ```{r}
-data(iris)
-mod <- lm(Sepal.Length ~ Petal.Width + Petal.Length, data = iris)
-sandwich::meat(mod)
-meat(mod)
-meat(mod, cluster = iris$Species)
+mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
+mod2 <- pbph(mod1, treatment = eottest$afterschool, data = eottest, cluster = eottest$class)
+summary(mod2)
+confint(mod2)
 ```
