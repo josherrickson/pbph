@@ -29,6 +29,17 @@ confint(mod2)
 
 The negative coefficient (-.4885) on `pred` shows evidence that students with lower predicted test score in the absence of treatment are showing a larger treatment effect than those with higher predicted test scores.
 
+# Logistic
+
+```{r}
+data(malldata)
+mod1 <- glm(winterhigher ~ year + size, data = malldata, 
+            subset = (coveredgarage == 0), family = binomial)
+mod2 <- pbph(mod1, treatment = malldata$coveredgarage, data = malldata)
+summary(mod2)
+confint(mod2)
+```
+
 
 # Clusters
 
