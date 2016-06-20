@@ -27,7 +27,7 @@ summary(mod2)
 confint(mod2)
 ```
 
-The negative coefficient (-.799) on `pred` shows evidence that students with lower predicted test score in the absence of treatment are showing a larger treatment effect than those with higher predicted test scores.
+The negative coefficient (-.4885) on `pred` shows evidence that students with lower predicted test score in the absence of treatment are showing a larger treatment effect than those with higher predicted test scores.
 
 
 # Clusters
