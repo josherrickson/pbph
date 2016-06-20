@@ -129,7 +129,7 @@ confint.pbph <- function(object, parm, level = 0.95, ...,
   ci <- confint.lm(object, parm = parm, level = level,...)
   if ("pred" %in% rownames(ci) & !wald.style) {
     if (summary(object)$coef[2,4] > .05 & !forceDisplayConfInt) {
-      cat("Interaction term not significant, suppressing associated confidence interval. ")
+      cat("Interaction term not significant, suppressing associated confidence interval.\n")
       cat("Use 'forceDisplayConfInt = TRUE' to override.\n")
       ci["pred",] <- c(NA, NA)
     } else {
