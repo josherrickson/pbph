@@ -15,5 +15,3 @@ eottest$test <- pmin(100, ifelse(eottest$afterschool, yt, yc) + rnorm(n))
 eottest$test <- round(eottest$test)
 
 devtools::use_data(eottest, overwrite = TRUE)
-
-#plot(eottest$test);arrows(1:80, yc, 1:80, eottest$test)
