@@ -43,7 +43,7 @@ A short example. Lets predict the effect of an afterschool program on an end-of-
 ```r
 data(eottest)
 mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
-mod2 <- pbph(mod1, treatment = eottest$afterschool, data = eottest)
+mod2 <- pbph(mod1, treatment = afterschool, data = eottest)
 summary(mod2)
 #> 
 #> Call:
