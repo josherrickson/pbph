@@ -18,6 +18,10 @@ pbph <- setClass("pbph", contains = "lm")
 ##'   with \code{treatment} and \code{predicted}.
 ##' @export
 pbph <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
+  arguments <- as.list(match.call())
+  treatment <- eval(arguments$treatment, data, parent.frame())
+  cluster <- eval(arguments$cluster, data, parent.frame())
+
   if (!all(treatment %in% 0:1)) {
     stop("treatment must be indicator (0/1) for treatment status")
   }
@@ -26,8 +30,13 @@ pbph <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
     stop("It appears the first stage model is not fit only on control units.")
   }
 
+  # These might be hit if the treatment/cluster are not in the data
+  # to begin with.
   if (length(treatment) != nrow(data)) {
     stop("treatment must be same length as number of observations in data.")
+  }
+  if (!is.null(cluster) & length(cluster) != nrow(data)) {
+    stop("cluster must be same length as number of observations in data.")
   }
 
   mm <- makemod2(mod1, treatment, data, center = center)
@@ -38,9 +47,9 @@ pbph <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
   data$treatment <- treatment
   data$pred <- pred
 
-  mod2$pbph <- list(mod1      = mod1,
-                   data      = data,
-                   cluster   = cluster)
+  mod2$pbph <- list(mod1   = mod1,
+                   data    = data,
+                   cluster = cluster)
 
   mod2 <- as(mod2, "pbph")
 

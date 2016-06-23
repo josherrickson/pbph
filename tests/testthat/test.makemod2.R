@@ -5,6 +5,7 @@ test_that("makemod2", {
                   x1 = c(2,1,3,4,2,1,3,1),
                   x2 = c(3,5,2,1,3,2,3,4))
   form <- formula(y ~ x1 + x2)
+  # treatment must stay outside of data.frame for makemod2
   treatment <- c(0,0,0,0,1,1,1,1)
   mod1 <- lm(form, data = d, subset = treatment == 0)
 

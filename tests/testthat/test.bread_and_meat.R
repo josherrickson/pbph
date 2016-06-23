@@ -3,17 +3,17 @@ context("bread_and_meat")
 test_that("bread", {
   d <- data.frame(y = c(3,4,1,3,2,1,4,2),
                   x1 = c(2,1,3,4,2,1,3,1),
-                  x2 = c(3,5,2,1,3,2,3,4))
+                  x2 = c(3,5,2,1,3,2,3,4),
+                  t = rep(0:1, each = 4))
   form <- formula(y ~ x1 + x2)
-  treatment <- c(0,0,0,0,1,1,1,1)
 
   resp <- eval(form[[2]], envir = d)
   covs <- model.matrix(form, data = d)
   eta0 <- 1
 
-  mod1 <- lm(form, data = d, subset = treatment == 0)
+  mod1 <- lm(form, data = d, subset = t == 0)
 
-  m <- pbph(mod1, treatment, d, center = FALSE)
+  m <- pbph(mod1, t, d, center = FALSE)
 
   # B11
   b11 <- bread11(mod1)
@@ -35,7 +35,7 @@ test_that("bread", {
 
   # If we center in the second stage, intercept and pred should be
   # independent
-  m2 <- pbph(mod1, treatment, d, center = TRUE)
+  m2 <- pbph(mod1, t, d, center = TRUE)
   b22.2 <- bread22(m2)
   expect_equal(solve(b22.2), matrix(c(4, 0, 0, 475/36), nrow = 2),
                check.attributes = FALSE)
@@ -45,13 +45,13 @@ test_that("bread", {
 test_that("meat", {
   d <- data.frame(y = c(3,4,1,3,2,1,4,2),
                   x1 = c(2,1,3,4,2,1,3,1),
-                  x2 = c(3,5,2,1,3,2,3,4))
+                  x2 = c(3,5,2,1,3,2,3,4),
+                  t = rep(0:1, each = 4))
   form <- formula(y ~ x1 + x2)
-  treatment <- c(0,0,0,0,1,1,1,1)
 
-  mod1 <- lm(form, data = d, subset = treatment == 0)
+  mod1 <- lm(form, data = d, subset = t == 0)
 
-  m <- pbph(mod1, treatment, d)
+  m <- pbph(mod1, t, d)
 
   resp <- eval(form[[2]], envir = d)
   covs <- model.matrix(form, data = d)

@@ -12,8 +12,8 @@ test_that("making pbph object", {
 test_that("pbph input/output", {
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
-                  z = rnorm(10))
-  t <- rep(0:1, each = 5)
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -37,8 +37,8 @@ test_that("pbph input/output", {
   expect_equal(names(e$pbph), c("mod1", "data", "cluster"))
   expect_equal(e$pbph$mod1, mod1)
   expect_equal(names(e$pbph$data), c(names(d), "treatment", "pred"))
-  expect_equal(e$pbph$data$treatment, t)
-  expect_equal(e$pbph$data[,1:3], d)
+  expect_equal(e$pbph$data$treatment, d$t)
+  expect_equal(e$pbph$data[,1:4], d)
   expect_true(length(e$pbph$data$pred) == nrow(d))
 
   expect_error(pbph(mod1, c(0,0,0,0,0,1,1,1,1,2), d),
@@ -52,8 +52,8 @@ test_that("pbph input/output", {
 test_that("corrVar and vcov", {
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
-                  z = rnorm(10))
-  t <- rep(0:1, each = 5)
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -77,8 +77,8 @@ test_that("createBreadAndMeat", {
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
                   z = rnorm(10),
-                  c = c(1,1,1,2,2,3,3,4,4,4))
-  t <- rep(0:1, each = 5)
+                  c = c(1,1,1,2,2,3,3,4,4,4),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -91,7 +91,7 @@ test_that("createBreadAndMeat", {
   expect_identical(names(bnm), c("b11", "b22", "m11", "m22"))
   expect_true(all(c(3,3,2,2,3,3,2,2) == sapply(bnm, dim)))
 
-  e2 <- pbph(mod1, t, d, cluster = d$c)
+  e2 <- pbph(mod1, t, d, cluster = c)
   expect_identical(e$coef, e2$coef)
 
   bnm.nocluster <- createBreadAndMeat(e2)
@@ -108,8 +108,8 @@ test_that("Hypothesis Test", {
 
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
-                  z = rnorm(10))
-  t <- rep(0:1, each = 5)
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -124,8 +124,8 @@ test_that("Hypothesis Test", {
 test_that("summary.pbph", {
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
-                  z = rnorm(10))
-  t <- rep(0:1, each = 5)
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -183,7 +183,6 @@ test_that("testinverse", {
 
 })
 
-
 test_that("print.summary.pbph", {
   data(eottest)
   mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
@@ -194,4 +193,42 @@ test_that("print.summary.pbph", {
   # capture_output stops print from actually printing! Will not affect an
   # error from this line.
   capture_output(expect_is(print(summary(mod2)), "summary.lm"))
+})
+
+test_that("treatment in and out of data", {
+
+  d <- data.frame(y = rnorm(10),
+                  x = rnorm(10),
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
+
+
+  mod1 <- lm(y ~ x + z, data = d, subset = t == 0)
+
+  # No real tests here, just ensuring we don't crash with t inside data
+  expect_silent(e <- pbph(mod1, t, d))
+  expect_silent(summary(e))
+  expect_silent(confint(e, forceDisplayConfInt = TRUE))
+
+  # Now there are two t's
+  t <- d$t
+  expect_silent(e <- pbph(mod1, t, d))
+  expect_silent(summary(e))
+  expect_silent(confint(e, forceDisplayConfInt = TRUE))
+
+  # in data should override out of data
+  t <- "foo"
+  expect_silent(e <- pbph(mod1, t, d))
+  expect_silent(summary(e))
+  expect_silent(confint(e, forceDisplayConfInt = TRUE))
+
+  # Only t is "foo"
+  d$t <- NULL
+  expect_error(pbph(mod1, t, d))
+
+  # No t in data, only outside.
+  t <- rep(0:1, each = 5)
+  expect_silent(e <- pbph(mod1, t, d))
+  expect_silent(summary(e))
+  expect_silent(confint(e, forceDisplayConfInt = TRUE))
 })

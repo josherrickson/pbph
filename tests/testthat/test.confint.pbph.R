@@ -7,13 +7,13 @@ test_that("confint.pbph", {
   n <- 100
   d <- data.frame(abc = rnorm(n),
                   x = rnorm(n),
-                  z = rnorm(n))
-  t <- rep(0:1, each = n/2)
-  d$abc <- d$x + t + d$x*t*.5 + rnorm(n)
+                  z = rnorm(n),
+                  t = rep(0:1, each = n/2))
+  d$abc <- with(d, x + t + x*t*.5 + rnorm(n))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
-  e <- pbph(mod1, t, d)
+  e <- pbph(mod1, t, data = d)
 
   ci <- confint(e, forceDisplayConfInt = TRUE)
   ci
@@ -34,8 +34,8 @@ test_that("confint.pbph", {
   set.seed(4)
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
-                  z = rnorm(10))
-  t <- rep(0:1, each = 5)
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -54,9 +54,9 @@ test_that("CI arguments", {
   n <- 100
   d <- data.frame(abc = rnorm(n),
                   x = rnorm(n),
-                  z = rnorm(n))
-  t <- rep(0:1, each = n/2)
-  d$abc <- d$x + t + d$x*t*.5 + rnorm(n)
+                  z = rnorm(n),
+                  t = rep(0:1, each = n/2))
+  d$abc <- with(d, x + t + x*t*.5 + rnorm(n))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -86,8 +86,8 @@ test_that("wald-style CI's", {
   set.seed(8)
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
-                  z = rnorm(10))
-  t <- rep(0:1, each = 5)
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -106,8 +106,8 @@ test_that("forceDisplayConfInt and returnShape", {
   set.seed(8)
   d <- data.frame(abc = rnorm(10),
                   x = rnorm(10),
-                  z = rnorm(10))
-  t <- rep(0:1, each = 5)
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
 
@@ -132,9 +132,9 @@ test_that("forceDisplayConfInt and returnShape", {
 test_that("disjoint CI's", {
   set.seed(3)
   d <- data.frame(x = rnorm(10),
-                  z = rnorm(10))
+                  z = rnorm(10),
+                  t = rep(0:1, each = 5))
   d$y <- d$x + rnorm(10)
-  t <- rep(0:1, each = 5)
 
   mod1 <- lm(y ~ x + z, data = d, subset = t == 0)
 

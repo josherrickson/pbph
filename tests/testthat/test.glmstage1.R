@@ -5,8 +5,8 @@ test_that("logistic", {
   set.seed(1)
   d <- data.frame(abc = sample(0:1, 10, TRUE),
                   x = c(2,5,4,2,1,2,4,3,4,1),
-                  z = c(2,2,1,3,6,2,2,4,0,9))
-  t <- rep(0:1, each = 5)
+                  z = c(2,2,1,3,6,2,2,4,0,9),
+                  t = rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
   mod1g <- glm(abc ~ x + z, data = d, subset = t == 0,
@@ -46,8 +46,8 @@ test_that("bread and meat with glm", {
   set.seed(1)
   d <- data.frame(abc = sample(0:1, 10, TRUE),
                   x = c(2,5,4,2,1,2,4,3,4,1),
-                  z = c(2,2,1,3,6,2,2,4,0,9))
-  t <- rep(0:1, each = 5)
+                  z = c(2,2,1,3,6,2,2,4,0,9),
+                  t = rep(0:1, each = 5))
 
   mod1 <- glm(abc ~ x + z, data = d, subset = t == 0,
               family = "binomial")
@@ -59,13 +59,13 @@ test_that("bread and meat with glm", {
                 matrix(c(1,4,1,4,16,4,1,4,1),3) * .2339 +
                 matrix(c(1,2,3,2,4,6,3,6,9),3) * .2407 +
                 matrix(c(1,1,6,1,1,6,6,6,36),3) * .0527 )
-  expect_true(isTRUE(all.equal(test, bread11(mod1), tol=1e-3,
-                               check.attributes=FALSE)))
+  expect_true(isTRUE(all.equal(test, bread11(mod1), tol = 1e-3,
+                               check.attributes = FALSE)))
 
   expect_true(isTRUE(all.equal(
     solve(matrix(c(5, 0, 0, sum(model.matrix(e)[,"pred"]^2)), 2)),
     bread22(e),
-    check.attributes=FALSE)))
+    check.attributes = FALSE)))
 
   })
 
@@ -74,8 +74,8 @@ test_that("poisson", {
   set.seed(1)
   d <- data.frame(abc = rpois(10, 3),
                   x = rnorm(10),
-                  z = rnorm(10))
-  t <- rep(0:1, each = 5)
+                  z = rnorm(10),
+                  t <- rep(0:1, each = 5))
 
   mod1 <- lm(abc ~ x + z, data = d, subset = t == 0)
   suppressWarnings(mod1p <- glm(abc ~ x + z, data = d, subset = t == 0, family = "poisson"))
