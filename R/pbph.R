@@ -4,11 +4,13 @@ pbph <- setClass("pbph", contains = "lm")
 ##'
 ##' Performs Peters-Belson with Prognostic Heterogeneity on the data.
 ##' @param mod1 First stage fitted model.
-##' @param treatment Vector of 0/1 treatment indicators.
+##' @param treatment A 0/1 variable in \code{data} indicating treatment
+##'   assignment, or a vector of 0/1 treatment indicators.
 ##' @param data Data where variables in \code{form} live.
 ##' @param center Default \code{TRUE}. Should the predicted values be
 ##'   centered in the second stage?
-##' @param cluster A \code{vector} defining the clusters.
+##' @param cluster A variable in \code{data} indicating cluster
+##'   membership, or a vector of cluster membership.
 ##' @return A \code{pbph} object which extends \code{lm}. Can be
 ##'   passed to \code{summary} or \code{confint}.
 ##'

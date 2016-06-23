@@ -11,14 +11,16 @@ pbph(mod1, treatment, data, center = TRUE, cluster = NULL)
 \arguments{
 \item{mod1}{First stage fitted model.}
 
-\item{treatment}{Vector of 0/1 treatment indicators.}
+\item{treatment}{A 0/1 variable in \code{data} indicating treatment
+assignment, or a vector of 0/1 treatment indicators.}
 
 \item{data}{Data where variables in \code{form} live.}
 
 \item{center}{Default \code{TRUE}. Should the predicted values be
 centered in the second stage?}
 
-\item{cluster}{A \code{vector} defining the clusters.}
+\item{cluster}{A variable in \code{data} indicating cluster
+membership, or a vector of cluster membership.}
 }
 \value{
 A \code{pbph} object which extends \code{lm}. Can be
