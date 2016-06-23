@@ -45,7 +45,9 @@ test_that("pbph input/output", {
                "must be indicator")
   expect_error(pbph(lm(abc ~ ., data = d), t, d),
                "only on control")
-  expect_error(pbph(mod1, t[1:9], d),
+  expect_error(pbph(mod1, d$t[1:9], d),
+               "same length")
+  expect_error(pbph(mod1, t, d, cluster = 1:5),
                "same length")
 })
 
