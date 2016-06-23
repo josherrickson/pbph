@@ -52,22 +52,22 @@ summary(mod2)
 #> 
 #> Residuals:
 #>     Min      1Q  Median      3Q     Max 
-#> -9.1368 -1.0697 -0.1559  2.2389  2.7636 
+#> -3.2983 -0.9854 -0.2190  0.9647  3.4119 
 #> 
 #> Coefficients:
 #>           Estimate Std. Error t value Pr(>|t|)    
-#> treatment 14.32344    0.57302  24.996  < 2e-16 ***
-#> pred      -0.79942    0.08846  -5.354 5.26e-05 ***
+#> treatment   3.3085     0.2592  12.765   <2e-16 ***
+#> pred       -0.4885     0.1137  -2.265   0.0295 *  
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> Residual standard error: 2.697 on 18 degrees of freedom
-#> Multiple R-squared:  0.9766,	Adjusted R-squared:  0.974 
-#> F-statistic: 375.1 on 2 and 18 DF,  p-value: 2.131e-15
+#> Residual standard error: 1.61 on 38 degrees of freedom
+#> Multiple R-squared:   0.91,	Adjusted R-squared:  0.9053 
+#> F-statistic: 192.1 on 2 and 38 DF,  p-value: < 2.2e-16
 confint(mod2)
-#>                2.5 %    97.5 %
-#> treatment 13.1195694 15.527304
-#> pred      -0.9788453 -0.591279
+#>                2.5 %      97.5 %
+#> treatment  2.7838090  3.83316671
+#> pred      -0.6528415 -0.08992958
 ```
 
 The negative coefficient (-.799) on `pred` shows evidence that students with lower predicted test score in the absense of treatment are showing a
