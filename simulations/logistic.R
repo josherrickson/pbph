@@ -40,7 +40,7 @@ for (j in 1:nrow(params)) {
     mod2 <- pbph(mod1, treatment, d)
 
     ci <- confint(mod2, "pred", returnShape = TRUE)
-    type <- attr(ci, "type")
+    type <- attr(ci, "shape")
     if (type == "finite") {
       covered <- ci[1] < ti & ti < ci[2]
     } else if (type == "infinite") {
