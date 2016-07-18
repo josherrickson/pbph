@@ -27,4 +27,7 @@ This \code{sandwich} function is an overloaded function of
 \code{sandwich} from the \code{sandwich} package which enables a
 \code{clusters} argument.
 }
+\seealso{
+sandwich::sandwich
+}
 
