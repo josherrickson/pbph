@@ -38,17 +38,14 @@ glmScale <- function(model, newdata) {
 ##' @rdname bread_and_meat
 bread11 <- function(model) {
   x <- model.matrix(model)
-  scale <- glmScale(model, newdata=model.frame(model))
+  scale <- glmScale(model, newdata = model.frame(model))
 
   solve(crossprod(x, x * scale))
 }
 
 ##' @rdname bread_and_meat
-bread22 <- function(model) {
-  x <- model.matrix(model)
-
-  solve(crossprod(x))
-}
+bread22 <- bread11
+# These function identically, and `pbph` should never let a non-lm slip through.
 
 ##' @rdname bread_and_meat
 meat11 <- function(model, cluster = NULL) {
@@ -56,9 +53,7 @@ meat11 <- function(model, cluster = NULL) {
 }
 
 ##' @rdname bread_and_meat
-meat22 <- function(model, cluster = NULL) {
-  meat(model, cluster = cluster) * length(residuals(model))
-}
+meat22 <- meat11
 
 ##' @rdname bread_and_meat
 bread21 <- function(model, eta) {
