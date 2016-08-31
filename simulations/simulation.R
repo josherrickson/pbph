@@ -32,7 +32,7 @@ for (j in 1:length(true_inter)) {
 
     e <- pbph(mod1, treatment, d)
     ci <- confint(e, "pred", returnShape = TRUE)
-    type <- attr(ci, "type")
+    type <- attr(ci, "shape")
     covered <- ci[1] < ti & ti < ci[2]
     if (type == "disjoint") {
       covered <- !covered
