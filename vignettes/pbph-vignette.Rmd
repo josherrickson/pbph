@@ -32,10 +32,10 @@ The negative coefficient (-.4885) on `pred` shows evidence that students with lo
 # Logistic
 
 ```{r}
-data(malldata)
-mod1 <- glm(winterhigher ~ year + size, data = malldata, 
-            subset = (coveredgarage == 0), family = binomial)
-mod2 <- pbph(mod1, treatment = coveredgarage, data = malldata)
+data(salesdata)
+mod1 <- glm(sale ~ experience + previoussales, data = salesdata, 
+            subset = (newtechnique == 0), family = binomial)
+mod2 <- pbph(mod1, treatment = newtechnique, data = salesdata)
 summary(mod2)
 confint(mod2)
 ```

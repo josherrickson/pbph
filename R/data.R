@@ -14,17 +14,16 @@
 #' @keywords dataset
 "eottest"
 
-#' This generated data set simulates some data about malls to determine whether
-#' having covered parking lots results in higher sales in winter over summer.
+#' This generated data set simulates some data about sales, testing whether a new technique increased sales (a binary response).
 #'
 #'
-#' @title Mall data and summer vs winter performance.
+#' @title Sales data with old and new technique
 #' @format A data.frame with 238 rows and 4 columns.
 #' \itemize{
-#'   \item coveredgarage Indicator of the garage being covered as oppposed to an open lot (the treatment variable).
-#'   \item year Year of construction.
-#'   \item size Mall dimensions (in thousands square feets).
-#'   \item winterhigher Binary indicator whether winter sales are higher than summer sales.
+#'   \item newtechnique Indicator of whether the new technique is used (the treatment variable).
+#'   \item experience Years of experience of salesperson.
+#'   \item previoussales The number of previous sales made in the calendar year.
+#'   \item sale Indicator of whether the sale was successful.
 #' }
 #' @keywords dataset
-"malldata"
+"salesdata"
