@@ -72,6 +72,8 @@ bread21 <- function(model, eta) {
   # Replace tauhat with tauhat_eta0
   # When eta = eta_0, the RHS is constant, so we just need the mean.
   tau <- mean(resp - (1 + eta) * pred)
+  tau <- max(min(tau, .5), -.5)
+  print(tau)
 
   b21.1 <- apply(-(1 + eta) * covs * scale, 2, sum)
   b21.2 <- apply( (resp - tau - 2 * (1 + eta) * pred) * covs * scale, 2, sum)
