@@ -12,12 +12,19 @@
 ##' @param data Data where variables in \code{form} live.
 ##' @param center Default \code{TRUE}. Should the predicted values be
 ##'   centered in the second stage?
+##' @param efficientScore Should we use the measurement error correction?
 ##' @return A \code{list} consisting of \code{mod2}, the second stage
 ##'   model, and \code{pred}, the predicted values from \code{mod1}.
-makemod2 <- function(mod1, treatment, data, center = TRUE) {
+makemod2 <- function(mod1, treatment, data, center = TRUE, efficientScore = FALSE) {
 
   # Get predicted values.
   predicted <- predict(mod1, type = "response", newdata = data)
+  if (efficientScore) {
+    x <- model.matrix(formula(mod1), data = data)
+    v_i <- diag(x %*% vcov(mod1) %*% t(x))
+    sc2 <- var(predicted[treatment == 0])
+    predicted <- (1 - v_i/sc2)*predicted
+  }
 
   # Second stage linear model.
   respname <- formula(mod1)[[2]]

@@ -11,6 +11,7 @@ pbph <- setClass("pbph", contains = "lm")
 ##'   centered in the second stage?
 ##' @param cluster A variable in \code{data} indicating cluster
 ##'   membership, or a vector of cluster membership.
+##' @param efficientScore Should we use the measurement error correction?
 ##' @return A \code{pbph} object which extends \code{lm}. Can be
 ##'   passed to \code{summary} or \code{confint}.
 ##'
@@ -19,7 +20,7 @@ pbph <- setClass("pbph", contains = "lm")
 ##'   stage model, and \code{data}, which includes the \code{data} augmented
 ##'   with \code{treatment} and \code{predicted}.
 ##' @export
-pbph <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
+pbph <- function(mod1, treatment, data, center = TRUE, cluster = NULL, efficientScore = FALSE) {
   arguments <- as.list(match.call())
   treatment <- eval(arguments$treatment, data, parent.frame())
   cluster <- eval(arguments$cluster, data, parent.frame())
@@ -41,7 +42,7 @@ pbph <- function(mod1, treatment, data, center = TRUE, cluster = NULL) {
     stop("cluster must be same length as number of observations in data.")
   }
 
-  mm <- makemod2(mod1, treatment, data, center = center)
+  mm <- makemod2(mod1, treatment, data, center = center, efficientScore = efficientScore)
 
   pred <- mm$pred
   mod2 <- mm$mod2
