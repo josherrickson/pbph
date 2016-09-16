@@ -1,4 +1,4 @@
-##' (Internal) Fit the second stage of the Peters-Belson with
+\0;95;0c##' (Internal) Fit the second stage of the Peters-Belson with
 ##' Prognostic Heterogeneity model.
 ##'
 ##' Given a first stage model fit only on the control group, fit a second stage
@@ -20,7 +20,7 @@ makemod2 <- function(mod1, treatment, data, center = TRUE, efficientScore = FALS
   # Get predicted values.
   predicted <- predict(mod1, type = "response", newdata = data)
   if (efficientScore) {
-    x <- model.matrix(formula(mod1), data = data)
+    x <- model.matrix(formula(mod1), data = data) # passing formula gives all data instead of just control
     v_i <- diag(x %*% vcov(mod1) %*% t(x))
     sc2 <- var(predicted[treatment == 0])
     predicted <- (1 - v_i/sc2)*predicted
