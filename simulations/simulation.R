@@ -30,7 +30,7 @@ for (j in 1:length(true_inter)) {
 
     mod1 <- lm(y ~ ., data = d, subset = treatment == 0)
 
-    e <- pbph(mod1, treatment, d, efficientScore = TRUE)
+    e <- pbph(mod1, treatment, d)
     ci <- confint(e, "pred", returnShape = TRUE)
     type <- attr(ci, "shape")
     covered <- ci[1] < ti & ti < ci[2]
