@@ -9,9 +9,10 @@
 ##'   to compute this once and pass into corrVar.
 ##' @return A covariance \code{matrix}.
 corrVar <- function(eta, object,
-                    breadAndMeat = createBreadAndMeat(object, cluster = object$pbph$cluster)) {
+                    breadAndMeat = createBreadAndMeat(object, cluster = object$pbph$cluster),
+                    taubound = Inf) {
 
-  b21 <- bread21(object, eta)
+  b21 <- bread21(object, eta, taubound)
 
   corrected <- correctedvar(breadAndMeat$b11,
                                          b21,
