@@ -20,4 +20,3 @@ This generated data set simulates some student-level data for
 demonstrating the use of `pbph`.
 }
 \keyword{dataset}
-

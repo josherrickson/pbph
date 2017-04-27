@@ -29,4 +29,3 @@ model with formula.
 \details{
 resp - pred ~ pred | treatment == 1
 }
-

@@ -38,4 +38,3 @@ Confidence intervals
 \description{
 Similar to \code{confint.lm}.
 }
-

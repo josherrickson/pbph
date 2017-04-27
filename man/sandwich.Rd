@@ -30,4 +30,3 @@ This \code{sandwich} function is an overloaded function of
 \seealso{
 sandwich::sandwich
 }
-

@@ -18,4 +18,3 @@ A list of b11, b22, m11, and m22.
 Computes the pieces of the Bread and Meat which do not depend on eta. (e.g.
 all but B21)
 }
-

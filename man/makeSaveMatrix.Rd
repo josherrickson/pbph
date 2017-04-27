@@ -18,4 +18,3 @@ An empty \code{matrix}.
 Given a \code{vector} of column names and a number of \code{reps}, generates an
 appropriately sized \code{matrix} with given column names.
 }
-

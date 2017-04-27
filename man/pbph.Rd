@@ -4,6 +4,7 @@
 \name{pbph}
 \alias{pbph}
 \alias{pbph-package}
+\alias{pbph}
 \title{pbph: A package for performing Peters-Belson with Prognostic Heterogeneity}
 \usage{
 pbph(mod1, treatment, data, center = TRUE, cluster = NULL)
@@ -36,4 +37,3 @@ pbph: A package for performing Peters-Belson with Prognostic Heterogeneity
 
 Performs Peters-Belson with Prognostic Heterogeneity on the data.
 }
-
