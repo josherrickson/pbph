@@ -18,4 +18,3 @@ A \code{vector} of length two with the lower and upper
 \description{
 (Internal) Computes a confidence interval for eta via test inversion.
 }
-

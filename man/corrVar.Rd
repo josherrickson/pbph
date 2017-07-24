@@ -23,4 +23,3 @@ A covariance \code{matrix}.
 For a given eta, the covariance can vary. For example, etahat or
 eta_0.
 }
-

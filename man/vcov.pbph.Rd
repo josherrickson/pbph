@@ -17,4 +17,3 @@ Returns a covariance \code{matrix}. Computed using PBPH
 methods. The variance for pred should NOT be used directly in
 confidence intervals.
 }
-

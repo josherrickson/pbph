@@ -37,4 +37,3 @@ argument.
 \seealso{
 sandwich::meat
 }
-

@@ -18,4 +18,3 @@ A test statistic, with distribution t(k) where k is the
 \description{
 (Internal) Conducts a hypothesis test for a given null.
 }
-

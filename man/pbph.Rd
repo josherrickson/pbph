@@ -4,9 +4,11 @@
 \name{pbph}
 \alias{pbph}
 \alias{pbph-package}
+\alias{pbph}
 \title{pbph: A package for performing Peters-Belson with Prognostic Heterogeneity}
 \usage{
-pbph(mod1, treatment, data, center = TRUE, cluster = NULL)
+pbph(mod1, treatment, data, center = TRUE, cluster = NULL,
+  efficientScore = FALSE)
 }
 \arguments{
 \item{mod1}{First stage fitted model.}
@@ -21,6 +23,8 @@ centered in the second stage?}
 
 \item{cluster}{A variable in \code{data} indicating cluster
 membership, or a vector of cluster membership.}
+
+\item{efficientScore}{Should we use the measurement error correction?}
 }
 \value{
 A \code{pbph} object which extends \code{lm}. Can be
@@ -36,4 +40,3 @@ pbph: A package for performing Peters-Belson with Prognostic Heterogeneity
 
 Performs Peters-Belson with Prognostic Heterogeneity on the data.
 }
-

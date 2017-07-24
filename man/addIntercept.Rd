@@ -20,4 +20,3 @@ nx(p+1) object of the same type where the first column is an
 intercept if the intercept is not already in the object (defined
 as a first column being all 1's).
 }
-

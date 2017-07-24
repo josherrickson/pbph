@@ -5,7 +5,7 @@
 \title{(Internal) Fit the second stage of the Peters-Belson with
 Prognostic Heterogeneity model.}
 \usage{
-makemod2(mod1, treatment, data, center = TRUE)
+makemod2(mod1, treatment, data, center = TRUE, efficientScore = FALSE)
 }
 \arguments{
 \item{mod1}{First stage model fit}
@@ -17,6 +17,8 @@ makemod2(mod1, treatment, data, center = TRUE)
 
 \item{center}{Default \code{TRUE}. Should the predicted values be
 centered in the second stage?}
+
+\item{efficientScore}{Should we use the measurement error correction?}
 }
 \value{
 A \code{list} consisting of \code{mod2}, the second stage
@@ -29,4 +31,3 @@ model with formula.
 \details{
 resp - pred ~ pred | treatment == 1
 }
-

@@ -11,6 +11,3 @@ pt <- pc + .1*salesdata$newtechnique - .7*salesdata$newtechnique*pc
 pt <- pmax(pmin(pt, 1), 0)
 
 salesdata$sale <- rbinom(n, 1, ifelse(salesdata$newtechnique, pt, pc))
-
-devtools::use_data(salesdata, overwrite = TRUE)
-

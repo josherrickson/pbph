@@ -18,4 +18,3 @@ salesdata
 This generated data set simulates some data about sales, testing whether a new technique increased sales (a binary response).
 }
 \keyword{dataset}
-

@@ -17,4 +17,3 @@ Scaling factor. 1 if lm.
 \description{
 (Internal) Return scaling factor for GLM models
 }
-
