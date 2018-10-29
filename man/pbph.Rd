@@ -4,7 +4,6 @@
 \name{pbph}
 \alias{pbph}
 \alias{pbph-package}
-\alias{pbph}
 \title{pbph: A package for performing Peters-Belson with Prognostic Heterogeneity}
 \usage{
 pbph(mod1, treatment, data, center = TRUE, cluster = NULL)
@@ -33,7 +32,5 @@ A \code{pbph} object which extends \code{lm}. Can be
   with \code{treatment} and \code{predicted}.
 }
 \description{
-pbph: A package for performing Peters-Belson with Prognostic Heterogeneity
-
 Performs Peters-Belson with Prognostic Heterogeneity on the data.
 }

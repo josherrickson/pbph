@@ -4,8 +4,9 @@
 \alias{confint.pbph}
 \title{Confidence intervals for \code{pbph} object}
 \usage{
-\method{confint}{pbph}(object, parm, level = 0.95, ..., wald.style = FALSE,
-  forceDisplayConfInt = FALSE, returnShape = FALSE)
+\method{confint}{pbph}(object, parm, level = 0.95, ...,
+  wald.style = FALSE, forceDisplayConfInt = FALSE,
+  returnShape = FALSE)
 }
 \arguments{
 \item{object}{An object of class \code{pbph}.}
