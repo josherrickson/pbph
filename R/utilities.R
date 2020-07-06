@@ -10,7 +10,7 @@
 ##'   \code{data.frame} (if \code{x} is a \code{data.frame})
 ##'   guaranteed to have an intercept column.
 addIntercept <- function(x) {
-  if (class(x) == "data.frame") {
+  if (is(x, "data.frame")) {
     if (any(x[,1] != 1)) {
       x$Intercept <- 1
       x <- x[,c(ncol(x), 1:(ncol(x) - 1))]
@@ -18,7 +18,7 @@ addIntercept <- function(x) {
     return(x)
   }
 
-  if (class(x) == "matrix") {
+  if (is(x, "matrix")) {
     if (any(x[,1] != 1)) {
       x <- cbind(1, x)
       if (!is.null(colnames(x))) {
@@ -35,7 +35,7 @@ addIntercept <- function(x) {
   }
 
   warning(paste0("Don't know how to add intercept to ",
-                 class(x), "."))
+                 class(x)[1], "."))
   return(x)
 }
 

@@ -5,7 +5,7 @@ test_that("addIntercept", {
   m <- matrix(1:8, ncol = 2)
 
   dout <- addIntercept(d)
-  expect_true(class(dout) == class(d))
+  expect_true(class(dout)[1] == class(d)[1])
   expect_true(nrow(dout) == nrow(d))
   expect_true(ncol(dout) == ncol(d) + 1)
   expect_true(all(dout[,-1] == d))
@@ -13,7 +13,7 @@ test_that("addIntercept", {
   expect_true(all(colnames(dout) == c("Intercept", colnames(d))))
 
   mout <- addIntercept(m)
-  expect_true(class(mout) == class(m))
+  expect_true(class(mout)[1] == class(m)[1])
   expect_true(nrow(mout) == nrow(m))
   expect_true(ncol(mout) == ncol(m) + 1)
   expect_true(all(mout[,-1] == m))
