@@ -4,14 +4,16 @@
 \name{eottest}
 \alias{eottest}
 \title{Student level demographic, performance and end-of-term test scores.}
-\format{A data.frame with 80 rows and 5 columns.
+\format{
+A data.frame with 80 rows and 5 columns.
 \itemize{
   \item afterschool Indicator in membership in an afterschool intervention (the treatment variable).
   \item male Indicator for gender (1 = male, 0 = female).
   \item gpa GPA on a 4.0 scale.
   \item class Students class (data can be considered as a clustered random trial).
   \item test Score (out of 100) on an end-of-term standardized test.
-}}
+}
+}
 \usage{
 eottest
 }

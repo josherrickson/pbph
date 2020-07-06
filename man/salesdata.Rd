@@ -4,13 +4,15 @@
 \name{salesdata}
 \alias{salesdata}
 \title{Sales data with old and new technique}
-\format{A data.frame with 238 rows and 4 columns.
+\format{
+A data.frame with 238 rows and 4 columns.
 \itemize{
   \item newtechnique Indicator of whether the new technique is used (the treatment variable).
   \item experience Years of experience of salesperson.
   \item previoussales The number of previous sales made in the calendar year.
   \item sale Indicator of whether the sale was successful.
-}}
+}
+}
 \usage{
 salesdata
 }

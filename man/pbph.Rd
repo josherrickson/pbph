@@ -3,7 +3,6 @@
 \docType{package}
 \name{pbph}
 \alias{pbph}
-\alias{pbph-package}
 \title{pbph: A package for performing Peters-Belson with Prognostic Heterogeneity}
 \usage{
 pbph(mod1, treatment, data, center = TRUE, cluster = NULL)
