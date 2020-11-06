@@ -6,8 +6,7 @@
 
 # pbph: Peters-Belson with Prognostic Heterogeneity implementation for R
 
-[![Travis-CI Build Status](https://travis-ci.org/josherrickson/pbph.svg?branch=master)](https://travis-ci.org/josherrickson/pbph)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/josherrickson/pbph?branch=master&svg=true)](https://ci.appveyor.com/project/josherrickson/pbph)
+![R-CMD-check](https://github.com/josherrickson/pbph/workflows/R-CMD-check/badge.svg)
 [![Coverage Status](https://img.shields.io/codecov/c/github/josherrickson/pbph/master.svg)](https://codecov.io/github/josherrickson/pbph?branch=master)
 [![Coverage Status](https://img.shields.io/coveralls/josherrickson/pbph.svg)](https://coveralls.io/r/josherrickson/pbph?branch=master)
 
