@@ -11,7 +11,7 @@ on:
 name: R-build-check
 
 jobs:
-  R-build-check
+  R-build-check:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
