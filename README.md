@@ -6,7 +6,7 @@
 
 # pbph: Peters-Belson with Prognostic Heterogeneity implementation for R
 
-![R-CMD-check](https://github.com/josherrickson/pbph/workflows/R-CMD-check/badge.svg)
+![R-build-check](https://github.com/josherrickson/pbph/workflows/R-build-check/badge.svg)
 [![Coverage Status](https://img.shields.io/codecov/c/github/josherrickson/pbph/master.svg)](https://codecov.io/github/josherrickson/pbph?branch=master)
 [![Coverage Status](https://img.shields.io/coveralls/josherrickson/pbph.svg)](https://coveralls.io/r/josherrickson/pbph?branch=master)
 
@@ -44,24 +44,24 @@ data(eottest)
 mod1 <- lm(test ~ gpa + male, data = eottest, subset = (afterschool == 0))
 mod2 <- pbph(mod1, treatment = afterschool, data = eottest)
 summary(mod2)
-#> 
+#>
 #> Call:
-#> lm(formula = test - pred ~ treatment + pred, data = newdata, 
+#> lm(formula = test - pred ~ treatment + pred, data = newdata,
 #>     subset = (treatment == 1))
-#> 
+#>
 #> Residuals:
-#>     Min      1Q  Median      3Q     Max 
-#> -3.2983 -0.9854 -0.2190  0.9647  3.4119 
-#> 
+#>     Min      1Q  Median      3Q     Max
+#> -3.2983 -0.9854 -0.2190  0.9647  3.4119
+#>
 #> Coefficients:
-#>           Estimate Std. Error t value Pr(>|t|)    
+#>           Estimate Std. Error t value Pr(>|t|)
 #> treatment   3.3085     0.2592  12.765   <2e-16 ***
-#> pred       -0.4885     0.1137  -2.265   0.0295 *  
+#> pred       -0.4885     0.1137  -2.265   0.0295 *
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
+#>
 #> Residual standard error: 1.61 on 38 degrees of freedom
-#> Multiple R-squared:   0.91,	Adjusted R-squared:  0.9053 
+#> Multiple R-squared:   0.91,	Adjusted R-squared:  0.9053
 #> F-statistic: 192.1 on 2 and 38 DF,  p-value: < 2.2e-16
 confint(mod2)
 #>                2.5 %      97.5 %

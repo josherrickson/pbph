@@ -8,10 +8,10 @@ on:
     branches:
       - master
 
-name: R-CMD-check
+name: R-build-check
 
 jobs:
-  R-CMD-check:
+  R-build-check
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
@@ -37,7 +37,7 @@ jobs:
           r-version: ${{ matrix.config.r }}
 
       - uses: r-lib/actions/setup-tinytex@v1
-        
+
       - uses: r-lib/actions/setup-pandoc@v1
 
       - name: Query dependencies
