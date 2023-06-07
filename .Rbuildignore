@@ -8,3 +8,4 @@ simulations
 ^data-raw$
 ^\.travis\.yml$
 ^appveyor\.yml$
+.github
